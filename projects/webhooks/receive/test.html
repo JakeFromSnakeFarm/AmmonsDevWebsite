@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+</head>
+<body>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+	function submitData() {
+        $.ajaxSetup({
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+        toForward = 'jsonkey={ "clientName": "Jacob", "clientLastName": "Ammons", "clientPhoneNumber": "7729132268", "clientAddress": "12835 roseland rd.", "clientCity": "Sebastian", "clientZip": "32958", "gateCode": "", "applianceType": "test", "applianceBrandName": "ttt", "applianceModelNumber": "432fgsd", "appliancePrompt": "Im having issues with my ttt test 432fgsd. ", "jobDateTime": "2024-09-09T11:45", "repairNotes": ""}';
+        $.ajax({
+            url: 'https://flask-service.6pkt8q75gkone.us-east-2.cs.amazonlightsail.com/json_test',
+            type: "GET",
+            dataType: "json",
+            data: toForward,
+            success: function(data) {
+                console.log(data);console.log(" test"); // Alert the results
+            }
+        });
+        // $.post('./send.php', toForward, function(response) {
+        //     console.log(response);
+        //     console.log("submit")
+        // }, 'json');
+        // $.post('./storeClient.php', toForward, function(response) {
+        //     console.log(response);
+        //     console.log("client")
+        // }, 'json');
+        //document.getElementById("dataForm").reset()
+        alert("Data submitted");
+    }
+</script>
+</html>

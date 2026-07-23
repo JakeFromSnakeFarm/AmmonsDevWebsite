@@ -1,0 +1,1437 @@
+   {
+      "call_id":"31e07cf2-9320-4379-b303-a906a5175865",
+      "call_length":2.71666666666667,
+      "batch_id":null,
+      "to":"+17722526770",
+      "from":"+17729132268",
+      "completed":true,
+      "created_at":"2024-08-01T15:19:14.973595+00:00",
+      "inbound":true,
+      "queue_status":"complete",
+      "endpoint_url":"api.prod.bland.ai",
+      "max_duration":30,
+      "error_message":null,
+      "variables":{
+         "now":"Thursday, August 1, 2024 11:19 AM",
+         "now_utc":"Thursday, August 1, 2024 3:19 PM",
+         "short_from":"7729132268",
+         "short_to":"7722526770",
+         "from":"+17729132268",
+         "to":"+17722526770",
+         "call_id":"31e07cf2-9320-4379-b303-a906a5175865",
+         "phone_number":"+17729132268",
+         "city":"SEBASTIAN",
+         "country":"US",
+         "state":"FL",
+         "zip":"32976",
+         "user_id":"a87948dd-6de3-40be-9764-8fcd0e454fae",
+         "timestamp":"2024-08-01T11:19:15-04:00",
+         "timezone":"America/New_York",
+         "callID":"31e07cf2-9320-4379-b303-a906a5175865",
+         "clientName":"Jacob",
+         "clientAppliance":null,
+         "applianceBrand":"Samsung",
+         "applianceSymptoms":"Getting out of balance on the spin cycle",
+         "clientNumber":"7729132268",
+         "clientAddress":null
+      },
+      "answered_by":null,
+      "record":false,
+      "recording_url":null,
+      "c_id":"31e07cf2-9320-4379-b303-a906a5175865",
+      "metadata":null,
+      "summary":"Here is a concise and insightful summary of the call:nnThe caller, Jacob, contacted Appliance Repair American to report an issue with his Samsung washer, which is getting out of balance during the spin cycle. The customer service representative, Linda, gathered information about the problem and offered to forward the details to a technician to discuss further with Jacob. The call concluded with Linda confirming Jacob's contact information, including his name and phone number, to ensure a smooth follow-up with the technician.",
+      "price":0.245,
+      "started_at":"2024-08-01T15:19:14+00:00",
+      "local_dialing":false,
+      "call_ended_by":"USER",
+      "pathway_logs":[
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:19:15.070614+00:00",
+            "pathway_info":{
+               "Variables being extracted":{
+                  " clientName":{
+                     "type":"string",
+                     "description":"the name the client provides to be addressed by"
+                  }
+               }
+            }
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:19:15.071064+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:19:15.074789+00:00",
+            "pathway_info":{
+               "Current Variables":{
+                  "now":"Thursday, August 1, 2024 11:19 AM",
+                  "now_utc":"Thursday, August 1, 2024 3:19 PM",
+                  "short_from":"7729132268",
+                  "short_to":"7722526770",
+                  "from":"+17729132268",
+                  "to":"+17722526770",
+                  "call_id":"31e07cf2-9320-4379-b303-a906a5175865",
+                  "phone_number":"+17729132268",
+                  "city":"SEBASTIAN",
+                  "country":"US",
+                  "state":"FL",
+                  "zip":"32976",
+                  "user_id":"a87948dd-6de3-40be-9764-8fcd0e454fae",
+                  "timestamp":"2024-08-01T11:19:15-04:00",
+                  "timezone":"America/New_York",
+                  "callID":"31e07cf2-9320-4379-b303-a906a5175865"
+               }
+            }
+         },
+         {
+            "role":"user",
+            "text":"<Call Connected>",
+            "decision":null,
+            "created_at":"2024-08-01T15:19:15.093846+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":"assistant",
+            "text":"Hi, this is Linda with Appliance Repair American. Before we get started can I get your name?",
+            "decision":null,
+            "created_at":"2024-08-01T15:19:16.536444+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:19:16.541745+00:00",
+            "pathway_info":{
+               "node":"Start"
+            }
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:19:16.562864+00:00",
+            "pathway_info":{
+               "Extracted Variables":{
+                  "clientName":null
+               }
+            }
+         },
+         {
+            "role":"user",
+            "text":"[extended silence, may not be present or have heard you]",
+            "decision":null,
+            "created_at":"2024-08-01T15:19:29.81658+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:19:29.822694+00:00",
+            "pathway_info":{
+               "Variables being extracted":{
+                  " clientName":{
+                     "type":"string",
+                     "description":"the name the client provides to be addressed by"
+                  }
+               }
+            }
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:19:30.48902+00:00",
+            "pathway_info":{
+               "node":"Start"
+            }
+         },
+         {
+            "role":"assistant",
+            "text":"Hi, this is Linda with Appliance Repair American. Before we get started can I get your name?",
+            "decision":null,
+            "created_at":"2024-08-01T15:19:30.491897+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:19:30.502823+00:00",
+            "pathway_info":{
+               "Extracted Variables":{
+                  "clientName":null
+               }
+            }
+         },
+         {
+            "role":"user",
+            "text":"It's Jacob.",
+            "decision":null,
+            "created_at":"2024-08-01T15:19:33.560889+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:19:33.562157+00:00",
+            "pathway_info":{
+               "Variables being extracted":{
+                  " clientName":{
+                     "type":"string",
+                     "description":"the name the client provides to be addressed by"
+                  }
+               }
+            }
+         },
+         {
+            "role":"assistant",
+            "text":"Hi, this is Linda with Appliance Repair American. Before we get started can I get your name?",
+            "decision":null,
+            "created_at":"2024-08-01T15:19:34.441652+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:19:34.442479+00:00",
+            "pathway_info":{
+               "Extracted Variables":{
+                  "clientName":"Jacob"
+               }
+            }
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:19:34.452599+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:19:34.478066+00:00",
+            "pathway_info":{
+               "node":"Start"
+            }
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:19:43.403448+00:00",
+            "pathway_info":{
+               "Variables being extracted":{
+                  " clientName":{
+                     "type":"string",
+                     "description":"the name the client provides to be addressed by"
+                  }
+               }
+            }
+         },
+         {
+            "role":"user",
+            "text":"My name is Jacob.",
+            "decision":null,
+            "created_at":"2024-08-01T15:19:43.408223+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:19:45.73639+00:00",
+            "pathway_info":{
+               "Extracted Variables":{
+                  "clientName":"Jacob"
+               }
+            }
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:19:46.148187+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":{
+               "Condition Achieved":true,
+               "Chosen Pathway":"User responded with their name",
+               "Current Node Prompt/Text":"Ask the client what kind of machine they have",
+               "Current Node Name":"Type of machine",
+               "Previous Node Name":"Start",
+               "Current Node ID":"5b0d94ac-0899-435d-acd2-d4fbc21af2e1",
+               "Previous Node ID":"1",
+               "Conversation History":[
+                  {
+                     "role":"user",
+                     "content":"<Call Connected>"
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Hi, this is Linda with Appliance Repair American. Before we get started can I get your name?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"[extended silence, may not be present or have heard you]"
+                  },
+                  {
+                     "role":"user",
+                     "content":"It's Jacob."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Hi, this is Linda with Appliance Repair American. Before we get started can I get your name?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"My name is Jacob."
+                  }
+               ],
+               "Assistant Response":"nnJacob, thank you for confirming. I'm going to need some information from you to better assist you with your issue. Can you tell me what kind of machine you have that's giving you trouble?"
+            },
+            "created_at":"2024-08-01T15:19:46.840906+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":"assistant",
+            "text":"nnJacob, thank you for confirming. I'm going to need some information from you to better assist you with your issue. Can you tell me what kind of machine you have that's giving you trouble?",
+            "decision":null,
+            "created_at":"2024-08-01T15:19:46.845381+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":"user",
+            "text":"My name is Jacob.",
+            "decision":null,
+            "created_at":"2024-08-01T15:19:47.611063+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:19:47.615876+00:00",
+            "pathway_info":{
+               "Variables being extracted":{
+                  "clientAppliance":{
+                     "type":"string",
+                     "description":"the kind of appliance the client has"
+                  }
+               }
+            }
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:19:48.747112+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:19:48.750006+00:00",
+            "pathway_info":{
+               "Extracted Variables":{
+                  "clientAppliance":null
+               }
+            }
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:19:49.169649+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":{
+               "Condition Achieved":true,
+               "Chosen Pathway":"User responded with their name",
+               "Current Node Prompt/Text":"Ask the client what kind of machine they have",
+               "Current Node Name":"Type of machine",
+               "Previous Node Name":"Start",
+               "Current Node ID":"5b0d94ac-0899-435d-acd2-d4fbc21af2e1",
+               "Previous Node ID":"1",
+               "Conversation History":[
+                  {
+                     "role":"user",
+                     "content":"<Call Connected>"
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Hi, this is Linda with Appliance Repair American. Before we get started can I get your name?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"[extended silence, may not be present or have heard you]"
+                  },
+                  {
+                     "role":"user",
+                     "content":"It's Jacob."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Hi, this is Linda with Appliance Repair American. Before we get started can I get your name?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"My name is Jacob."
+                  },
+                  {
+                     "role":"user",
+                     "content":"My name is Jacob."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Jacob, t-"
+                  }
+               ],
+               "Assistant Response":"nnJacob, can you hear me okay?"
+            },
+            "created_at":"2024-08-01T15:19:49.46117+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":"assistant",
+            "text":"nnJacob, can you hear me okay?",
+            "decision":null,
+            "created_at":"2024-08-01T15:19:49.463036+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:19:56.538543+00:00",
+            "pathway_info":{
+               "Variables being extracted":{
+                  "clientAppliance":{
+                     "type":"string",
+                     "description":"the kind of appliance the client has"
+                  }
+               }
+            }
+         },
+         {
+            "role":"user",
+            "text":"Yep.",
+            "decision":null,
+            "created_at":"2024-08-01T15:19:56.545587+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:19:57.44292+00:00",
+            "pathway_info":{
+               "Extracted Variables":{
+                  "clientAppliance":null
+               }
+            }
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:19:57.872635+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":"assistant",
+            "text":"nnJacob, I'm going to need some information about the appliance that's not working properly. Can you tell me what kind of machine is giving you trouble?",
+            "decision":null,
+            "created_at":"2024-08-01T15:19:58.462718+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":{
+               "Condition Achieved":true,
+               "Chosen Pathway":"User responded with a non washer or dryer machine",
+               "Current Node Prompt/Text":"ask the client what is the brand name of the machine. Brand names can be confusing to pronounce or take a few tries, so stick with the user until they confirm and agree on the brand name of the appliance.",
+               "Current Node Name":"Appliance Brand Extraction",
+               "Previous Node Name":"Type of machine",
+               "Current Node ID":"a920a464-ffc7-47ac-b931-7339185e72ec",
+               "Previous Node ID":"5b0d94ac-0899-435d-acd2-d4fbc21af2e1",
+               "Conversation History":[
+                  {
+                     "role":"user",
+                     "content":"<Call Connected>"
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Hi, this is Linda with Appliance Repair American. Before we get started can I get your name?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"[extended silence, may not be present or have heard you]"
+                  },
+                  {
+                     "role":"user",
+                     "content":"It's Jacob."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Hi, this is Linda with Appliance Repair American. Before we get started can I get your name?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"My name is Jacob."
+                  },
+                  {
+                     "role":"user",
+                     "content":"My name is Jacob."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Jacob, can you hear me okay?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"Yep."
+                  }
+               ],
+               "Assistant Response":"nnJacob, I'm going to need some information about the appliance that's not working properly. Can you tell me what kind of machine is giving you trouble?"
+            },
+            "created_at":"2024-08-01T15:19:58.465976+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":"user",
+            "text":"I have a Samsung washer, and it",
+            "decision":null,
+            "created_at":"2024-08-01T15:20:09.609644+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:20:09.621798+00:00",
+            "pathway_info":{
+               "Variables being extracted":{
+                  "applianceBrand":{
+                     "type":"string",
+                     "description":"the brand name of the appliance"
+                  }
+               }
+            }
+         },
+         {
+            "role":"user",
+            "text":"Cool.",
+            "decision":null,
+            "created_at":"2024-08-01T15:20:11.270293+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:20:11.285872+00:00",
+            "pathway_info":{
+               "Variables being extracted":{
+                  "applianceBrand":{
+                     "type":"string",
+                     "description":"the brand name of the appliance"
+                  }
+               }
+            }
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:20:12.54024+00:00",
+            "pathway_info":{
+               "Extracted Variables":{
+                  "applianceBrand":"Samsung"
+               }
+            }
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:20:12.715986+00:00",
+            "pathway_info":{
+               "Extracted Variables":{
+                  "applianceBrand":"Samsung"
+               }
+            }
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:20:13.12787+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":"assistant",
+            "text":"nn- It sounds like your Samsung washer is not functioning correctly. Can you tell me what's happening with it? What symptoms or problems are you experiencing?",
+            "decision":null,
+            "created_at":"2024-08-01T15:20:13.710701+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":{
+               "Condition Achieved":true,
+               "Chosen Pathway":"user confirmed the appliance brand",
+               "Current Node Prompt/Text":"Ask the user what symptoms or problems they are suffering from their appliance. Ask them if theyve provided all symptoms when they finish.",
+               "Current Node Name":"Appliance Symptoms",
+               "Previous Node Name":"Appliance Brand Extraction",
+               "Current Node ID":"d4a68084-c43b-427f-a076-16461f836200",
+               "Previous Node ID":"a920a464-ffc7-47ac-b931-7339185e72ec",
+               "Conversation History":[
+                  {
+                     "role":"user",
+                     "content":"<Call Connected>"
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Hi, this is Linda with Appliance Repair American. Before we get started can I get your name?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"[extended silence, may not be present or have heard you]"
+                  },
+                  {
+                     "role":"user",
+                     "content":"It's Jacob."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Hi, this is Linda with Appliance Repair American. Before we get started can I get your name?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"My name is Jacob."
+                  },
+                  {
+                     "role":"user",
+                     "content":"My name is Jacob."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Jacob, can you hear me okay?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"Yep."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Jacob, I'm going to need some information about the appliance that's not working properly. Can you tell me what kind of machine is giving you trouble?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"I have a Samsung washer, and it"
+                  },
+                  {
+                     "role":"user",
+                     "content":"Cool."
+                  }
+               ],
+               "Assistant Response":"nn- It sounds like your Samsung washer is not functioning correctly. Can you tell me what's happening with it? What symptoms or problems are you experiencing?"
+            },
+            "created_at":"2024-08-01T15:20:13.714914+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:20:25.392146+00:00",
+            "pathway_info":{
+               "Variables being extracted":{
+                  "applianceSymptoms":{
+                     "type":"string",
+                     "description":"The total list of symptoms given by the user"
+                  }
+               }
+            }
+         },
+         {
+            "role":"user",
+            "text":"It's getting out of balance on the spin cycle.",
+            "decision":null,
+            "created_at":"2024-08-01T15:20:25.395767+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:20:26.534266+00:00",
+            "pathway_info":{
+               "Extracted Variables":{
+                  "applianceSymptoms":"Getting out of balance on the spin cycle"
+               }
+            }
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":{
+               "Condition Achieved":true,
+               "Chosen Pathway":"User confirmed they provided all symptoms",
+               "Current Node Prompt/Text":"This should be enough information about your issue to send to our technicians. Would you still like me to forward your information to a technician so he can discuss this with you?",
+               "Current Node Name":"Would You Like to Schedule and Appointment?",
+               "Previous Node Name":"Appliance Symptoms",
+               "Current Node ID":"94234db3-3b12-465c-81fa-b6452dbcafef",
+               "Previous Node ID":"d4a68084-c43b-427f-a076-16461f836200",
+               "Conversation History":[
+                  {
+                     "role":"user",
+                     "content":"<Call Connected>"
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Hi, this is Linda with Appliance Repair American. Before we get started can I get your name?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"[extended silence, may not be present or have heard you]"
+                  },
+                  {
+                     "role":"user",
+                     "content":"It's Jacob."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Hi, this is Linda with Appliance Repair American. Before we get started can I get your name?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"My name is Jacob."
+                  },
+                  {
+                     "role":"user",
+                     "content":"My name is Jacob."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Jacob, can you hear me okay?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"Yep."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Jacob, I'm going to need some information about the appliance that's not working properly. Can you tell me what kind of machine is giving you trouble?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"I have a Samsung washer, and it"
+                  },
+                  {
+                     "role":"user",
+                     "content":"Cool."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"- It sounds like your Samsung washer is not functioning correctly. Can you tell me what's happening with it? What symptoms or problems are you experiencing?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"It's getting out of balance on the spin cycle."
+                  }
+               ],
+               "Assistant Response":"This should be enough information about your issue to send to our technicians. Would you still like me to forward your information to a technician so he can discuss this with you?"
+            },
+            "created_at":"2024-08-01T15:20:26.85044+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":"assistant",
+            "text":"This should be enough information about your issue to send to our technicians. Would you still like me to forward your information to a technician so he can discuss this with you?",
+            "decision":null,
+            "created_at":"2024-08-01T15:20:26.851728+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:20:26.854682+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":"user",
+            "text":"Yes.",
+            "decision":null,
+            "created_at":"2024-08-01T15:20:39.219211+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:20:39.655184+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":"assistant",
+            "text":"nnBefore I do that, just to confirm, is Jacob the correct name to use when our technician reaches out to you?",
+            "decision":null,
+            "created_at":"2024-08-01T15:20:40.159039+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":{
+               "Condition Achieved":true,
+               "Chosen Pathway":"User responded with an affirmative answer",
+               "Current Node Prompt/Text":"Ask the user if {clientName} is the correct name to use",
+               "Current Node Name":"Confirm Name",
+               "Previous Node Name":"Would You Like to Schedule and Appointment?",
+               "Current Node ID":"0791cde7-b2fd-4f63-94d9-fa8ca12ecdb6",
+               "Previous Node ID":"94234db3-3b12-465c-81fa-b6452dbcafef",
+               "Conversation History":[
+                  {
+                     "role":"user",
+                     "content":"<Call Connected>"
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Hi, this is Linda with Appliance Repair American. Before we get started can I get your name?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"[extended silence, may not be present or have heard you]"
+                  },
+                  {
+                     "role":"user",
+                     "content":"It's Jacob."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Hi, this is Linda with Appliance Repair American. Before we get started can I get your name?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"My name is Jacob."
+                  },
+                  {
+                     "role":"user",
+                     "content":"My name is Jacob."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Jacob, can you hear me okay?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"Yep."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Jacob, I'm going to need some information about the appliance that's not working properly. Can you tell me what kind of machine is giving you trouble?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"I have a Samsung washer, and it"
+                  },
+                  {
+                     "role":"user",
+                     "content":"Cool."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"- It sounds like your Samsung washer is not functioning correctly. Can you tell me what's happening with it? What symptoms or problems are you experiencing?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"It's getting out of balance on the spin cycle."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"This should be enough information about your issue to send to our technicians. Would you still like me to forward your information to a technician so he can discuss this with you?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"Yes."
+                  }
+               ],
+               "Assistant Response":"nnBefore I do that, just to confirm, is Jacob the correct name to use when our technician reaches out to you?"
+            },
+            "created_at":"2024-08-01T15:20:40.16286+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":"user",
+            "text":"Yes.",
+            "decision":null,
+            "created_at":"2024-08-01T15:20:47.577963+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:20:47.884126+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":"assistant",
+            "text":"nnI also need to confirm your phone number to ensure our technician can reach you. Can you please provide me with your phone number?",
+            "decision":null,
+            "created_at":"2024-08-01T15:20:48.400367+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":{
+               "Condition Achieved":true,
+               "Chosen Pathway":"User said yes",
+               "Current Node Prompt/Text":"Ask the user for the phone number. Confirm the number with them before proceeding.",
+               "Current Node Name":"Get Phone Number",
+               "Previous Node Name":"Confirm Name",
+               "Current Node ID":"0cd526b6-74d8-41c9-bd5b-ab37a2191fb6",
+               "Previous Node ID":"0791cde7-b2fd-4f63-94d9-fa8ca12ecdb6",
+               "Conversation History":[
+                  {
+                     "role":"user",
+                     "content":"<Call Connected>"
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Hi, this is Linda with Appliance Repair American. Before we get started can I get your name?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"[extended silence, may not be present or have heard you]"
+                  },
+                  {
+                     "role":"user",
+                     "content":"It's Jacob."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Hi, this is Linda with Appliance Repair American. Before we get started can I get your name?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"My name is Jacob."
+                  },
+                  {
+                     "role":"user",
+                     "content":"My name is Jacob."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Jacob, can you hear me okay?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"Yep."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Jacob, I'm going to need some information about the appliance that's not working properly. Can you tell me what kind of machine is giving you trouble?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"I have a Samsung washer, and it"
+                  },
+                  {
+                     "role":"user",
+                     "content":"Cool."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"- It sounds like your Samsung washer is not functioning correctly. Can you tell me what's happening with it? What symptoms or problems are you experiencing?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"It's getting out of balance on the spin cycle."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"This should be enough information about your issue to send to our technicians. Would you still like me to forward your information to a technician so he can discuss this with you?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"Yes."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Before I do that, just to confirm, is Jacob the correct name to use when our technician reaches out to you?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"Yes."
+                  }
+               ],
+               "Assistant Response":"nnI also need to confirm your phone number to ensure our technician can reach you. Can you please provide me with your phone number?"
+            },
+            "created_at":"2024-08-01T15:20:48.407363+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":"user",
+            "text":"7729132268.",
+            "decision":null,
+            "created_at":"2024-08-01T15:21:01.269623+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:21:01.275099+00:00",
+            "pathway_info":{
+               "Variables being extracted":{
+                  "clientNumber":{
+                     "type":"string",
+                     "description":"Phone number provided by the client (Should be 10 digits)"
+                  }
+               }
+            }
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:21:03.854489+00:00",
+            "pathway_info":{
+               "Extracted Variables":{
+                  "clientNumber":"7729132268"
+               }
+            }
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:21:04.259322+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":{
+               "Condition Achieved":true,
+               "Chosen Pathway":"user provided a 10 digit phone number",
+               "Current Node Prompt/Text":"Ask the user what their home address is.",
+               "Current Node Name":"Get Address",
+               "Previous Node Name":"Get Phone Number",
+               "Current Node ID":"d07574c5-7f31-4a61-b986-41ad215f9e69",
+               "Previous Node ID":"0cd526b6-74d8-41c9-bd5b-ab37a2191fb6",
+               "Conversation History":[
+                  {
+                     "role":"user",
+                     "content":"<Call Connected>"
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Hi, this is Linda with Appliance Repair American. Before we get started can I get your name?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"[extended silence, may not be present or have heard you]"
+                  },
+                  {
+                     "role":"user",
+                     "content":"It's Jacob."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Hi, this is Linda with Appliance Repair American. Before we get started can I get your name?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"My name is Jacob."
+                  },
+                  {
+                     "role":"user",
+                     "content":"My name is Jacob."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Jacob, can you hear me okay?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"Yep."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Jacob, I'm going to need some information about the appliance that's not working properly. Can you tell me what kind of machine is giving you trouble?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"I have a Samsung washer, and it"
+                  },
+                  {
+                     "role":"user",
+                     "content":"Cool."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"- It sounds like your Samsung washer is not functioning correctly. Can you tell me what's happening with it? What symptoms or problems are you experiencing?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"It's getting out of balance on the spin cycle."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"This should be enough information about your issue to send to our technicians. Would you still like me to forward your information to a technician so he can discuss this with you?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"Yes."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Before I do that, just to confirm, is Jacob the correct name to use when our technician reaches out to you?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"Yes."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"I also need to confirm your phone number to ensure our technician can reach you. Can you please provide me with your phone number?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"7729132268."
+                  }
+               ],
+               "Assistant Response":"nnI also need to get your home address so our technician can schedule a visit if needed. Can you please provide me with your home address?"
+            },
+            "created_at":"2024-08-01T15:21:04.838649+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":"assistant",
+            "text":"nnI also need to get your home address so our technician can schedule a visit if needed. Can you please provide me with your home address?",
+            "decision":null,
+            "created_at":"2024-08-01T15:21:04.845192+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":"user",
+            "text":"Hello?",
+            "decision":null,
+            "created_at":"2024-08-01T15:21:48.559654+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:21:48.571355+00:00",
+            "pathway_info":{
+               "Variables being extracted":{
+                  "clientAddress":{
+                     "type":"string",
+                     "description":"address provided by the client"
+                  }
+               }
+            }
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:21:50.249757+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:21:50.251543+00:00",
+            "pathway_info":{
+               "Extracted Variables":{
+                  "clientAddress":null
+               }
+            }
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":null,
+            "created_at":"2024-08-01T15:21:50.731925+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":"assistant",
+            "text":"nn<Wait>.",
+            "decision":null,
+            "created_at":"2024-08-01T15:21:50.941934+00:00",
+            "pathway_info":null
+         },
+         {
+            "role":null,
+            "text":null,
+            "decision":{
+               "Condition Achieved":true,
+               "Chosen Pathway":"user provided a 10 digit phone number",
+               "Current Node Prompt/Text":"Ask the user what their home address is.",
+               "Current Node Name":"Get Address",
+               "Previous Node Name":"Get Phone Number",
+               "Current Node ID":"d07574c5-7f31-4a61-b986-41ad215f9e69",
+               "Previous Node ID":"0cd526b6-74d8-41c9-bd5b-ab37a2191fb6",
+               "Conversation History":[
+                  {
+                     "role":"user",
+                     "content":"<Call Connected>"
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Hi, this is Linda with Appliance Repair American. Before we get started can I get your name?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"[extended silence, may not be present or have heard you]"
+                  },
+                  {
+                     "role":"user",
+                     "content":"It's Jacob."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Hi, this is Linda with Appliance Repair American. Before we get started can I get your name?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"My name is Jacob."
+                  },
+                  {
+                     "role":"user",
+                     "content":"My name is Jacob."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Jacob, can you hear me okay?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"Yep."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Jacob, I'm going to need some information about the appliance that's not working properly. Can you tell me what kind of machine is giving you trouble?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"I have a Samsung washer, and it"
+                  },
+                  {
+                     "role":"user",
+                     "content":"Cool."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"- It sounds like your Samsung washer is not functioning correctly. Can you tell me what's happening with it? What symptoms or problems are you experiencing?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"It's getting out of balance on the spin cycle."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"This should be enough information about your issue to send to our technicians. Would you still like me to forward your information to a technician so he can discuss this with you?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"Yes."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"Before I do that, just to confirm, is Jacob the correct name to use when our technician reaches out to you?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"Yes."
+                  },
+                  {
+                     "role":"assistant",
+                     "content":"I also need to confirm your phone number to ensure our technician can reach you. Can you please provide me with your phone number?"
+                  },
+                  {
+                     "role":"user",
+                     "content":"7729132268."
+                  },
+                  {
+                     "role":"user",
+                     "content":"Hello?"
+                  }
+               ],
+               "Assistant Response":"nn<Wait>."
+            },
+            "created_at":"2024-08-01T15:21:50.946598+00:00",
+            "pathway_info":null
+         }
+      ],
+      "analysis_schema":null,
+      "analysis":null,
+      "transferred_to":null,
+      "concatenated_transcript":"assistant: Hi, this is Linda with Appliance Repair American. Before we get started can I get your name? n user: It's Jacob. n assistant: Hi, this is Linda with Appliance Repair American. Befor- n assistant: Hi, this is Linda with Appliance Repair American. Before we get started can I get your name? n user: My name is Jacob. n user: My name is Jacob. n assistant: Jacob, t- n assistant: Jacob, can you hear me okay? n user: Yep. n assistant: Jacob, I'm going to need some information about the appliance that's not working properly. Can you tell me what kind of machine is giving you trouble? n user: I have a Samsung washer, and it n user: Cool. n assistant: - It sounds like your Samsung washer is not functioning correctly. Can you tell me what's happening with it? What symptoms or problems are you experiencing? n user: It's getting out of balance on the spin cycle. n assistant: This should be enough information about your issue to send to our technicians. Would you still like me to forward your information to a technician so he can discuss this with you? n user: Yes. n assistant: Before I do that, just to confirm, is Jacob the correct name to use when our technician reaches out to you? n user: Yes. n assistant: I also need to confirm your phone number to ensure our technician can reach you. Can you please provide me with your phone number? n user: 7729132268. n user: Hello? n ",
+      "transcripts":[
+         {
+            "id":22009957,
+            "user":"assistant",
+            "text":"Hi, this is Linda with Appliance Repair American. Before we get started can I get your name?",
+            "created_at":"2024-08-01T15:19:21.817326+00:00"
+         },
+         {
+            "id":22009986,
+            "user":"user",
+            "text":"It's Jacob.",
+            "created_at":"2024-08-01T15:19:33.561531+00:00"
+         },
+         {
+            "id":22009987,
+            "user":"assistant",
+            "text":"Hi, this is Linda with Appliance Repair American. Befor-",
+            "created_at":"2024-08-01T15:19:33.619884+00:00"
+         },
+         {
+            "id":22010010,
+            "user":"assistant",
+            "text":"Hi, this is Linda with Appliance Repair American. Before we get started can I get your name?",
+            "created_at":"2024-08-01T15:19:39.579316+00:00"
+         },
+         {
+            "id":22010024,
+            "user":"user",
+            "text":"My name is Jacob.",
+            "created_at":"2024-08-01T15:19:43.436711+00:00"
+         },
+         {
+            "id":22010043,
+            "user":"user",
+            "text":"My name is Jacob.",
+            "created_at":"2024-08-01T15:19:47.618454+00:00"
+         },
+         {
+            "id":22010044,
+            "user":"assistant",
+            "text":"Jacob, t-",
+            "created_at":"2024-08-01T15:19:47.672779+00:00"
+         },
+         {
+            "id":22010056,
+            "user":"assistant",
+            "text":"Jacob, can you hear me okay?",
+            "created_at":"2024-08-01T15:19:51.505864+00:00"
+         },
+         {
+            "id":22010089,
+            "user":"user",
+            "text":"Yep.",
+            "created_at":"2024-08-01T15:19:56.53618+00:00"
+         },
+         {
+            "id":22010119,
+            "user":"assistant",
+            "text":"Jacob, I'm going to need some information about the appliance that's not working properly. Can you tell me what kind of machine is giving you trouble?",
+            "created_at":"2024-08-01T15:20:03.329272+00:00"
+         },
+         {
+            "id":22010138,
+            "user":"user",
+            "text":"I have a Samsung washer, and it",
+            "created_at":"2024-08-01T15:20:09.61042+00:00"
+         },
+         {
+            "id":22010147,
+            "user":"user",
+            "text":"Cool.",
+            "created_at":"2024-08-01T15:20:11.292696+00:00"
+         },
+         {
+            "id":22010167,
+            "user":"assistant",
+            "text":"- It sounds like your Samsung washer is not functioning correctly. Can you tell me what's happening with it? What symptoms or problems are you experiencing?",
+            "created_at":"2024-08-01T15:20:17.133696+00:00"
+         },
+         {
+            "id":22010199,
+            "user":"user",
+            "text":"It's getting out of balance on the spin cycle.",
+            "created_at":"2024-08-01T15:20:25.393534+00:00"
+         },
+         {
+            "id":22010242,
+            "user":"assistant",
+            "text":"This should be enough information about your issue to send to our technicians. Would you still like me to forward your information to a technician so he can discuss this with you?",
+            "created_at":"2024-08-01T15:20:35.176177+00:00"
+         },
+         {
+            "id":22010261,
+            "user":"user",
+            "text":"Yes.",
+            "created_at":"2024-08-01T15:20:39.203589+00:00"
+         },
+         {
+            "id":22010292,
+            "user":"assistant",
+            "text":"Before I do that, just to confirm, is Jacob the correct name to use when our technician reaches out to you?",
+            "created_at":"2024-08-01T15:20:45.71766+00:00"
+         },
+         {
+            "id":22010300,
+            "user":"user",
+            "text":"Yes.",
+            "created_at":"2024-08-01T15:20:47.576841+00:00"
+         },
+         {
+            "id":22010318,
+            "user":"assistant",
+            "text":"I also need to confirm your phone number to ensure our technician can reach you. Can you please provide me with your phone number?",
+            "created_at":"2024-08-01T15:20:52.816661+00:00"
+         },
+         {
+            "id":22010365,
+            "user":"user",
+            "text":"7729132268.",
+            "created_at":"2024-08-01T15:21:01.268146+00:00"
+         },
+         {
+            "id":22010514,
+            "user":"user",
+            "text":"Hello?",
+            "created_at":"2024-08-01T15:21:48.561517+00:00"
+         }
+      ],
+      "status":"completed",
+      "corrected_duration":"163",
+      "end_at":"2024-08-01T15:21:57.000Z"
+   }

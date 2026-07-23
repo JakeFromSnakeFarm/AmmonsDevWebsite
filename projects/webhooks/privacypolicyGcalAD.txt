@@ -1,0 +1,21 @@
+Privacy Policy for AmmonsDev GCal API
+
+Effective Date: 9/12/2024
+
+This Privacy Policy describes how AmmonsDev GCal API ("the App") handles data access and processing when accessing the personal Google Calendar of the sole user, the owner of the domain ammons.dev.
+
+1. Introduction
+AmmonsDev GCal API is a private application created and maintained by the owner of ammons.dev. The App is designed solely for personal use to access and interact with the owner's Google Calendar for specific purposes defined by the owner. This App does not collect, store, or process any data from external users.
+
+2. Data Access and Usage
+The App accesses the owner's Google Calendar to provide responses when pinged, similar to an API. This access is limited to reading the calendar events as necessary to fulfill the App's defined purpose.
+No data from the Google Calendar is stored, shared, or processed beyond what is required for the App’s functionality.
+3. Data Security
+The App runs on a domain fully owned and controlled by the owner. Security measures are in place to ensure that only the owner has access to the App and its functionalities.
+The App does not collect any personal data, and there is no storage of calendar data on external servers. All data access is performed securely via the Google Calendar API with appropriate authentication.
+4. Third-Party Access
+No third parties have access to the App or the data accessed by the App. All operations are confined to the owner’s environment, and no data is shared with external entities.
+5. Changes to This Privacy Policy
+Since this App is for personal use only, any changes to this Privacy Policy will be made at the sole discretion of the owner. The updated Privacy Policy will be available on ammons.dev.
+6. Contact Information
+If you have any questions or concerns about this Privacy Policy, please contact the owner at jammons1@gmail.com.
