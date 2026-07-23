@@ -1,0 +1,33 @@
+<html>
+<link rel="stylesheet" href="./fractalStyle.css">
+<canvas id='can'></canvas>
+<input type="range" min="1" max="8" value="1" id="slider" class="slider">
+<script>
+  const c=document.getElementById("can"), ctx= c.getContext("2d");
+  c.width = window.innerHeight;
+  c.height = window.innerHeight,
+  sLength = c.width;
+  drawTSquare(1)
+  slider.oninput = function() {
+    drawTSquare(slider.value)
+  }
+  function drawTSquare(steps) {
+    ctx.fillStyle = "black"
+    ctx.fillRect(0,0,sLength,sLength)
+    ctx.fillStyle = "rgb(255,255,255)"
+    ctx.fillRect(sLength/4,sLength/4,sLength/2,sLength/2)
+    for(let i=1;i<=steps;++i) {
+      let size = (sLength/2)*Math.pow(1/2, i)
+      let divisor  = Math.pow(2,i+1);
+      for(let j=1;j<=(steps*200)+1;j+=2) {
+        ctx.fillRect((j*sLength/divisor)-size/2,(sLength/divisor)-size/2,size,size)
+        ctx.fillRect((j*sLength/divisor)-size/2,(3*sLength/divisor)-size/2,size,size)
+        for(let h=0;h<=700;h+=2) {
+          ctx.fillRect((j*sLength/divisor)-size/2,(((5+h)*sLength)/divisor)-size/2,size,size)
+          ctx.fillRect((j*sLength/divisor)-size/2,(((7+h)*sLength)/divisor)-size/2,size,size)
+        }
+      }
+    }
+  }
+</script>
+</html>

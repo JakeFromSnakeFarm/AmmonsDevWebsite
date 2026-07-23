@@ -1,0 +1,20 @@
+[12-Apr-2025 13:35:13 UTC] PHP Fatal error:  Uncaught Google\Service\Exception: {
+ "error": {
+  "errors": [
+   {
+    "domain": "global",
+    "reason": "badRequest",
+    "message": "Bad Request"
+   }
+  ],
+  "code": 400,
+  "message": "Bad Request"
+ }
+}
+ in /home/ammonsdev/public_html/projects/webhooks/vendor/google/apiclient/src/Http/REST.php:134
+Stack trace:
+#0 /home/ammonsdev/public_html/projects/webhooks/vendor/google/apiclient/src/Http/REST.php(107): Google\Http\REST::decodeHttpResponse(Object(GuzzleHttp\Psr7\Response), Object(GuzzleHttp\Psr7\Request), 'Google\\Service\\...')
+#1 [internal function]: Google\Http\REST::doExecute(Object(GuzzleHttp\Client), Object(GuzzleHttp\Psr7\Request), 'Google\\Service\\...')
+#2 /home/ammonsdev/public_html/projects/webhooks/vendor/google/apiclient/src/Task/Runner.php(187): call_user_func_array(Array, Array)
+#3 /home/ammonsdev/public_html/projects/webhooks/vendor/google/apiclient/src/Http/REST.php(66): Google\Task\Runner->run()
+#4 /home/ammonsdev/public_html/projects/webhooks/vendor/google/apiclient/src/Client.php(922) in /home/ammonsdev/public_html/projects/webhooks/vendor/google/apiclient/src/Http/REST.php on line 134

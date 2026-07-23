@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Discord Embed Bot</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        html {
+            background-color: #eee;
+        }
+        body {
+            max-width: 1200px;
+            margin: auto;
+            font-size: 1.5em;
+        }
+
+        code {
+            background-color: #ddd;
+            padding: 20px;
+            display: block;
+            word-break: break-word;
+        }
+
+        i {
+            all: unset;
+            color: red;
+        }
+        b {
+            all: unset;
+            color: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="intro">
+        <h1>The Problem</h1>
+        <p>Links from the social media site ifunny.co dont auto embed within discord (a chromium based app). When sharing links to videos it is inconvenient to be redirected to your browser on PC or be forced into a different screen/app on mobile just to view them.</p>
+        <h1>The Solution</h1>
+        <p>Just because ifunny.co doesnt have embed handling for link sharing doesnt stop us from man handling the data for ourselves from their CDN. Hidden inside the data returned from the HTTPS request to ifunny.co is an .mp4 file we can sniff and scrape out.</p>
+    </div>
+    <div class="explain">
+        <div class="point">
+            <h2>Inspecting the data</h2>
+            <p>Ifunny doesnt give us any APIs to work with to efficiently retrieve data, so we have to work with the source HTML given through the HTTPS request. Lets take a look at the &#60video&#62 tag to see what hints we can find.</p>
+            <!-- IMG -->
+            <img src="./assets/datai.png">
+            <p>This looks like visual garbage. Our mp4 is inside the video tag though. The HTML data can be treated as a giant string, and we can search for .mp4. This yields ~5 results per page, some of which are bogus. This isnt a consistent enough approach for me and would require some if/else logic. Luckily this data-src attribute (possibly used for lazy loading) is the only occurence on the page and contains our proper data. This allows us to do only 1 search, and no conditional logic.</p>
+            <h2>Scraping the data</h2>
+            <p>
+                Since we know what were looking for we can use the JS String.search() function to find our substring.<br>
+                <code>
+                    <b>let</b> index <i>=</i> data.<b>search</b>("data-src=");
+                </code><br>
+                <code>
+                    //data-src="https://img.ifunny.co/videos/ec20...e46b664c3499d820_1.mp4"<br><br>
+                <i>for</i> (index <i>+=</i> 10; index < data.length; index<i>++</i>) {<br>
+                &nbsp&nbsp&nbsp&nbspif (data[index] <i>!=</i> "<i>\"</i>")<br>
+                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsptempstr <i>+=</i> data[index];<br>
+                &nbsp&nbsp&nbsp&nbspelse<br>
+                    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp break;<br>
+            }
+                </code>
+            </p>
+            <h2>Sending the link</h2>
+            <p>DiscordJS makes this easy, we can pass our link data with the original message object. We can use our message object data to reply with our scraped link in the same channel.<br>
+                <code>
+                    message.channel.<b>send</b> ("" <i>+</i> string);
+                </code></p><br>
+                The final product is 39 lines of a simple, but effective code. Software doesnt *have* to be complicated, it just has to serve its purpose.<br>
+            <code>
+                const { Client, Intents } <i>=</i> require("discord.js");<br>
+const client <i>=</i> new Client({<br>
+    &nbsp&nbsp&nbsp&nbspintents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],<br>
+});<br>
+const request <i>=</i> require("request");<br>
+const ifunnyLink <i>=</i> "https://ifunny.co/video";<br>
+
+client.<b>once</b>("ready", () => {<br>
+    &nbsp&nbsp&nbsp&nbsp<b>console.log</b>("Discord bot operational");<br>
+});<br>
+client.on("message", message => {<br>
+    &nbsp&nbsp&nbsp&nbsp<i>if</i> (<i>!</i>message.content.<b>startsWith</b>(ifunnyLink) <i>||</i> message.author.bot) return;<br>
+    &nbsp&nbsp&nbsp&nbsp<b>queryAndSend</b>("" + message.content, message);<br>
+});<br>
+client.<b>login</b>("Super Secret Key");<br>
+
+<b>function</b> queryAndSend(link, message) {<br>
+    &nbsp&nbsp&nbsp&nbsplet tempstr <i>=</i> "";<br>
+    &nbsp&nbsp&nbsp&nbsprequest(<br>
+        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp`` <i>+</i> link,<br>
+        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp(err, response, body) => {<br>
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsplet data <i>=</i> body;<br>
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspdataLength <i>=</i> data.length;<br>
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsplet index <i>=</i> data.<b>search</b>("data-src=");<br>
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<i>for</i> (let i <i>=</i> index <i>+</i> 10; i < data.length; i<i>++</i>) {<br>
+                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspif (data[i] <i>!=</i> "<i>\"</i>")<br>
+                    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsptempstr <i>+=</i> data[i];<br>
+                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspelse<br>
+                    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp break;<br>
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp}<br>
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<b>sendMessage</b>(tempstr, message);<br>
+        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp}<br>
+    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp);<br>
+}<br>
+
+<b>function</b> sendMessage(string, message) {<br>
+    &nbsp&nbsp&nbsp&nbspmessage.channel.<b>send</b> ("" <i>+</i> string);<br>
+}
+            </code>
+        </div>
+    </div>
+    <div class=""></div>
+</body>
+
+</html>

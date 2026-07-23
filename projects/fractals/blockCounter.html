@@ -1,0 +1,133 @@
+<html>
+<style>
+body, html {
+    margin:8px;
+    padding: 0px;
+}
+</style>
+<canvas id="can" style="border: 5px solid orange"></canvas>
+<img id="img" src="https://marinestars.net/jake/algorithms/fractals/gifs/dlrOne.png" width="0" height="0"></img>
+<input type="range" min="100" max="800" value="800" step="100" id="slider"></input>
+<!-- <input type="range" min="1" max="8" value="1" id="slider2" class="slider"> -->
+<script>
+const c = document.getElementById("can"),
+  ctx = c.getContext("2d");
+  c.width = 800;
+  c.height = 800,
+  sLength = 800;
+  slider = document.getElementById("slider");
+    var image = document.getElementById("img");
+  // sliderTwo = document.getElementById("slider2");
+//   slider.oninput = function() {
+//   sLength = slider.value;
+//   ctx.fillStyle = "white";
+//   ctx.fillRect(0,0,c.width,c.height)
+//   drawTSquare(sliderTwo.value);
+//   countTiles(255,0,0)
+// }
+// sliderTwo.oninput = function() {
+//   ctx.fillStyle = "white";
+//   ctx.fillRect(0,0,c.width,c.height)
+//   drawTSquare(sliderTwo.value)
+//   //countTiles(255,0,0)
+// }
+//pineapple
+//507353 800
+//606081 400
+//631788 200
+//565639 600
+slider.oninput = function() {
+  sLength = slider.value
+ctx.fillStyle = "rgb(255,255,255)"
+ctx.fillRect(0,0,c.width,c.height)
+ctx.drawImage(image,0,0,663,653,0,0,sLength,sLength)
+countTiles(255,0,0);
+}
+// var image = document.getElementById("img");
+// image.onload = function() {
+// ctx.fillStyle = "rgb(255,255,255)"
+// ctx.fillRect(0,0,c.width,c.height)
+// ctx.drawImage(image,0,0,288,360,0,0,sLength,sLength)
+// countTiles(0,0,0);
+// }
+
+
+function drawTSquare(steps) {
+  ctx.fillStyle = "rgb(255,0,0)"
+  ctx.fillRect(0,0,sLength,sLength)
+  ctx.fillStyle = "rgb(255,255,255)"
+  ctx.fillRect(sLength/4,sLength/4,sLength/2,sLength/2)
+  for(let i=1;i<=steps;++i) {
+    let size = (sLength/2)*Math.pow(1/2, i)
+    let divisor  = Math.pow(2,i+1);
+    for(let j=1;j<=(steps*400)+1;j+=2) {
+      ctx.fillRect((j*sLength/divisor)-size/2,(sLength/divisor)-size/2,size,size)
+      ctx.fillRect((j*sLength/divisor)-size/2,(3*sLength/divisor)-size/2,size,size)
+      for(let h=0;h<=1000;h+=2) {
+        ctx.fillRect((j*sLength/divisor)-size/2,(((5+h)*sLength)/divisor)-size/2,size,size)
+        ctx.fillRect((j*sLength/divisor)-size/2,(((7+h)*sLength)/divisor)-size/2,size,size)
+      }
+    }
+  }
+}
+function drawTSquaret(steps) {
+  let divisors = [2,4,8,16,32,64,128,256]
+  ctx.fillStyle = "rgb(0,0,0)"
+  ctx.fillRect(0,0,sLength,sLength)
+  ctx.fillStyle = "rgb(255,255,255)"
+  ctx.fillRect(sLength/4,sLength/4,sLength/2,sLength/2)
+  for(let k=1;k<=steps;k++) {
+    let size = (sLength/2)*Math.pow(1/2, k)
+  for(let i=0;i<=sLength;++i) {
+    for(let j=0;j<sLength;j++) {
+      ctx.fillRect((sLength*j/divisors[k-1])-size/2,(sLength/divisors[k-1])-size/2,size,size)
+      // ctx.fillRect((sLength/divisors[k])-size/2,(sLength/divisors[k])*j-size/2,size,size)
+      //ctx.fillRect((j*sLength/divisor)-size/2,(3*sLength/divisor)-size/2,size,size)
+    }
+  }
+}
+}
+function drawSquareCurve(steps) {
+  let divisors = [2,4,8,16,32,64,128,256]
+  ctx.fillStyle = "rgb(0,0,0)"
+  ctx.fillRect(0,0,sLength,sLength)
+  ctx.fillStyle = "rgb(255,255,255)"
+  ctx.fillRect(sLength/4,sLength/4,sLength/2,sLength/2)
+  for(let k=1;k<=steps;k++) {
+    let size = (sLength/2)*Math.pow(1/2, k)
+  for(let i=0;i<=sLength;++i) {
+    for(let j=0;j<sLength;j++) {
+      ctx.fillRect((sLength/divisors[k-1])*i-size/2,(sLength/divisors[k-1])*j-size/2,size,size)
+    }
+  }
+}
+}
+function drawCarpet(steps) {
+    ctx.fillStyle = "rgb(0,255,0)";
+    ctx.fillRect(0, 0, sLength, sLength);
+    for (let i = 1; i < steps; ++i) {
+      ctx.fillStyle = "rgb(255,0,0)"
+      let s = Math.pow(1 / 3, steps-i),
+        squareS = sLength * s;
+      for (let j = 1; j < Math.pow(3, steps - 1); j += 3) {
+        for (let k = 1; k < Math.pow(3, steps - 1); k += 3)
+          ctx.fillRect(Math.round(squareS * j), Math.round(squareS * k), Math.round(squareS), Math.round(squareS));
+      }
+    }
+}
+function countTiles(check1,check2,check3) {
+  let count = 0;
+    for(let i=0;i<sLength;++i) {
+        for(let j=0;j<sLength;++j) {
+            let p = ctx.getImageData(i,j,1,1).data;
+            //if(p[0]!=0)console.log(p[0]+"  "+p[1]+"    "+p[2]+"    "+p[3])
+            if(p[0] >= check1-30 && p[1] <= check2+150 && p[2] <= check3+150) {
+                ++count;
+            }
+        }
+    }
+    console.log(count + " " + sLength)
+}
+
+</script>
+</html>

@@ -1,0 +1,38 @@
+<html>
+<link rel="stylesheet" href="./fractalStyle.css">
+<canvas id="can"></canvas>
+<input type="range" min="1" max="8" value="1" id="slider" class="slider">
+<script>
+  const c = document.getElementById("can"),
+  ctx = c.getContext("2d"), slider = document.getElementById("slider");
+  c.width = window.innerHeight;
+  c.height = window.innerHeight;
+  sLength = c.width;
+  drawSquareCurve(1)
+  slider.oninput = function() {
+    drawSquareCurve(slider.value)
+  }
+
+  function drawSquareCurve(steps) {
+    let divisors = [2,4,8,16,32,64,128,256]
+    ctx.fillStyle = "rgb(0,0,0)"
+    ctx.fillRect(0,0,sLength,sLength)
+    ctx.fillStyle = "rgb(255,255,255)"
+    ctx.fillRect(sLength/4,sLength/4,sLength/2,sLength/2)
+    for(let k=1;k<=steps;k++) {
+      let size = (sLength/2)*Math.pow(1/2, k)
+    for(let i=0;i<=sLength;++i) {
+        if((sLength/divisors[k-1])*i-size/2 >= sLength) {
+          break;
+        }
+      for(let j=0;j<sLength;j++) {
+        if((sLength/divisors[k-1])*j-size/2 >= sLength) {
+          break;
+        }
+        ctx.fillRect((sLength/divisors[k-1])*i-size/2,(sLength/divisors[k-1])*j-size/2,size,size)
+      }
+    }
+  }
+}
+</script>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech to Text</title>
+</head>
+<body>
+    <h1>Record Audio for Speech-to-Text</h1>
+    <button id="record">Record</button>
+    <button id="stop">Stop</button>
+    <p id="status">Status: Not recording</p>
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+
+        const recordButton = document.getElementById('record');
+        const stopButton = document.getElementById('stop');
+        const status = document.getElementById('status');
+
+        recordButton.addEventListener('click', async () => {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+
+            mediaRecorder.start();
+            status.innerText = "Status: Recording";
+
+            mediaRecorder.ondataavailable = (event) => {
+                audioChunks.push(event.data);
+            };
+        });
+
+        stopButton.addEventListener('click', () => {
+            mediaRecorder.stop();
+            status.innerText = "Status: Stopped";
+
+            mediaRecorder.onstop = () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                audioChunks = [];
+
+                // Send the audioBlob to the backend
+                const formData = new FormData();
+                formData.append('audio', audioBlob, 'audio.wav');
+
+                fetch('process_audio.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Transcription: ", data.transcription);
+                    speakText(data.transcription);
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+            };
+        });
+
+        function speakText(tts) {
+            const synth = window.speechSynthesis;
+            const text = tts;
+            const utterThis = new SpeechSynthesisUtterance(text);
+            synth.speak(utterThis);
+        }
+    </script>
+</body>
+</html>

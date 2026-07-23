@@ -1,0 +1,98 @@
+<html>
+<canvas id="can"></canvas>
+<script>
+var c = document.getElementById("can"),
+    ctx = c.getContext("2d"),
+    objarr = [],
+    structure = [],
+    setStruct = [],
+    maxDistFromBottom = 10,
+    objarrLength = 100;
+c.width = 800;
+c.height = 600;
+
+class object {
+    constructor(x, y) {
+        this.x = x
+        this.y = y
+        this.radius = 3;
+        this.diameter = this.radius * 2;
+        this.g = 0
+        this.b = 0
+    }
+    move() {
+        this.y++
+        this.g = this.y / 2.35;
+        this.b = this.g;
+        // if (Math.random() > 0.5) {
+        //     this.x++
+        // } else {
+        //     this.x--
+        // }
+    };
+    draw() {
+        ctx.fillStyle = "rgba(165," + this.g + ", " + this.b + ", 1)";
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+        ctx.fill();
+    }
+};
+
+function setup() {
+    // using i as the index populate objarr with new objects
+    for (let i = 0; i < objarrLength; i++) {
+        objarr.push(new object(Math.random() * c.width, Math.random() * 15));
+    }
+}
+setup();
+setInterval(function() { update() }, 1)
+//update();
+function update() {
+    for (let i = 0; i < 1; i++) {
+        //var t0 = performance.now();
+        ctx.fillStyle = "rgb(120,120,120)"
+        ctx.fillRect(0, 0, c.width, c.height)
+        if (maxDistFromBottom < 500)
+            for (let i = 0; i < objarrLength; i++) {
+                objarr[i].move()
+                let strucLength = structure.length;
+                if (c.height - objarr[i].y < maxDistFromBottom + 6)
+                    for (let k = 0; k < strucLength; k++) {
+
+                        if (Math.abs(Math.sqrt(Math.pow(objarr[i].x - structure[k].x, 2) + Math.pow(objarr[i].y - structure[k].y, 2))) <= objarr[i].diameter) {
+                            //if((Math.abs(objarr[i].x-structure[k].x)<objarr[i].diameter) && ((structure[k].y-objarr[i].y)<objarr[i].diameter)) {
+                            if (c.height - objarr[i].y > maxDistFromBottom) {
+                                maxDistFromBottom = c.height - objarr[i].y
+                            }
+                            structure[structure.length] = objarr.splice(i, 1)[0]
+                            if (structure.length > 1000) {
+                                setStruct[setStruct.length] = structure.splice(0, 1)[0];
+                            }
+                            objarr[objarr.length] = new object(Math.random() * c.width, Math.random() * 15)
+                            break;
+                        }
+                    }
+
+                if (objarr[i].y >= c.height - 3) {
+                    structure[structure.length] = objarr.splice(i, 1)[0]
+                    objarr[objarr.length] = new object(Math.random() * c.width, Math.random() * 15)
+                }
+
+
+                objarr[i].draw()
+            }
+
+        for (let i = 0; i < setStruct.length; i++) {
+            setStruct[i].draw();
+        }
+        for (let i = 0; i < structure.length; i++) {
+            structure[i].draw();
+        }
+        //var t1 = performance.now()
+        //console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.")
+        //window.requestAnimationFrame(update)  
+    }
+}
+</script>
+
+</html>

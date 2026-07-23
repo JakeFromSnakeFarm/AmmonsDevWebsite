@@ -1,0 +1,122 @@
+{
+  "call_id": "ded73fe8-9f45-4ac5-bba5-20e8888b19d0",
+  "call_length": 0.416666666666667,
+  "batch_id": null,
+  "to": "+17722526770",
+  "from": "+17729132268",
+  "completed": true,
+  "created_at": "2024-06-19T08:22:39.487808+00:00",
+  "inbound": true,
+  "queue_status": "complete",
+  "endpoint_url": "api.prod.bland.ai",
+  "max_duration": 30,
+  "error_message": null,
+  "variables": {
+    "now": "Wednesday, June 19, 2024 4:22 AM",
+    "now_utc": "Wednesday, June 19, 2024 8:22 AM",
+    "short_from": "7729132268",
+    "short_to": "7722526770",
+    "from": "+17729132268",
+    "to": "+17722526770",
+    "call_id": "ded73fe8-9f45-4ac5-bba5-20e8888b19d0",
+    "phone_number": "+17729132268",
+    "city": "SEBASTIAN",
+    "country": "US",
+    "state": "FL",
+    "zip": "32976",
+    "user_id": "a87948dd-6de3-40be-9764-8fcd0e454fae",
+    "timestamp": "2024-06-19T04:22:39-04:00",
+    "timezone": "America/New_York",
+    "callID": "ded73fe8-9f45-4ac5-bba5-20e8888b19d0"
+  },
+  "answered_by": null,
+  "record": false,
+  "recording_url": null,
+  "c_id": "ded73fe8-9f45-4ac5-bba5-20e8888b19d0",
+  "metadata": null,
+  "summary": "Here is a concise and insightful summary of the call:\n\nThe call was abruptly ended by the agent after the user revealed they have a stacked washing machine unit. The agent explained that they don't typically handle stacked units due to the labor-intensive nature of repairing them, and offered to forward the user to a human dispatcher in the future if needed.",
+  "price": 0.038,
+  "started_at": "2024-06-19T08:22:39+00:00",
+  "local_dialing": false,
+  "call_ended_by": "ASSISTANT",
+  "pathway_logs": [
+    {
+      "role": null,
+      "text": null,
+      "decision": null,
+      "created_at": "2024-06-19T08:22:39.54944+00:00",
+      "pathway_info": "{\"Current Variables\":{\"now\":\"Wednesday, June 19, 2024 4:22 AM\",\"now_utc\":\"Wednesday, June 19, 2024 8:22 AM\",\"short_from\":\"7729132268\",\"short_to\":\"7722526770\",\"from\":\"+17729132268\",\"to\":\"+17722526770\",\"call_id\":\"ded73fe8-9f45-4ac5-bba5-20e8888b19d0\",\"phone_number\":\"+17729132268\",\"city\":\"SEBASTIAN\",\"country\":\"US\",\"state\":\"FL\",\"zip\":\"32976\",\"user_id\":\"a87948dd-6de3-40be-9764-8fcd0e454fae\",\"timestamp\":\"2024-06-19T04:22:39-04:00\",\"timezone\":\"America/New_York\",\"callID\":\"ded73fe8-9f45-4ac5-bba5-20e8888b19d0\"}}"
+    },
+    {
+      "role": null,
+      "text": null,
+      "decision": null,
+      "created_at": "2024-06-19T08:22:39.550204+00:00",
+      "pathway_info": "{\"node\":\"Start\"}"
+    },
+    {
+      "role": "assistant",
+      "text": "Hey there, this is Appliance AI. Im here to help diagnose exclusively your washing machine currently.\nCould you please begin by telling me whether you have a stacked or non stacked unit?",
+      "decision": null,
+      "created_at": "2024-06-19T08:22:39.55057+00:00",
+      "pathway_info": null
+    },
+    {
+      "role": "user",
+      "text": "<Call Connected>",
+      "decision": null,
+      "created_at": "2024-06-19T08:22:39.555257+00:00",
+      "pathway_info": null
+    },
+    {
+      "role": "user",
+      "text": "I have a stacked unit.",
+      "decision": null,
+      "created_at": "2024-06-19T08:22:51.115869+00:00",
+      "pathway_info": null
+    },
+    {
+      "role": null,
+      "text": null,
+      "decision": "{\"Condition Achieved\":true,\"Chosen Pathway\":\"Stacked unit\",\"Current Node Prompt/Text\":\"Im sorry but we dont normally handle stacked units as the labor required to move these items around for repair is incredibly strenous. In the future I can forward you directly to a human dispatcher if you are in dire need.\",\"Current Node Name\":\"Stacked Unit\",\"Previous Node Name\":\"Start\",\"Current Node ID\":\"randomnode_1714657288270\",\"Previous Node ID\":\"1\",\"Conversation History\":[{\"role\":\"user\",\"content\":\"<Call Connected>\"},{\"role\":\"assistant\",\"content\":\"Hey there, this is Appliance AI. Im here to help diagnose exclusively your washing machine currently. Could you please begin by telling me whether you have a stacked or non stacked unit?\"},{\"role\":\"user\",\"content\":\"I have a stacked unit.\"}],\"Assistant Response\":\"Im sorry but we dont normally handle stacked units as the labor required to move these items around for repair is incredibly strenous. In the future I can forward you directly to a human dispatcher if you are in dire need.\"}",
+      "created_at": "2024-06-19T08:22:51.657132+00:00",
+      "pathway_info": null
+    },
+    {
+      "role": "assistant",
+      "text": "Im sorry but we dont normally handle stacked units as the labor required to move these items around for repair is incredibly strenous. In the future I can forward you directly to a human dispatcher if you are in dire need.",
+      "decision": null,
+      "created_at": "2024-06-19T08:22:51.65933+00:00",
+      "pathway_info": null
+    }
+  ],
+  "analysis_schema": null,
+  "analysis": null,
+  "transferred_to": null,
+  "concatenated_transcript": "assistant: Hey there, this is Appliance AI. Im here to help diagnose exclusively your washing machine currently. Could you please begin by telling me whether you have a stacked or non stacked unit? \n user: I have a stacked unit. \n agent-action: Ended call \n assistant: Im sorry but we dont normally handle stacked units as the labor required to move these items around for repair is incredibly strenous. In the future I can forward you directly to a human dispatcher if you are in dire need. \n ",
+  "transcripts": [
+    {
+      "user": "assistant",
+      "text": "Hey there, this is Appliance AI. Im here to help diagnose exclusively your washing machine currently. Could you please begin by telling me whether you have a stacked or non stacked unit?",
+      "created_at": "2024-06-19T08:22:48.482448+00:00"
+    },
+    {
+      "user": "user",
+      "text": "I have a stacked unit.",
+      "created_at": "2024-06-19T08:22:51.112314+00:00"
+    },
+    {
+      "user": "agent-action",
+      "text": "Ended call",
+      "created_at": "2024-06-19T08:23:04.197+00:00"
+    },
+    {
+      "user": "assistant",
+      "text": "Im sorry but we dont normally handle stacked units as the labor required to move these items around for repair is incredibly strenous. In the future I can forward you directly to a human dispatcher if you are in dire need.",
+      "created_at": "2024-06-19T08:23:04.199286+00:00"
+    }
+  ],
+  "status": "completed",
+  "corrected_duration": "25",
+  "end_at": "2024-06-19T08:23:04.000Z"
+}

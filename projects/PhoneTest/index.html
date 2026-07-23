@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+    <style type="text/css">
+        a {
+            padding: 30px;
+            margin: 5px;
+            background-color: #eee;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<a href="sms:7729132268&body=Hi, this is a test message from your technician on IPHONE!">IPHONE USER TEST</a>
+<br>
+<a href="sms:7729132268?body=Hi, this is a test message from your technician on ANDROID!">ANDROID USER TEST</a>
+<br>
+<div class="" id="text"></div>
+
+</body>
+<script type="text/javascript">
+	function getMobileOperatingSystem() {
+    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+    // Windows Phone must come first because its UA also contains "Android"
+    if (/windows phone/i.test(userAgent)) {
+        return "Windows Phone";
+    }
+
+    if (/android/i.test(userAgent)) {
+        return "Android";
+    }
+
+    // iOS detection from: http://stackoverflow.com/a/9039885/177710
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        return "iOS";
+    }
+
+    return "unknown";
+}
+document.getElementById("text").innerText = "You are using a "+getMobileOperatingSystem()+" device.\n"+navigator.userAgent+"\n"+navigator.vendor+"\n"+window.opera;
+</script>
+</html>

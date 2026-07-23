@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link href="./css/main.css" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <!-- <select id="langSelector">
+            <option value="en">English</option>
+            <option value="es">Espanol</option>
+        </select> -->
+        <div class="select-box">
+            <div class="select-box__current" tabindex="1" onclick="toggleSelect(this)">
+                <div class="select-box__value">
+                    <input class="select-box__input" type="radio" id="0" value="1" name="Ben" checked="checked" />
+                    <p class="select-box__input-text">Español</p>
+                </div>
+                <div class="select-box__value">
+                    <input class="select-box__input" type="radio" id="1" value="2" name="Ben" checked="checked" />
+                    <p class="select-box__input-text">English</p>
+                </div>
+                <img class="select-box__icon" src="./assets/caret1.svg" alt="Arrow Icon" aria-hidden="true" />
+            </div>
+            <ul class="select-box__list">
+                <li>
+                    <label onclick="changeLanguage('es')" class="select-box__option" for="0" aria-hidden="aria-hidden">Español</label>
+                </li>
+                <li>
+                    <label onclick="changeLanguage('en')" class="select-box__option" for="1" aria-hidden="aria-hidden">English</label>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <div class="main-column">
+        <div class="about-box content">
+            <div class="text-box">
+                <h1>William Licea</h1>
+                <p class="lang lang-en">
+                    From being stuck down in the mud to looking down from the views of the high rises he constructs, the determination for self improvement has brought William from an ex-convict to a powerful and respected businessman in the construction industry of New York.
+                </p>
+                <p lang="es" class="lang lang-es">
+                    este es un vez bueno para practicar mi español. Solo necisito escribir un poco palabras para ocupar el espacio en la website. Puedo escribir sobre mi dia o la clima frio tenemos en Florida ahora.
+                </p>
+            </div>
+            <div class="author-image">
+                <img src="./assets/portgray.webp">
+            </div>
+        </div>
+        <img class="trail-image" src="./assets/penpath2.svg">
+        <div class="book-box content">
+            <div class="book-image">
+                <img src="./assets/bookcover.png">
+            </div>
+            <div class="text-box">
+                <h2 class="lang lang-en">From Burning Blocks To Building Blocks</h2>
+                <h2 lang="es" class="lang lang-es">Quemando bloques a haciendo bloques</h2>
+                <p class="lang lang-en">
+                    The man who constructs the high rises you gaze up on started with the odds against him after his freedom from prison. The high rises he builds reflect the rise from the mud he had to face to not only readjust to society, but rise through the ranks to become the succesful man he is today. This novel serves as an inspiration to others who may have faced similar struggles and shows that with investment and dedication to yourself, anyone can achieve success and turn their life around.
+                </p>
+                <p lang="es" class="lang lang-es">
+                    Sólo escribiendo más texto para ocupar espacio. Mi espanol no es bueno, entonces necisito tu escribir el texto por estes seciones para asegurar que el texto es valid y correcto. Yo creo que necisito uno mas oración para hacer egual al versión de ingles.
+                </p>
+                <div class="book-buttons">
+                    <a href="./">Buy The Book</a>
+                </div>
+            </div>
+        </div>
+        <div class="info-box content">
+            <div class="text-box">
+                <h2 class="lang lang-en">About The Author</h2>
+                <h2 lang="es" class="lang lang-es">Sobre el Autor</h2>
+                <p class="lang lang-en">
+                    Kinda the same thing as the introduction paragraph up top. This is mainly meant to drive SEO and provide content on the page. You can write some meaningful and inspirational text here, but chance is the end user will never see it.
+                </p>
+                <p lang="es" class="lang lang-es">
+                    Voy a estar perezoso y copiar que escribi en ingles. Este es el mismo cosa por el secion de introducion arriba. Este es ayudar el SEO y provicar el contento por la pagina. Escribir algo amible y inspirador, pero el gente en la pagina problamente no ver este texto.
+                </p>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="footer-links">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="./">Buy From Author</a></li>
+            </ul>
+        </div>
+        <div class="footer-book">
+            <h3>From Burning Blocks To Building Blocks</h3>
+            <a href="./">Buy The Book</a>
+        </div>
+        <div class="footer-image">
+            <!-- <img src="./assets/portgray.webp" width="300px"> -->
+        </div>
+    </footer>
+</body>
+<script type="text/javascript">
+function changeLanguage(languageCode) {
+    Array.from(document.getElementsByClassName('lang')).forEach(function(elem) {
+        if (elem.classList.contains('lang-' + languageCode)) {
+            elem.style.display = 'revert';
+        } else {
+            elem.style.display = 'none';
+        }
+    });
+}
+
+function toggleSelect(element) {
+    console.log("toggleSelect")
+    selectItems.style.display = selectItems.style.display == "none" ? "block" : "none";
+    selectIcon.classList.toggle("select-box__icon-rotate");
+}
+
+// select handler
+//const selector = document.getElementById('langSelector');
+//selector.addEventListener('change', function(evt) {
+//    changeLanguage(this.value);
+//});
+
+// detect initial browser language
+const lang = navigator.userLanguage || navigator.language || 'en';
+var selectItems = document.querySelector(".select-box__list"),
+selectIcon = document.querySelector(".select-box__icon");
+selectItems.style.display = "none";
+//const startLang = Array.from(selector.options).map(opt => opt.value).find(val => lang.includes(val)) || 'en';
+//changeLanguage(startLang);
+changeLanguage(lang[0]+lang[1]);
+
+// updating select with start value
+//selector.selectedIndex = Array.from(selector.options).map(opt => opt.value).indexOf(startLang)
+</script>
+
+</html>

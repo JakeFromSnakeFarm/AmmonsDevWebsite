@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+</head>
+<style type="text/css">
+* {
+    box-sizing: border-box;
+}
+
+body,
+html {
+    background-color: #aaa;
+}
+
+.canvas-container {
+    display: flex;
+    /*      flex-direction: column;*/
+    width: 90%;
+    margin: 10px auto;
+}
+
+.canvas-container canvas {
+    width: 90%;
+}
+
+.canvas-container button {
+    text-align: center;
+    display: block;
+    height: 90px;
+    width: 10%;
+    font-size: 2em;
+    cursor: pointer;
+    margin: 4rem 0 1rem;
+}
+
+h1 {
+    text-align: center;
+    width: 90%;
+    margin: auto;
+}
+
+@media screen and (max-width: 1000px) {
+    .canvas-container {
+        flex-direction: column;
+    }
+
+    .canvas-container button, .canvas-container canvas {
+        width: 100%;
+    }
+}
+</style>
+
+<body>
+    <h1>This page is unfinished, do not judge the mediocrity of the style, enjoy the content it offers.</h1>
+    <div class="canvas-container">
+        <button onclick="changeInterval(updateMatrixRain,60)">Start</button>
+        <canvas width="1600px" height="900px" id="matrixRain"></canvas>
+    </div>
+    <div class="canvas-container">
+        <button onclick="changeInterval(updateDiagLines,60)">Start</button>
+        <canvas width="1600px" height="900px" id="diagLines"></canvas>
+    </div>
+    <div class="canvas-container">
+        <button onclick="updateSceneryDraw()">New</button>
+        <canvas width="1600px" height="900px" id="sceneryDraw"></canvas>
+    </div>
+    <h1>Youve seen some of my other creations on my <a href="../../">Home Page.</a> I havnt added them here as of now, but you can still view them in their natural habitat.</h1>
+</body>
+<script type="text/javascript">
+var activeInterval;
+
+function changeInterval(fName, fps) {
+    clearInterval(activeInterval)
+    activeInterval = setInterval(fName, 1000 / fps);
+}
+
+//Scenery Draw
+var cSD = document.getElementById("sceneryDraw");
+var ctxSD = cSD.getContext("2d");
+
+updateSceneryDraw()
+
+function updateSceneryDraw() {
+    ctxSD.beginPath();
+    drawLandscape();
+    drawCloud();
+}
+
+function drawLandscape() {
+    let yOffSet = random(400, 600),
+        period = Math.random();
+    ctxSD.fillStyle = "#5df4f7";
+    ctxSD.fillRect(0, 0, cSD.width, cSD.height);
+    ctxSD.strokeStyle = "green";
+    ctxSD.lineWidth = 2;
+
+    for (let x = 0; x <= 1920; ++x) {
+        //Grass
+        let y = 12 * Math.sin(period * x * Math.PI / 180);
+        ctxSD.moveTo(x, cSD.height);
+        ctxSD.lineTo(x, y + yOffSet);
+    }
+    ctxSD.stroke();
+
+    ctxSD.beginPath();
+    ctxSD.strokeStyle = "blue";
+    for (let i = 0, xOffSet = random(120, 970); i < 80; ++i) {
+        // River
+        for (let y = 0; y <= 900; ++y) {
+            let x = 18 * Math.sin(period * 3 * y * Math.PI / 180),
+                z = 12 * Math.sin(period * (xOffSet + i) * Math.PI / 180) + yOffSet;
+            if (y == 0) ctxSD.moveTo(y + xOffSet + i, z);
+
+            ctxSD.lineTo(x + xOffSet + i, z + y);
+        }
+    }
+    ctxSD.stroke();
+}
+
+function drawCloud(debug) {
+    let xOff = 400,
+        yOff = 200,
+        radiusX = Math.random() * 120,
+        radiusY = Math.random() * 40,
+        angle = Math.random() * (2 * Math.PI),
+        x = radiusX * Math.cos(angle),
+        y = radiusY * Math.sin(angle);
+    ctxSD.fillStyle = "white";
+    for (let j = 1; j < 4; ++j) {
+        ctxSD.strokeStyle = "black";
+        xOff = random(200 * j, 600 * j);
+        yOff = random(70, 200);
+        for (let i = 0; i < 4; ++i) {
+            (radiusX = Math.random() * 120),
+            (radiusY = Math.random() * 60),
+            (angle = Math.random() * (2 * Math.PI)),
+            (x = radiusX * Math.cos(angle)),
+            (y = radiusY * Math.sin(angle));
+            ctxSD.beginPath();
+            ctxSD.arc(x + xOff, y + yOff, random(60, 90), 2 * Math.PI, false);
+            ctxSD.fill();
+        }
+        if (debug) {
+            ctxSD.strokeStyle = "blue";
+            ctxSD.beginPath();
+            ctxSD.ellipse(xOff, yOff, 120, 60, 0, 2 * Math.PI, false);
+            ctxSD.stroke();
+        }
+    }
+}
+
+
+
+
+
+
+
+//Diagonal Lines
+var cDL = document.getElementById("diagLines");
+var ctxDL = cDL.getContext('2d'),
+    gridW,
+    gridH,
+    cellSize = 20,
+    horInc = 0,
+    verInc = 0,
+    diagBool = true;
+ctxDL.fillStyle = "#000";
+ctxDL.strokeStyle = "#fff";
+ctxDL.fillRect(0, 0, cDL.width, cDL.height);
+calcGridSize(cellSize);
+
+
+function calcGridSize(cellSize) {
+    gridW = Math.floor(cDL.width / cellSize);
+    gridH = Math.floor(cDL.height / cellSize);
+}
+
+function drawDiag(x, y, dir) {
+    ctxDL.beginPath();
+    if (dir) {
+        ctxDL.moveTo(x, y);
+        ctxDL.lineTo(x + cellSize, y + cellSize);
+    } else {
+        ctxDL.moveTo(x, y + cellSize);
+        ctxDL.lineTo(x + cellSize, y);
+    }
+    ctxDL.stroke();
+}
+
+function updateDiagLines() {
+    if (diagBool) {
+        drawDiag(horInc * cellSize, verInc * cellSize, Math.round(Math.random()));
+        drawDiag(cDL.width - (horInc * cellSize), cDL.height - ((verInc + 1) * cellSize), Math.round(Math.random()));
+    } else {
+        drawDiag(cDL.width - (horInc * cellSize), verInc * cellSize, Math.round(Math.random()));
+        drawDiag(horInc * cellSize, cDL.height - ((verInc + 1) * cellSize), Math.round(Math.random()));
+    }
+    if (horInc++ >= gridW) {
+        diagBool = !diagBool;
+        horInc = 0;
+        verInc++;
+        if (verInc >= gridH) {
+            console.log("done")
+            resetDiagLines();
+        }
+    }
+}
+
+function resetDiagLines() {
+    horInc = 0;
+    verInc = 0;
+    ctxDL.fillRect(0, 0, cDL.width, cDL.height);
+}
+
+//Matrix Rain
+var cMR = document.getElementById("matrixRain");
+var ctxMR = cMR.getContext("2d");
+var chains = [];
+ctxMR.fillStyle = "#000";
+ctxMR.fillRect(0, 0, cMR.width, cMR.height);
+ctxMR.textAlign = "center";
+class Chain {
+    constructor(length, speed, size, x, y) {
+        this.length = length;
+        this.speed = speed;
+        this.size = size;
+        this.height = this.size * this.length;
+        this.x = x;
+        this.y = y;
+        this.green = [];
+        this.text = [];
+        this.colors = [];
+        this.chance = random(0.85, 0.995, 1)
+        for (let i = 0; i < this.length; i++) {
+            this.green.push(random(164, 255));
+            this.text.push((Math.round(Math.random())));
+        }
+    }
+    move() {
+        this.y += this.speed;
+        if (this.y > cMR.height) {
+            this.y = 0 - this.height;
+            this.x = random(20, cMR.width - 20);
+        }
+    }
+    draw() {
+        for (let i = 0; i < this.length; i++) {
+            if (i == this.length - 1) {
+                ctxMR.fillStyle = "#fff"
+            } else {
+                ctxMR.fillStyle = "rgb(0," + this.green[i] + ",0)";
+            }
+            let rnd = Math.random();
+            if (rnd > this.chance) {
+                //console.log(rnd)
+                this.green[i] = random(120, 255);
+                this.text[i] = (Math.round(Math.random()));
+            }
+            ctxMR.font = this.size + "px Nova Square";
+            ctxMR.fillText(this.text[i] + "", this.x, this.y + (this.size * i));
+        }
+    }
+
+}
+
+function setupMatrixRain() {
+    for (let i = 0; i < 40; i++) {
+        chains.push(new Chain(random(5, 9), random(2, 8), random(15, 35), random(20, cMR.width - 20), -200));
+    }
+}
+
+function updateMatrixRain() {
+    ctxMR.fillStyle = "#000";
+    ctxMR.fillRect(0, 0, cMR.width, cMR.height);
+    for (let i = 0; i < chains.length; i++) {
+        chains[i].move();
+        chains[i].draw();
+    }
+
+}
+
+setupMatrixRain();
+
+function random(min, max, noRound, occlusion) { //Homebrew random function for generating random numbers, occlusion is an array that holds #s our random cant be
+    if (noRound) {
+        this.value = Math.random() * (max - min) + min;
+    } else {
+        this.value = Math.round(Math.random() * (max - min)) + min;
+    }
+    if (occlusion) {
+        for (let i = 0; i < occlusion.length; i++) {
+            if (this.value == occlusion[i]) {
+                this.value = random(min, max, occlusion); //Recursive function to cycle until it finds our number
+            }
+        }
+        return this.value;
+    } else {
+        return this.value;
+    }
+}
+</script>
+
+</html>

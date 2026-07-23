@@ -1,0 +1,68 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    background-color: #fffffd;
+}
+
+body {
+    margin: 0;
+    background-color: #fffffd;
+}
+
+h1 {
+    margin: auto;
+    text-align: center;
+}
+
+.main-box {
+    width: 100%;
+    background-color: #fffffd;
+}
+
+.fillable-item {
+    font-size: 1.3rem;
+    width: 100%;
+    margin: 1rem auto;
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+}
+
+.item-label {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.3rem;
+    width: 100%;
+    max-width: 800px;
+    margin: auto;
+}
+
+.item-label label {
+    flex-grow: 9;
+}
+
+.item-label input {
+    flex-grow: 1;
+}
+
+.notes-area {
+    background-color: #fffffd;
+    display: flex;
+}
+
+.notes-area textarea {
+    margin: 0.3rem;
+    flex-grow: 6;
+    height: 180px;
+}
+
+.notes-area input {
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 0.4rem;
+    margin: 0.3rem 0.6rem;
+    flex-grow: 4;
+}

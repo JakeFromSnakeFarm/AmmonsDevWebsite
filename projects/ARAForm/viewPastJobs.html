@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style type="text/css">
+    /* Container for the table to center it and add some spacing */
+    .incomingItemContainer {
+        width: 90%;
+        margin: 20px auto;
+        /* Centers the container */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        /* Adds a subtle shadow */
+        border-radius: 8px;
+        /* Rounded corners */
+        overflow: hidden;
+        /* Ensures child elements don't overflow */
+        background-color: #ffffff;
+        /* Background color */
+    }
+
+    /* Styling the table */
+    #incomingDataTable {
+        width: 100%;
+        border-collapse: collapse;
+        /* Removes default spacing between cells */
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        /* Modern font */
+        color: #333333;
+        /* Text color */
+    }
+
+    /* Table headers */
+    #incomingDataTable th {
+        background-color: #4CAF50;
+        /* Header background color */
+        color: white;
+        /* Header text color */
+        padding: 12px 15px;
+        /* Padding for header cells */
+        text-align: left;
+        /* Left-align text */
+        font-size: 1.1em;
+        /* Slightly larger font for headers */
+    }
+
+    /* Table data cells */
+    #incomingDataTable td {
+        padding: 12px 15px;
+        /* Padding for data cells */
+        border-bottom: 1px solid #dddddd;
+        /* Light border below each row */
+    }
+
+    /* Zebra striping for rows */
+    #incomingDataTable tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+        /* Light gray background for even rows */
+    }
+
+    #incomingDataTable tbody tr:nth-child(odd) {
+        background-color: #ffffff;
+        /* White background for odd rows */
+    }
+
+    /* Hover effect for rows */
+    #incomingDataTable tbody tr:hover {
+        background-color: #f1f1f1;
+        /* Slightly darker background on hover */
+        cursor: pointer;
+        /* Changes cursor to pointer on hover */
+    }
+
+    /* Responsive design for smaller screens */
+    @media screen and (max-width: 768px) {
+        #incomingDataTable thead {
+            display: none;
+            /* Hide table headers */
+        }
+
+        #incomingDataTable,
+        #incomingDataTable tbody,
+        #incomingDataTable tr,
+        #incomingDataTable td {
+            display: block;
+            width: 100%;
+        }
+
+        #incomingDataTable tr {
+            margin-bottom: 15px;
+            /* Space between rows */
+        }
+
+        #incomingDataTable td {
+            text-align: right;
+            padding-left: 50%;
+            position: relative;
+        }
+
+        #incomingDataTable td::before {
+            content: attr(data-label);
+            /* Use data-label attribute for labels */
+            position: absolute;
+            left: 15px;
+            width: 45%;
+            padding-right: 10px;
+            white-space: nowrap;
+            text-align: left;
+            font-weight: bold;
+        }
+    }
+    </style>
+    <meta charset="utf-8">
+    <title></title>
+</head>
+
+<body>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script type="text/javascript">
+var incomingObject, incomingObj;
+$.get('../webhooks/allEvents.php', function(data) {
+    incomingObj = data;
+    displayData();
+});
+
+function displayData() {
+    console.log(incomingObj);
+
+    // Parse the incoming JSON object
+    //const incomingObject = JSON.parse(incomingObj);
+    const incomingObject = incomingObj;
+
+    // Check if the table already exists to avoid recreating it
+    let table = document.getElementById("incomingDataTable");
+    if (!table) {
+        // Create the table element
+        table = document.createElement("table");
+        table.id = "incomingDataTable";
+        table.style.width = "100%"; // Optional: Adjust table width
+        table.setAttribute("border", "1"); // Optional: Add border to table
+
+        // Create the table header
+        const header = table.createTHead();
+        const headerRow = header.insertRow(0);
+
+        // Define header titles
+        const headers = ["Name", "Date", "Assigned Tech"];
+        headers.forEach((headerText, index) => {
+            const th = document.createElement("th");
+            th.textContent = headerText;
+            headerRow.appendChild(th);
+        });
+
+        // Create the table body
+        const tbody = document.createElement("tbody");
+        table.appendChild(tbody);
+
+        // Append the table to the document body
+        document.body.appendChild(table);
+    }
+
+    // Iterate through the bookedTimes array in reverse order
+    for (let i = incomingObject.bookedTimes.length - 1; i >= 0; i--) {
+        console.log("Processing entry:", i);
+
+        // Determine the assigned technician
+        let assignedTech = "Null"; // Default value
+        const bookedTime = incomingObject.bookedTimes[i];
+        if (bookedTime.extendedProperties && bookedTime.extendedProperties.private) {
+            assignedTech = bookedTime.extendedProperties.private.assignedTech || "Null";
+        }
+
+        // Extract the name and date
+        const name = bookedTime.summary.split("|")[0].trim();
+        const date = bookedTime.start.dateTime.split("T")[0];
+
+        // Create a new table row with the extracted data
+        createIncomingItem(name, date, assignedTech);
+    }
+}
+
+function createIncomingItem(name, date, tech) {
+    // Get the existing table
+    const table = document.getElementById("incomingDataTable");
+    if (!table) {
+        console.error("Table not found!");
+        return;
+    }
+
+    // Get the table body
+    const tbody = table.getElementsByTagName("tbody")[0];
+    if (!tbody) {
+        console.error("Table body not found!");
+        return;
+    }
+
+    // Insert a new row at the end of the table body
+    const row = tbody.insertRow();
+
+    // Insert cells for Name, Date, and Assigned Tech
+    const nameCell = row.insertCell(0);
+    const dateCell = row.insertCell(1);
+    const techCell = row.insertCell(2);
+
+    // Populate the cells with data
+    nameCell.textContent = name;
+    dateCell.textContent = date;
+    techCell.textContent = tech;
+}
+
+// Call the displayData function to execute the data display
+displayData();
+</script>
+
+</html>

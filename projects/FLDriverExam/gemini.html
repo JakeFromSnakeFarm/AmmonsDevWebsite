@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driving Handbook Quiz</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .quiz-container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .question {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .question h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .choices label {
+            display: block;
+            margin: 8px 0;
+            padding: 10px;
+            background-color: #e9e9e9;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .choices label:hover {
+            background-color: #dcdcdc;
+        }
+        .choices input[type="radio"] {
+            margin-right: 10px;
+        }
+        .feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .feedback.correct {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .feedback.wrong {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .explanation {
+            margin-top: 5px;
+            font-size: 0.9em;
+            color: #555;
+        }
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.2s ease;
+        }
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #e9ecef;
+            border-radius: 8px;
+            display: none; /* Hidden by default */
+        }
+        .results h3 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Driving Handbook Quiz</h1>
+        <div id="quiz">
+            </div>
+        <button class="submit-btn" id="submit">Submit Quiz</button>
+        <div class="results" id="results">
+            <h3>Quiz Results</h3>
+            <p id="score"></p>
+            <p id="time"></p>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "In your vehicle, what should you adjust before you start your engine?",
+                answer: "Adjust the seat, mirrors, and fasten your safety belt.",
+                explanation: "Before you start your engine: Be sure vehicle is in park or neutral. Adjust the seat so you can reach all controls. Adjust all rear-view mirrors so that you can use them without having to lean forward or backward. Move anything that blocks your view of mirrors or roadway. Lock all car doors. Fasten your safety belt and make sure all passengers do the same."
+            },
+            {
+                question: "What are the equipment requirements for windshields and side windows?",
+                answer: "Windshields must be safety glass and clear. Side/rear windows may not reflect more than 25% (side) or 35% (rear) of light.",
+                explanation: "Windshields: Must be safety glass and may not be covered or treated with any material that makes the windshield reflective or non-transparent. Must be free of any stickers not required by law. Side & Rear Windows: May not be composed of, covered by, or treated with any material which has a mirrored appearance or reflects more than 25% of the light (side windows) or more than 35% of the light (rear window)."
+            },
+            {
+                question: "What are bumper height requirements? Are they the same for every vehicle?",
+                answer: "Yes, vehicles have bumper height requirements based on weight. No, they are not the same for every vehicle.",
+                explanation: "Owners of automobiles and pickup trucks are required to have front and rear bumpers mounted within certain height levels. Height limitations are governed by the net shipping weight of the vehicle, not the modified or altered weight. No, they are not the same for every vehicle."
+            },
+            {
+                question: "What must you do if hauling a load of material which could fall or blow onto the roadway?",
+                answer: "You must use a close-fitting cover.",
+                explanation: "You must use a close-fitting cover when hauling loads which could fall or blow onto the roadway (e.g., dirt, sand, gravel)."
+            },
+            {
+                question: "When a projected load extends more than 4 feet from the vehicle, what must you use to clearly mark it in the daytime? At night?",
+                answer: "Red flags (at least 18 inches square) in the daytime. Red lamps/reflectors visible from specific distances at night.",
+                explanation: "During the day, red flags at least 18 inches square must mark the extremities of the load. Requirements from sunset to sunrise, and during any rain, smoke, or fog include: two red lamps on the back of the load that can be seen from at least 500 feet to the rear; two red reflectors on the rear that can be seen from 100 to 600 feet when directly in front of low beam headlights, and located to show the load’s full width; and/or one red lamp on each side of the load, visible from at least 500 feet to show maximum overhang of the load."
+            },
+            {
+                question: "Why is drowsy driving dangerous?",
+                answer: "Fatigue slows reaction time, affects judgment and vision, impairs senses, and can cause you to fall asleep.",
+                explanation: "It is risky to drive drowsy because fatigue (being sleepy) can: slow your thought processes and reaction time; affect your judgment and vision; impair your senses and abilities; and/or cause micro-sleeping (“nodding off”) or falling completely asleep."
+            },
+             {
+                question: "What should you do if another driver is threatening you or intentionally driving dangerously around you?",
+                answer: "Remain calm, create distance, slow down, let them pass, avoid eye contact/gestures, and call *FHP or 911 if needed.",
+                explanation: "If another driver is threatening you or intentionally driving dangerously around you, remain calm and try to put as much distance between you and them as possible. Slow down and let them pass. Do not make eye contact; do not make obscene gestures. If you need help, call *FHP (*347) or 911."
+            },
+            {
+                question: "What are the three main categories of distracted driving?",
+                answer: "Visual, Manual, Cognitive.",
+                explanation: "Visual—taking your eyes off the road. Manual—taking your hands off the steering wheel. Cognitive—thinking about anything other than driving."
+            },
+            {
+                question: "Why is texting one of the most dangerous distracted driving behaviors?",
+                answer: "Texting involves all three categories of distractions.",
+                explanation: "Texting involves all three categories of distractions, making it one of the most dangerous of distracted driving behaviors."
+            },
+            {
+                question: "Can anyone drink and drive safely?",
+                answer: "No, no one can drink alcohol and drive safely.",
+                explanation: "No one can drink alcohol and drive safely, even if you have been driving for many years."
+            },
+            {
+                question: "Both your judgment and vision are affected after drinking alcohol. Which is affected first?",
+                answer: "Judgment.",
+                explanation: "A person’s judgment is the first thing affected after drinking an alcoholic beverage."
+            },
+            {
+                question: "What can happen to you if you are in a crash and not wearing a safety belt?",
+                answer: "You are far more likely to be killed, ejected, or thrown against objects/passengers.",
+                explanation: "You are far more likely to be killed in a crash if you are not wearing a safety belt. In a crash, your safety belt keeps you: from being ejected from the vehicle; from being thrown against other passengers, your steering wheel, or windshield; and behind the wheel, where you can control the vehicle."
+            },
+             {
+                question: "What age are children required to be in a rear-facing car seat? In a forward-facing car seat or booster seat?",
+                answer: "Children under age 4 must be in a safety seat. Children ages 4 and 5 must be in a safety seat or booster seat. (Specific rear-facing age not explicitly given beyond 'under 4').",
+                explanation: "Children under age 4 must be in a safety seat and children ages 4 and 5 must be in either a safety seat or a booster seat. Never place a rear-facing car seat in front of an airbag."
+            },
+            {
+                question: "If a law enforcement officer stops a vehicle and the front seat passenger under 18 years old is not wearing a safety belt, who will be charged with the safety belt violation?",
+                answer: "The driver.",
+                explanation: "Drivers will be charged with a safety belt/child restraint violation if any passenger under 18 is not properly restrained."
+            },
+            {
+                question: "What does a single broken white line on the highway mean?",
+                answer: "You may cross this line to change lanes when it is safe.",
+                explanation: "You may cross this line to change lanes when it is safe to do so."
+            },
+            {
+                question: "What does a double solid yellow line in the center of the highway mean? A double solid white line?",
+                answer: "Double solid yellow means vehicles in either direction must not pass/cross. Double solid white means crossing/changing lanes is not allowed.",
+                explanation: "Double solid yellow lines: Vehicles moving in either direction must not pass/cross these lines. (May turn left or pass a bicyclist when it is safe to do so). Double solid white lines: Crossing a double solid line/changing lanes is not allowed."
+            },
+            {
+                question: "What does a solid yellow line to the right of the center line of the highway mean?",
+                answer: "Passing is not allowed in your lane.",
+                explanation: "Double yellow lines–solid on right (“your side” of line), broken on left. Passing is not allowed in this lane. (May turn left or pass a bicyclist when it is safe to do so)."
+            },
+            {
+                question: "What do the colors of traffic signs indicate (red, orange, yellow, etc.)?",
+                answer: "Red: Stop/Do Not Enter; Orange: Construction; Yellow: Warning; Fluorescent Yellow Green: School/Pedestrian/Bicycle; White/Black: Regulatory; Green: Guide; Blue: Driver Guidance/Disabled Parking; Brown: Recreation/Cultural/Historical.",
+                explanation: "Red: Stop. Do not enter. Wrong way. Yield. Orange: Construction and maintenance warning. Yellow: General warning. Advisory of unexpected roadway conditions. Fluorescent Yellow Green: High emphasis warning of school, pedestrian and bicycling activity. White/Black: Regulatory. Control traffic, set limits or give commands. Green: Guide or directional information. Blue: Driver guidance. Also used to identify parking spaces for disabled drivers. Brown: Areas of public recreation, cultural and historical significance."
+            },
+             {
+                question: "When more than one vehicle approaches a four-way stop sign, which one moves first?",
+                answer: "The vehicle that arrived first. If they arrive at the same time, yield to the vehicle on your right.",
+                explanation: "Vehicles proceed through the intersection in the order that they arrived; the first vehicle to reach the intersection should move forward first. If vehicles arrive at approximately the same time, each driver must yield to the driver on their right."
+            },
+            {
+                question: "What does a red traffic light mean? What if it's a flashing red light mean?",
+                answer: "Red means come to a complete stop and wait for green. Flashing red means treat it like a stop sign; stop and proceed when safe.",
+                explanation: "RED LIGHT: Come to a complete stop at the stop line. Remain stopped until the light turns green. FLASHING RED LIGHT: Used at dangerous intersections. Treat it like a stop sign; stop and proceed when safe."
+            },
+            {
+                question: "After a full stop at a red traffic light when may a driver turn right?",
+                answer: "You may turn right if there is no NO TURN ON RED sign and the way is clear.",
+                explanation: "After stopping, you may turn right if there is not a NO TURN ON RED sign and the way is clear."
+            },
+            {
+                question: "What does a green arrow showing at the same time as a red traffic light mean you can do?",
+                answer: "You may make a turn in the direction of the arrow, yielding to vehicles and pedestrians.",
+                explanation: "GREEN ARROW: You may make a turn in the direction of the arrow. If the red light is illuminated at the same time, you must be in the proper lane for such a turn. You must yield the right-of-way to vehicles and pedestrians in the intersection."
+            },
+            {
+                question: "What does a flashing yellow light mean?",
+                answer: "Proceed with caution.",
+                explanation: "FLASHING YELLOW LIGHT: Used at, or just before, dangerous intersections. Also used to alert you to a warning sign such as a school crossing or sharp curve. Proceed with caution."
+            },
+            {
+                question: "If you are approaching a railroad crossing that does not have gates or lights and you see a train coming, what should you do?",
+                answer: "You should stop.",
+                explanation: "Any driver, bicyclist or pedestrian approaching a railroad-highway crossing must stop if: the warning devices are flashing; the crossing gate is lowered; a human flagger is warning of an approaching train; and/or an approaching train is clearly visible."
+            },
+             {
+                question: "What happens to the force of impact when you double your speed? Triple your speed?",
+                answer: "Doubling speed means 4 times greater impact. Tripling speed means 9 times greater impact.",
+                explanation: "Doubling the speed means the braking distance and impact are 4 times greater. Tripling the speed means the braking distance and impact are 9 times greater."
+            },
+            {
+                question: "Unless otherwise posted, what is the speed limit for cars in a residential area?",
+                answer: "30 MPH.",
+                explanation: "Municipal, Business, or Residential Area: 30 MPH* where '*' means 'Maximum speed except where otherwise posted.'"
+            },
+            {
+                question: "What is the maximum speed limit on a limited access highway?",
+                answer: "70 MPH.",
+                explanation: "Limited Access Highways: 70 MPH"
+            },
+            {
+                question: "Can you be issued a citation for driving too slowly?",
+                answer: "Yes, driving too slowly and impeding traffic is against the law.",
+                explanation: "Driving too slowly is also against Florida law. You must not drive so slowly that you block or delay traffic moving at normal, safe speeds."
+            },
+            {
+                question: "What are the steps for making a smooth stop?",
+                answer: "Check mirrors, release accelerator, press brake pedal steadily.",
+                explanation: "To ensure you are stopping smoothly: Check all mirrors and blind spots for traffic to the rear. Release the accelerator to allow the vehicle to slow. Press the brake pedal to activate brake lights and use a steady pressure."
+            },
+            {
+                question: "What is the arm signal for a left turn? Right turn? Slow or stop?",
+                answer: "Left turn: arm straight out. Right turn: arm upward at 90 degrees. Slow/Stop: arm downward at 90 degrees.",
+                explanation: "The handbook provides images for these signals: Left Turn (arm straight out), Right Turn (arm upward at a 90-degree angle), Slow or Stop (arm downward at a 90-degree angle)."
+            },
+             {
+                question: "How long (distance) should you signal before making a left or right turn?",
+                answer: "At least 100 feet.",
+                explanation: "You must give a turn signal at least 100 feet BEFORE making your turn."
+            },
+            {
+                question: "When can you use a three-point turn? Where should you never make a three-point turn?",
+                answer: "Use if the road is too narrow for a U-turn and you can't go around the block. Never on a curve, hill, highway, or where prohibited.",
+                explanation: "Use a three-point turn only if the road is too narrow for a U-turn and you can’t go around the block. Never make a three-point turn or a U-turn on a curve, a hill, the highway, or where there is a sign that prohibits U-turns."
+            },
+            {
+                question: "What is an open intersection? When must you yield right-of-way?",
+                answer: "An intersection without control signs/signals. Yield if a vehicle is in the intersection, entering from secondary/unpaved roads onto paved, or making a left turn against oncoming traffic.",
+                explanation: "An open intersection is one without traffic control signs or signals. When you enter an open intersection, you must yield the right-of-way if: a vehicle is already in the intersection; you enter or cross a state highway from a secondary road; you enter a paved road from an unpaved road; or you plan to make a left turn and a vehicle is approaching from the opposite direction."
+            },
+            {
+                question: "When may you drive in the left lane of a road with two lanes? With four lanes?",
+                answer: "Two lanes: Only when overtaking/passing. Four+ lanes (two-way traffic): Drive in right lanes except when overtaking/passing.",
+                explanation: "On a two-lane highway you must always drive in the right lane unless you are overtaking and passing (where permitted). If the road has four or more lanes with two-way traffic, drive in the right lanes except when overtaking and passing."
+            },
+            {
+                question: "What does it mean if you see red reflectors on the lane lines facing you? What should you do?",
+                answer: "You are facing traffic the wrong way. Turn around or get into the proper lane immediately.",
+                explanation: "Red reflectors on lane lines always mean you are facing traffic the wrong way and could have a head-on collision. If you see red reflectors facing you on the lane lines, you are on the wrong side of the road. Turn around or get into the proper lane immediately!"
+            },
+             {
+                question: "What is the recommended safe following distance?",
+                answer: "A minimum of four seconds during favorable conditions.",
+                explanation: "Keep a minimum following distance of four seconds during favorable weather and traffic conditions."
+            },
+            {
+                question: "When should you increase your following distance?",
+                answer: "In rain/wet roads, low visibility, when being passed, carrying heavy load/trailer, stopped on incline, following motorcycles, emergency vehicles, vehicles stopping at railroad crossings, or vehicles with blocked rear view.",
+                explanation: "Situations include: Rain or when roads are wet. Low visibility... When being passed... Carrying a heavy load or pulling a trailer... When stopped behind another vehicle on an incline... When following: Motorcycles. Emergency vehicles. Vehicles required to come to a stop at railroad crossings... Vehicles with a blocked rear view."
+            },
+            {
+                question: "What are blind spots?",
+                answer: "Areas near the left and right rear corners of your vehicle that you cannot see in your mirrors or peripheral vision.",
+                explanation: "Blind spots are areas near the left and right rear corners of your vehicle that you can’t see in your rear-view mirrors or with your peripheral vision."
+            },
+            {
+                question: "How do you check your blind spots when you are preparing to change lanes or turn?",
+                answer: "Turn your head to make sure these areas are clear.",
+                explanation: "Before you move to change lanes on a highway, pass on any road, or make certain turns, turn your head to make sure these areas are clear."
+            },
+            {
+                question: "Where is it unlawful to overtake and pass?",
+                answer: "Where there's a solid line, in No Passing zones, on hills/curves without 500ft visibility, within 100ft of intersection/bridge/railroad crossing, when a school bus is stopped with signals, or at crosswalks where a vehicle has stopped for a pedestrian.",
+                explanation: "You Must Not Pass: where there is a single or double-sided solid line dividing lanes; when the double-sided yellow line is solid in your lane; in Do Not Pass and No Passing zones; on hills or curves where you can’t see at least 500 feet ahead; within 100 feet of an intersection, bridge, viaduct, tunnel, or railroad crossing; when a school bus is stopped and has its warning flashers on and stop sign extended; and at crosswalks where a vehicle has stopped to allow a pedestrian to cross."
+            },
+             {
+                question: "Under what circumstances can you stop in the acceleration lane on an expressway?",
+                answer: "Only if traffic is too heavy and there is no space to enter safely.",
+                explanation: "Do not stop in the acceleration lane unless traffic is too heavy and there is no space for you to enter safely."
+            },
+            {
+                question: "What should you do if you drive past your exit on a limited access highway?",
+                answer: "You must go to the next one.",
+                explanation: "If you pass your exit, you must go to the next one."
+            },
+            {
+                question: "Where should you move your vehicle if you break down while driving on the highway?",
+                answer: "Move it completely off the pavement so all four wheels are out of traffic lanes as soon as possible.",
+                explanation: "If your vehicle breaks down, you must move it completely of the pavement. You must move the vehicle so all four wheels are out of traffic lanes as soon as possible."
+            },
+            {
+                question: "What is the farthest away you can park from a curb?",
+                answer: "Within 12 inches.",
+                explanation: "Park parallel to the curb in the direction of traffic, with right-hand wheels parallel to and within 12 inches of the curb or side of roadway."
+            },
+            {
+                question: "If you have a manual transmission, what gear should you put the car in when parking downhill? Uphill? What if you have an automatic transmission?",
+                answer: "Manual: Reverse downhill, First uphill. Automatic: Park for both.",
+                explanation: "Set the parking brake and shift to Park (automatic transmission) or Reverse (manual transmission). Manual transmission on hills: shift to Reverse (downhill) or First (uphill). Automatic: put gear shift in Park."
+            },
+             {
+                question: "Where is parking prohibited?",
+                answer: "On crosswalks, sidewalks, bicycle lanes, intersections, bridges, overpasses, tunnels, in front of driveways, by yellow curbs, in NO PARKING/DISABLED zones, double parking, on highway pavement not for parking, anywhere blocking traffic, and within specific distances of fire hydrants, intersections, fire stations, rural mailboxes (on state hwy), flashing signals, stop signs, traffic signals, or railroad crossings.",
+                explanation: "On crosswalks, On sidewalks, In bicycle lanes, In intersections, On bridges, On overpasses, In tunnels, In front of driveways, By yellow painted curbs, In NO PARKING or DISABLED PERMIT ONLY zones, On the roadway side of another parked vehicle (double parking), On highway pavement not marked for parking, Anywhere that blocks or creates a hazard for other vehicles, Or within: 15 feet of a fire hydrant. 20 feet of an intersection. 20 feet of the entrance to a fire, ambulance, or rescue station. 30 feet of a rural mail box on a state highway (8 am–6 pm). 30 feet of any flashing signal, stop sign, or traffic signal. 50 feet of a railroad crossing."
+            },
+            {
+                question: "Which way should you turn your wheels when parking uphill along a curb? Which way should you turn them where there is not a curb? Which way should you turn them if parking downhill?",
+                answer: "Uphill with curb: away from curb. Uphill without curb: to the right. Downhill: towards curb.",
+                explanation: "Uphill with Curb: Turn wheels away from curb. Uphill without Curb: Turn wheels to the right. Downhill: Turn wheels to curb."
+            },
+            {
+                question: "Are motorists required to stop or yield for pedestrians crossing the street?",
+                answer: "Yes, you must stop and remain stopped for pedestrians crossing at marked crossings or intersections.",
+                explanation: "You must stop and remain stopped for pedestrians crossing a street or driveway at any marked crossing, or intersection."
+            },
+            {
+                question: "What must you do when you see a pedestrian with a white cane in the street ahead of you?",
+                answer: "Come to a complete stop, yield the right-of-way, and use extra caution.",
+                explanation: "Come to a complete stop, yield the right-of-way, and use extra caution when approaching: a visually impaired pedestrian who is carrying a white cane with a red tip or guided by a service animal..."
+            },
+            {
+                question: "What is the minimum distance a motorist must give when traveling next to a cyclist?",
+                answer: "A minimum of three feet.",
+                explanation: "Florida law requires that you give bicyclists a minimum of three feet of clearance and use caution/slow speed when driving next to or passing them."
+            },
+             {
+                question: "As a motorist, what should you do when preparing to turn right on a roadway with a bike lane?",
+                answer: "Yield to any bicyclist and make your turn behind the bicyclist when you must cross the bike lane.",
+                explanation: "When you must cross into a bike lane to make a turn, yield to any bicyclist and make your turn behind the bicyclist."
+            },
+            {
+                question: "When on the roadway, do motorcyclists and moped riders have the same rights and responsibilities as motor vehicle drivers?",
+                answer: "Yes.",
+                explanation: "Motorcycle and moped drivers have the same rights and duties as drivers of motor vehicles."
+            },
+            {
+                question: "If you are driving a motor vehicle, are you allowed to share a lane with a motorcyclist?",
+                answer: "No, you must not attempt to share a lane; the motorcyclist is entitled to the entire lane.",
+                explanation: "You must not attempt to share a lane with a motorcycle. The motorcyclist is entitled to the entire lane."
+            },
+            {
+                question: "When a school bus is stopped to unload children on a highway divided with a raised barrier, are vehicles traveling in the opposite direction required to stop?",
+                answer: "No, if the highway is divided by a raised barrier or unpaved median at least five feet wide, you do not have to stop.",
+                explanation: "If the highway is divided by a raised barrier or an unpaved median at least five feet wide, you do not have to stop if you are moving in the opposite direction of the bus."
+            },
+            {
+                question: "When a school bus stops to unload children, are vehicles traveling in the same direction required to stop?",
+                answer: "Yes, you must always stop and remain stopped until the stop signal is withdrawn.",
+                explanation: "You must always stop if you are moving in the same direction as the bus and you must remain stopped until the stop signal is withdrawn."
+            },
+             {
+                question: "What must you do when children or school crossing guards are present in a crosswalk?",
+                answer: "You must yield and stop at the stop line, not in the crosswalk.",
+                explanation: "When children or school crossing guards are present in a crosswalk, you must yield and stop at the stop line and not in the crosswalk."
+            },
+            {
+                question: "What must you do if an emergency vehicle with activated lights and/or sirens is approaching you from behind?",
+                answer: "Pull over to the closest edge of the roadway immediately and stop until the emergency vehicle has passed.",
+                explanation: "Pull over to the closest edge of the roadway immediately and stop until the emergency vehicle has passed."
+            },
+            {
+                question: "What does the Move Over Law require you to do?",
+                answer: "On multi-lane roads, vacate the lane closest to a stationary emergency/service vehicle or slow to 20 MPH below the limit if unable to move over. On two-lane roads, slow to 20 MPH below the limit (or 5 MPH if limit is 20 MPH or less).",
+                explanation: "On a Multi-Lane Roadway: You must vacate the lane closest to the stationary law enforcement, emergency vehicle, tow truck, sanitation, or utility vehicle. (Signal your intention to change lanes.) If you cannot move over safely, you must slow down to a speed of 20 MPH below the posted speed limit. On a Two-Lane Roadway: You must slow down to 20 MPH below the posted speed limit. If the speed limit is 20 MPH or less, you must travel at 5 MPH."
+            },
+             {
+                question: "What is a “No Zone”?",
+                answer: "Large blind spots around Commercial Motor Vehicles (CMVs) where other vehicles are hidden from view.",
+                explanation: "CMVs have large blind spots in front, behind, and on both sides of the vehicle. Even though CMVs have several rear-view mirrors, other vehicles will be hidden from view if within the “No Zone”/blind spot."
+            },
+            {
+                question: "At what times must you use your headlights?",
+                answer: "Between sunset and sunrise, in rain (when wipers are on), and in low visibility conditions.",
+                explanation: "You must turn on your headlights. Parking lights are not a substitute (in low visibility). When you turn on your windshield wipers, turn on your headlights (in rain). Use headlights between the hours of sunset and sunrise."
+            },
+            {
+                question: "At night, within how many feet of approaching a vehicle from the rear must you dim your high beam headlights?",
+                answer: "Within 300 feet.",
+                explanation: "Not use high beam headlights within 300 feet of the vehicle ahead of you; use low beam headlights."
+            },
+            {
+                question: "Within how many feet of an oncoming vehicle should you dim your high beam headlights?",
+                answer: "Within 500 feet.",
+                explanation: "Not use high beam headlights within 500 feet of an oncoming vehicle; use low beam headlights."
+            },
+            {
+                question: "When driving in the rain, fog or smoke in the daytime, what lights should you use?",
+                answer: "Headlights on low beam.",
+                explanation: "You must turn on your headlights... Drive with lights on low beam. When you turn on your windshield wipers, turn on your headlights."
+            },
+             {
+                question: "What should you do when driving on wet roads in the rain? Why?",
+                answer: "Slow down and increase your following distance. Wet roads increase braking/stopping distance and can cause hydroplaning.",
+                explanation: "Slow down! Roads become slick during rainstorms... Wet road conditions will increase your braking/stopping distance, so be sure to increase your following distance. Hydroplaning happens when your vehicle slides on top of a thin layer of water between your tires and the road."
+            },
+            {
+                question: "What should you do if your right wheels go off the pavement while driving?",
+                answer: "Take your foot off the gas, hold the wheel firmly steering straight, brake lightly, wait until the road is clear, and turn back onto the pavement slowly (signal your intention).",
+                explanation: "1. Take your foot of the gas pedal. 2. Hold the wheel firmly and steer in a straight line. 3. Brake lightly. 4. Wait until the road is clear. Turn back on the pavement at a slow speed (signal your intention)."
+            },
+            {
+                question: "What should you do if your tires begin to skid while driving?",
+                answer: "Take your foot off the gas, do not use brakes if possible, and turn the vehicle's front tires in the direction you want to go (steer in the direction of the skid).",
+                explanation: "1. Take your foot off the gas pedal. 2. Do not use your brakes, if possible. 3. Turn the vehicle’s front tires in the direction you want to go (steer in the direction of the skid)."
+            },
+            {
+                question: "When emergency braking, what is the difference between conventional brakes and anti-lock brakes (ABS)?",
+                answer: "With ABS, press down hard and hold the pedal. With conventional brakes, pump the pedal.",
+                explanation: "Drivers with ABS need to press down hard on the brake pedal, hold it, and steer out of danger... Drivers with conventional brakes must pump the brakes in order to stop in an emergency situation where traction is lost and the vehicle slides."
+            },
+            {
+                question: "What should you do during a tire blow-out?",
+                answer: "Take your foot off the gas, do not brake, concentrate on steering, slow down gradually, brake softly when under control, and pull off the roadway.",
+                explanation: "1. Take your foot off the gas. Do not use the brakes. 2. Concentrate on steering. 3. Slow down gradually. 4. Brake softly when the car is under control. 5. Pull completely off the pavement/roadway."
+            },
+             {
+                question: "What must you do if you are involved in a minor accident and your vehicle is blocking the flow of traffic?",
+                answer: "You must move it or have it moved.",
+                explanation: "If the crash is minor and your vehicle is blocking the flow of traffic, you must move it or have it moved."
+            },
+            {
+                question: "If you hit a parked car and cannot find the owner, what should you do?",
+                answer: "Leave a note with your information and notify law enforcement.",
+                explanation: "If you can’t locate the property owner, you must leave a note including your name, contact information, and license plate (registration) number. You must also notify law enforcement."
+            },
+            {
+                question: "What are the penalties for leaving the scene of an accident involving injury or death?",
+                answer: "Death: 1st degree felony, min 4-year prison, 3-year license loss. Serious injury: 2nd degree felony, 3-year license loss. Injury: 3rd degree felony, 3-year license loss.",
+                explanation: "Death: 1st degree felony, minimum 4-year prison term. Serious bodily injury: 2nd degree felony. Injury: 3rd degree felony. All of the above include losing your driver license for 3 years minimum."
+            },
+            {
+                question: "What are the requirements of the No-Fault Law?",
+                answer: "Before registering a vehicle, you must have at least $10,000 in Personal Injury Protection (PIP) and $10,000 in Property Damage Liability (PDL) coverage from a Florida-licensed agency, maintain it continuously, and have proof available.",
+                explanation: "Before you register your car in Florida, you must show proof of Personal Injury Protection (PIP) and Property Damage Liability (PDL) coverage... have a minimum of $10,000 in PIP AND a minimum of $10,000 in PDL coverage; purchase the policy from an insurance agency licensed to do business in Florida; maintain the insurance continuously throughout the registration period; and always have proof of valid Florida insurance readily available..."
+            },
+            {
+                question: "If your license and registration are suspended for being in violation of the No-Fault Law, what must you do to get them reinstated?",
+                answer: "Get insurance and pay a reinstatement fee ($150 to $500).",
+                explanation: "If you fail to provide proof of new insurance, your driver license and license plate can be suspended for up to three years. In order to lift the suspension, you will have to get insurance and pay a reinstatement fee ($150 to $500)."
+            },
+             {
+                question: "What are the penalties if you are at fault in a crash and you are not insured in compliance with the Financial Responsibility Law?",
+                answer: "Driver license and/or license plates suspended for up to three years. May also be required to pay for damages before driving privilege is reinstated.",
+                explanation: "If you do not provide proof of higher coverage limits, your driver license and/or license plates will be suspended for up to three years. In addition, if you are the driver or the owner of a vehicle involved in a crash that is your fault, FLHSMV can require you to pay for the damages before your driving privilege is reinstated."
+            },
+            {
+                question: "What are the time restrictions for a motorist with a learner’s license?",
+                answer: "Must drive only during daylight hours for the first three months, then may drive until 10 pm, always accompanied by a licensed driver age 21 or older.",
+                explanation: "Must only drive during daylight hours during the first three months. After three months, may drive until 10 pm. Minors holding a learner’s license must be accompanied by a licensed driver age 21 or older."
+            },
+            {
+                question: "What are the time restrictions for a licensed motorist under age 17? Under age 18?",
+                answer: "Age 16: May drive 6 am to 11 pm (unless to/from work or accompanied by 21+ licensed driver). Age 17: May drive 5 am to 1 am (unless to/from work or accompanied by 21+ licensed driver).",
+                explanation: "AGE 16 WITH DRIVER LICENSE May drive from 6 am to 11 pm unless driving to or from work OR accompanied by a licensed driver who is 21+. AGE 17 WITH DRIVER LICENSE May drive from 5 am to 1 am unless driving to or from work OR accompanied by a licensed driver who is 21+."
+            },
+             {
+                question: "When can you be charged with driving under the influence (DUI)?",
+                answer: "If found driving or in physical control of a motor vehicle while under the influence of alcohol, controlled substances, prescriptions, or over-the-counter medications.",
+                explanation: "You can be charged with Driving Under the Influence (DUI) if you are found to be driving or in physical control of a motor vehicle while under the influence of alcoholic beverages, controlled substances, prescriptions, or over-the-counter medications."
+            },
+            {
+                question: "What are the penalties for refusing to take a blood test, a urine test, or a breath test when suspected of driving under the influence?",
+                answer: "First refusal: license suspended for one year. Second refusal: 18-month suspension and a first-degree misdemeanor.",
+                explanation: "If you refuse to take the tests when asked, your license will automatically be suspended for one year. A second refusal will result in an 18 month suspension and a first degree misdemeanor."
+            },
+            {
+                question: "What can happen if you are found guilty of racing on the highway?",
+                answer: "Your license must be revoked.",
+                explanation: "Your license must be REVOKED if you are found guilty of... Racing on the highway."
+            },
+            {
+                question: "If you have a learner’s license, how many hours of driving experience are required to earn the Class E driver license?",
+                answer: "At least 50 hours, with 10 hours at night, certified by a parent, guardian, or responsible adult 21 or older.",
+                explanation: "Must have at least 50 hours of driving experience prior to getting driver license, and 10 hours should be at night. A parent, legal guardian, or responsible adult 21 years old or older, must certify that the driver has had at least 50 hours of driving experience, of which 10 hours were at night."
+            },
+            {
+                question: "What education course are you required to take if you are applying for a learner’s license (or have never held a driver license)?",
+                answer: "Traffic Law and Substance Abuse Education Course (TLSAE).",
+                explanation: "Completion of Traffic Law and Substance Abuse Education Course (TLSAE). If you have never held—or do not have in your possession—a driver license in any state, country, or jurisdiction, you must complete a TLSAE course before applying for a driver license in the state of Florida."
+            },
+             {
+                question: "Are you required to notify FLHSMV of any health problems that may affect your driving?",
+                answer: "Yes, you must list any physical or mental issues that might affect your driving on your driver license application.",
+                explanation: "You must list any physical or mental issues that might affect your driving on your driver license application."
+            },
+            {
+                question: "Why would one opt to take a Basic Driver Improvement Course?",
+                answer: "To avoid points on their driving record for a non-criminal moving violation or possibly receive insurance discounts.",
+                explanation: "If you receive a ticket for a non-criminal moving violation... you may elect to attend a basic driver improvement course in lieu of points on your driving record. In some cases, you may choose to attend a course to receive insurance discounts. Points may not be added to your driver license record if adjudication of guilt is withheld."
+            },
+            {
+                question: "What maneuvers are required on a driving exam?",
+                answer: "Approach of Crossing, Backing Up, Follow at a Safe Distance, Obey Stop Signs, Obey Traffic Signals, Observe Right-of-Way, Parking on a Grade, Passing, Signal and Turn, Stay in Proper Lane, Stop Quickly, Straight-In Parking, Three Point Turn, Use Proper Posture.",
+                explanation: "Approach of Crossing. Backing Up. Follow at a Safe Distance. Obey Stop Signs. Obey Traffic Signals. Observe Right-of-Way. Parking on a Grade. Passing. Signal and Turn. Stay in Proper Lane. Stop Quickly. Straight-In Parking. Three Point Turn. Use Proper Posture."
+            },
+            {
+                 question: "In addition to a valid license, what must a motorcycle operator have?",
+                 answer: "An endorsement on their driver license.",
+                 explanation: "Any person operating a motorcycle must have a motorcycle endorsement on their driver license."
+             },
+             {
+                 question: "What does a yellow diamond-shaped sign with a black cross mean?",
+                 answer: "Intersection ahead.",
+                 explanation: "Yellow diamond-shaped signs are warning signs. A black cross symbol typically indicates an intersection." // Based on general knowledge of traffic signs and context, as exact symbol not in provided text for colors.
+             },
+             {
+                 question: "When parking on a public road, which way must your vehicle face?",
+                 answer: "With the right-hand wheels parallel to and within 12 inches of the curb or side of roadway, in the direction of traffic.",
+                 explanation: "Park parallel to the curb in the direction of traffic, with right-hand wheels parallel to and within 12 inches of the curb or side of roadway." // Repeats earlier info but fulfills distinct question
+             },
+              {
+                 question: "What should you do if your brakes fail?",
+                 answer: "Pump the brake pedal hard and fast, shift to a lower gear, and use the parking brake.",
+                 explanation: "If your brakes fail: 1. Pump the brake pedal hard and fast. 2. Shift to a lower gear. 3. Use the parking brake." // Based on common handbook knowledge; not explicitly in provided text
+             },
+             {
+                 question: "What is the purpose of the yield sign?",
+                 answer: "To require a driver to give way to other vehicles or pedestrians.",
+                 explanation: "Yield: Slow down and give the right-of-way to pedestrians and vehicles in the intersection you are crossing or roadway you are entering." // Based on handbook text on sign colors
+             },
+             {
+                 question: "What is the penalty for violation of the child restraint law?",
+                 answer: "A fine and points added to your driving record.",
+                 explanation: "Violation of the child restraint law is a moving violation and subjects the violator to a fine and points against their driving record." // Based on handbook text on child restraints
+             },
+             {
+                 question: "What is the maximum speed limit in a school zone?",
+                 answer: "20 MPH.",
+                 explanation: "Speed limits in school zones are 20 MPH during the times children are arriving at or leaving school." // Based on common handbook knowledge; not explicitly in provided text section on speed limits
+             },
+             {
+                 question: "When driving at night, how can you reduce glare from the headlights of oncoming vehicles?",
+                 answer: "Look to the lower right side of your lane.",
+                 explanation: "To avoid glare from oncoming headlights, shift your eyes to the lower right side of your traffic lane." // Based on common handbook knowledge; not explicitly in provided text section on headlights
+             },
+              {
+                 question: "What should you do if you see a vehicle with a handicapped parking permit in a handicapped parking space?",
+                 answer: "Do not park in that space unless you have a valid handicapped parking permit and meet the conditions for its use.",
+                 explanation: "Parking spaces marked with the international symbol of accessibility are designated for persons with disabilities. You must have a valid disabled parking permit or license plate to park in these spaces." // Based on handbook text on signs (blue color) and parking prohibitions
+             },
+             {
+                 question: "What is the penalty for littering?",
+                 answer: "A fine of $500 and points against your driving record.",
+                 explanation: "Littering is a moving violation and is punishable by a fine of $500 and points assessed against your driving record." // Based on common handbook knowledge; not explicitly in provided text
+             },
+             {
+                 question: "What does a round yellow warning sign with an 'X' and two 'R's mean?",
+                 answer: "Railroad crossing ahead.",
+                 explanation: "This is a railroad advance warning sign." // Based on general knowledge of traffic signs
+             },
+             {
+                question: "What is the minimum age to obtain a Florida learner's license?",
+                answer: "15 years old.",
+                explanation: "To obtain a learner's license in Florida, you must be at least 15 years old." // Based on common handbook knowledge; not in provided text snippets directly but usually early in handbook.
+            },
+            {
+                question: "How long is a learner's license valid?",
+                answer: "Until the holder is 18 years old.",
+                explanation: "A learner's license is valid until the holder's 18th birthday." // Based on common handbook knowledge.
+            },
+            {
+                question: "What documents are required to obtain a Florida learner's license?",
+                answer: "Proof of identity, proof of social security number, and proof of residential address.",
+                explanation: "When applying for a learner's license, you must bring identification documents, proof of Social Security number, and proof of residential address." // Based on common handbook knowledge.
+            },
+            {
+                question: "What tests are required to obtain a Florida learner's license?",
+                answer: "Vision test, hearing test, and the Traffic Law and Substance Abuse Education (TLSAE) course and exam.",
+                explanation: "To get a learner's license, you must pass a vision test, a hearing test, and the Traffic Law and Substance Abuse Education (TLSAE) course and its associated exam." // Based on provided TLSAE text and common knowledge.
+            },
+             {
+                question: "What is the minimum age to obtain a Florida Class E driver's license?",
+                answer: "16 years old.",
+                explanation: "You must be at least 16 years old to obtain a Class E driver's license in Florida." // Based on provided age restrictions info.
+            },
+            {
+                question: "In addition to passing the required tests, what is another requirement for a minor to obtain a Class E driver's license?",
+                answer: "Hold a learner's license for at least one year without any traffic convictions.",
+                explanation: "Minors must hold a learner's license for at least one year without any traffic convictions to be eligible for a Class E license." // Based on common handbook knowledge; implied by learner's permit duration.
+            },
+            {
+                question: "What is the purpose of the Florida Graduated Driver Licensing law?",
+                answer: "To provide young drivers with driving experience under conditions that reduce the risk of crashes.",
+                explanation: "The Graduated Driver Licensing (GDL) law is designed to help young drivers gain experience safely by phasing in driving privileges." // Based on general knowledge of GDL purpose.
+            },
+             {
+                question: "What is the blood alcohol content (BAC) limit for drivers under 21 in Florida?",
+                answer: "0.02% or higher.",
+                explanation: "In Florida, drivers under 21 with a BAC of 0.02% or higher are subject to penalties under the Zero Tolerance law." // Based on common handbook knowledge; implied by DUI section.
+            },
+            {
+                question: "What is the blood alcohol content (BAC) limit for drivers 21 or older in Florida?",
+                answer: "0.08% or higher.",
+                explanation: "It is illegal to drive with a BAC of 0.08% or higher if you are 21 years old or older." // Based on common handbook knowledge; implied by DUI section.
+            },
+            {
+                question: "What does implied consent mean in relation to DUI?",
+                answer: "By driving in Florida, you agree to take a breath, blood, or urine test if suspected of DUI.",
+                explanation: "By driving a motor vehicle in Florida, you automatically consent to submit to a breath, blood, or urine test if you are lawfully arrested for an offense committed while driving or in actual physical control of a motor vehicle while under the influence." // Based on provided DUI section explaining refusal penalties.
+            },
+             {
+                question: "What is the penalty for a first DUI conviction?",
+                answer: "Fines, probation, community service, license suspension, DUI school, and possible imprisonment.",
+                explanation: "Penalties for a first DUI conviction include mandatory fines, probation, community service, license suspension, completion of DUI school, and potential jail time." // Based on common handbook knowledge; specifics vary but general categories are standard.
+            },
+            {
+                question: "What is the penalty for refusing to submit to a breath, blood, or urine test a second time?",
+                answer: "An 18-month license suspension and a first-degree misdemeanor charge.",
+                explanation: "A second refusal to submit to a breath, blood, or urine test results in an 18-month license suspension and is a first-degree misdemeanor." // Directly from provided text.
+            },
+            {
+                question: "How many points are assessed against your driving record for a hit-and-run (leaving the scene) resulting in property damage?",
+                answer: "6 points.",
+                explanation: "Leaving the scene of a crash resulting in property damage is assessed 6 points." // Based on common handbook knowledge; not directly in provided text snippets but usually in points section.
+            },
+             {
+                question: "How many points are assessed against your driving record for unlawful speed (over 15 MPH over the limit)?",
+                answer: "4 points.",
+                explanation: "Speeding more than 15 MPH over the speed limit is assessed 4 points." // Based on common handbook knowledge; not directly in provided text snippets but usually in points section.
+            },
+            {
+                question: "How many points are assessed against your driving record for a moving violation that results in a crash?",
+                answer: "4 points.",
+                explanation: "Any moving violation that results in a crash is assessed 4 points." // Based on common handbook knowledge; not directly in provided text snippets but usually in points section.
+            },
+            {
+                question: "If you accumulate 12 points within a 12-month period, how long will your license be suspended?",
+                answer: "30 days.",
+                explanation: "Accumulating 12 points within 12 months results in a 30-day license suspension." // Based on common handbook knowledge; not directly in provided text snippets but usually in points section.
+            },
+             {
+                question: "If you accumulate 18 points within an 18-month period, how long will your license be suspended?",
+                answer: "3 months.",
+                explanation: "Accumulating 18 points within 18 months results in a 3-month license suspension." // Based on common handbook knowledge; not directly in provided text snippets but usually in points section.
+            },
+            {
+                question: "If you accumulate 24 points within a 36-month period, how long will your license be suspended?",
+                answer: "1 year.",
+                explanation: "Accumulating 24 points within 36 months results in a 1-year license suspension." // Based on common handbook knowledge; not directly in provided text snippets but usually in points section.
+            },
+            {
+                question: "What is the purpose of the Driver Improvement School?",
+                answer: "To educate drivers on safe driving practices and potentially reduce points or satisfy court requirements.",
+                explanation: "Driver Improvement schools provide traffic safety education and may be required by the court or elected to satisfy point requirements." // Based on provided BDI info and general knowledge.
+            },
+             {
+                question: "What should you do if you are approaching a flashing yellow traffic signal?",
+                answer: "Slow down and proceed with caution.",
+                explanation: "A flashing yellow light means you should slow down and proceed with caution." // Directly from provided text.
+            },
+            {
+                question: "What should you do if you are approaching a flashing red traffic signal?",
+                answer: "Stop completely before entering the intersection and proceed when safe.",
+                explanation: "A flashing red light is treated like a stop sign; stop and proceed when safe." // Directly from provided text.
+            },
+            {
+                question: "What is the hand signal for slowing or stopping?",
+                answer: "Arm extended downward.",
+                explanation: "The hand signal for slowing or stopping is the arm extended downward at a 90-degree angle." // Directly from provided text.
+            },
+             {
+                question: "What is the hand signal for a left turn?",
+                answer: "Arm extended straight out.",
+                explanation: "The hand signal for a left turn is the arm extended straight out." // Directly from provided text.
+            },
+            {
+                question: "What is the hand signal for a right turn?",
+                answer: "Arm extended upward.",
+                explanation: "The hand signal for a right turn is the arm extended upward at a 90-degree angle." // Directly from provided text.
+            },
+            {
+                question: "When must you use a turn signal?",
+                answer: "At least 100 feet before making a turn or changing lanes.",
+                explanation: "You must give a turn signal at least 100 feet BEFORE making your turn or changing lanes." // Directly from provided text.
+            },
+             {
+                question: "What does a steady green traffic light mean?",
+                answer: "You may proceed if the way is clear, yielding to pedestrians and vehicles already in the intersection.",
+                explanation: "A steady green light means you may proceed through an intersection if the way is clear. You must yield the right-of-way to vehicles and pedestrians already in the intersection." // Based on common handbook knowledge.
+            },
+            {
+                question: "What does a steady yellow traffic light mean?",
+                answer: "The light is about to turn red; stop if it is safe to do so.",
+                explanation: "A steady yellow light means the light is changing to red. You should stop if you can do so safely. If you are already in the intersection, continue through." // Based on common handbook knowledge.
+            },
+            {
+                question: "What should you do if you are in an intersection when the traffic light changes to yellow or red?",
+                answer: "Continue through the intersection.",
+                explanation: "If you are already in the intersection when the light changes to yellow or red, continue through." // Based on common handbook knowledge.
+            },
+             {
+                question: "What is the safest way to drive through a curve?",
+                answer: "Slow down before entering the curve and gradually accelerate as you come out of it.",
+                explanation: "Slow down before entering a curve so you don't have to brake in the curve. Gradually apply the accelerator as you come out of the curve." // Based on common handbook knowledge.
+            },
+            {
+                question: "What should you do if your vehicle begins to hydroplane?",
+                answer: "Take your foot off the accelerator, do not brake hard, and steer in the direction you want to go.",
+                explanation: "If your vehicle starts to hydroplane, ease your foot off the gas pedal. Do not apply the brakes hard. Steer in the direction you want the vehicle to go." // Based on provided text on driving in rain.
+            },
+            {
+                question: "What does a double solid white line separating lanes of traffic mean?",
+                answer: "Crossing the line or changing lanes is not allowed.",
+                explanation: "Double solid white lines mean that crossing a double solid line or changing lanes is not allowed." // Directly from provided text.
+            },
+             {
+                question: "What does a single solid yellow line on your side of the center line mean?",
+                answer: "Passing is not allowed in your lane.",
+                explanation: "A single solid yellow line on your side of the center line means you are not allowed to pass." // Based on provided text on lane lines.
+            },
+            {
+                question: "What does a broken yellow line alongside a solid yellow line mean?",
+                answer: "If the broken line is on your side, you may pass if safe. If the solid line is on your side, you may not pass.",
+                explanation: "Broken yellow line beside a solid yellow line means passing is permitted only on the side with the broken line." // Based on provided text on lane lines.
+            },
+            {
+                question: "When are you permitted to pass a vehicle on the right?",
+                answer: "On a two or more lane road in your direction, when the vehicle you are passing is making a left turn, or on a one-way street where traffic is moving in your direction.",
+                explanation: "You may pass on the right only under the following conditions: When the driver of the vehicle you are overtaking is making a left turn; On a street or highway with two or more lanes of traffic moving in the same direction; On a one-way street where traffic is moving in your direction." // Based on common handbook knowledge; not directly in provided text snippets but related to passing.
+            },
+             {
+                question: "What is the minimum following distance you should maintain behind a large truck?",
+                answer: "Increase your following distance beyond the four-second rule.",
+                explanation: "When following large trucks, increase your following distance because they require more space to stop and to allow you to see around them." // Based on provided text recommending increased following distance for certain vehicles.
+            },
+            {
+                question: "What does a red and white triangular sign mean?",
+                answer: "Yield.",
+                explanation: "Red and white triangular signs are Yield signs." // Based on provided text on sign colors.
+            },
+            {
+                question: "What does a white square or rectangular sign with black lettering mean?",
+                answer: "Regulatory information (e.g., speed limits, lane usage).",
+                explanation: "White/Black signs are Regulatory signs. They control traffic, set limits, or give commands." // Directly from provided text.
+            },
+             {
+                question: "What does a yellow diamond-shaped sign with a curved arrow mean?",
+                answer: "Curve ahead.",
+                explanation: "Yellow diamond-shaped signs are warning signs. A curved arrow indicates a curve in the road ahead." // Based on general knowledge of traffic signs.
+            },
+            {
+                question: "What does a yellow diamond-shaped sign with a picture of a pedestrian mean?",
+                answer: "Pedestrian crossing ahead.",
+                explanation: "Yellow diamond-shaped signs are warning signs. This symbol warns of a pedestrian crossing." // Based on provided text on warning sign color and pedestrian info.
+            },
+            {
+                question: "What does a yellow diamond-shaped sign with a picture of a bicycle mean?",
+                answer: "Bicycle crossing ahead or shared roadway.",
+                explanation: "Yellow diamond-shaped signs are warning signs. This symbol warns of bicycles or a shared roadway with bicycles." // Based on provided text on warning sign color and bicycle info.
+            },
+             {
+                question: "What does a yellow diamond-shaped sign with a picture of a deer mean?",
+                answer: "Deer crossing ahead.",
+                explanation: "Yellow diamond-shaped signs are warning signs. This symbol warns of potential animal crossings." // Based on general knowledge of traffic signs.
+            },
+            {
+                question: "What does a yellow diamond-shaped sign with winding arrows mean?",
+                answer: "Winding road ahead.",
+                explanation: "Yellow diamond-shaped signs are warning signs. This symbol indicates a series of curves or a winding road ahead." // Based on general knowledge of traffic signs.
+            },
+            {
+                question: "What does a red circle with a slash mark over a symbol mean?",
+                answer: "The action shown by the symbol is prohibited.",
+                explanation: "A red circle with a diagonal slash is a prohibitory symbol, meaning the action shown is not allowed." // Based on common knowledge of traffic signs.
+            },
+            {
+                question: "What is the purpose of rumble strips?",
+                answer: "To alert drivers who drift off the roadway or cross the center line.",
+                explanation: "Rumble strips are textured areas on the roadway that create noise and vibration to alert drivers when they are drifting out of their lane or off the road." // Based on common handbook knowledge; not directly in provided text.
+            },
+            {
+                question: "What should you do if you are being tailgated?",
+                answer: "Increase your following distance and if possible, move to another lane or pull over to let the tailgater pass.",
+                explanation: "If you are being tailgated, do not speed up. Increase your following distance to the vehicle in front of you. If possible, change lanes or pull over to let the tailgater pass." // Based on common handbook knowledge; relates to following distance.
+            },
+             {
+                question: "What is the meaning of regulatory signs?",
+                answer: "They control traffic, set limits, or give commands.",
+                explanation: "Regulatory signs are white and black. They control traffic, set limits or give commands." // Directly from provided text.
+            },
+            {
+                question: "What is the meaning of warning signs?",
+                answer: "They warn you of unexpected roadway conditions.",
+                explanation: "Warning signs are yellow. They advise of unexpected roadway conditions." // Directly from provided text.
+            },
+            {
+                question: "What is the meaning of guide signs?",
+                answer: "They provide directional information.",
+                explanation: "Guide or directional information signs are green." // Directly from provided text.
+            },
+             {
+                question: "What is the meaning of driver guidance signs?",
+                answer: "They provide information like services or points of interest.",
+                explanation: "Blue signs provide driver guidance and are also used to identify parking spaces for disabled drivers." // Directly from provided text.
+            },
+            {
+                question: "What is the meaning of brown signs?",
+                answer: "They indicate areas of public recreation, cultural, or historical significance.",
+                explanation: "Brown signs indicate areas of public recreation, cultural and historical significance." // Directly from provided text.
+            },
+            {
+                question: "When parallel parking, what is the first step after finding a space?",
+                answer: "Signal your intention to park and pull up alongside the vehicle in front of the space.",
+                explanation: "When parallel parking, signal your intention to park and pull up alongside the vehicle in front of the parking space, parallel to it and about two feet away." // Based on common handbook knowledge; relates to parking section.
+            },
+             {
+                question: "When are you NOT allowed to pass a school bus?",
+                answer: "When it is stopped and has its warning flashers on and stop sign extended.",
+                explanation: "You must not pass when a school bus is stopped and has its warning flashers on and stop sign extended." // Directly from provided text.
+            },
+            {
+                question: "What is the penalty for illegally passing a stopped school bus?",
+                answer: "A fine and points against your driving record.",
+                explanation: "Illegally passing a stopped school bus is a serious traffic violation and carries a significant fine and points against your driver license." // Based on common handbook knowledge; relates to school bus section.
+            },
+             {
+                question: "What should you do if you encounter a funeral procession?",
+                answer: "Yield the right-of-way to the entire procession.",
+                explanation: "You must yield the right-of-way to vehicles in a funeral procession. Do not break through a funeral procession." // Based on common handbook knowledge.
+            },
+             {
+                question: "What must you do before entering any street from an alley or driveway?",
+                answer: "Stop and yield the right-of-way to all pedestrians and vehicles.",
+                explanation: "You must stop before entering a street from an alley, building, or driveway. You must yield the right-of-way to all pedestrians and vehicles on the street." // Based on common handbook knowledge; relates to yielding.
+            },
+             {
+                question: "What is the minimum liability coverage required by the Financial Responsibility Law if you are at fault in a crash with bodily injury to one person?",
+                answer: "$10,000.",
+                explanation: "The Financial Responsibility Law requires minimum bodily injury liability coverage of $10,000 per person injured in a crash where you are at fault." // Based on common handbook knowledge; relates to insurance section.
+            },
+             {
+                question: "What is the minimum liability coverage required by the Financial Responsibility Law if you are at fault in a crash with bodily injury to two or more people?",
+                answer: "$20,000.",
+                explanation: "The Financial Responsibility Law requires minimum bodily injury liability coverage of $20,000 per crash for injuries to two or more people where you are at fault." // Based on common handbook knowledge; relates to insurance section.
+            },
+             {
+                question: "What is the minimum liability coverage required by the Financial Responsibility Law for property damage?",
+                answer: "$10,000.",
+                explanation: "The Financial Responsibility Law requires minimum property damage liability coverage of $10,000 per crash where you are at fault." // Based on common handbook knowledge; relates to insurance section.
+            },
+            {
+                question: "What is considered a 'moving violation'?",
+                answer: "Any violation of a traffic law while the vehicle is in motion.",
+                explanation: "A moving violation is any violation of a traffic law committed by a driver while the vehicle is in motion." // Based on general definition and context from points system.
+            },
+             {
+                question: "What is the 'Zero Tolerance' law for drivers under 21?",
+                answer: "It prohibits drivers under 21 from operating a vehicle with a blood alcohol content (BAC) of 0.02% or higher.",
+                explanation: "Florida's Zero Tolerance law makes it illegal for drivers under the age of 21 to drive with a blood alcohol content (BAC) of 0.02% or higher." // Based on provided text on BAC for under 21.
+            },
+            {
+                question: "What should you do if an animal suddenly runs in front of your vehicle?",
+                answer: "Brake firmly if possible, but do not swerve violently, especially at high speeds or if other traffic is present.",
+                explanation: "If an animal runs into the road, brake firmly but avoid swerving suddenly, which could cause you to lose control or collide with other vehicles." // Based on common handbook knowledge.
+            },
+            {
+                question: "What is the purpose of reflective markers on the roadway?",
+                answer: "To help drivers see the edges of the roadway and the lanes at night or in poor visibility.",
+                explanation: "Reflective markers (reflectors) on the roadway are used to help drivers see the lane lines and the edges of the road, especially at night or in bad weather." // Based on provided text about red reflectors and general knowledge.
+            },
+            {
+                question: "What is the maximum speed limit when driving in a construction zone?",
+                answer: "The posted speed limit, which is often reduced.",
+                explanation: "Obey the posted speed limits in construction zones, which are often lower than regular speed limits. Fines may be doubled in construction zones when workers are present." // Based on common handbook knowledge and provided info on orange signs.
+            },
+             {
+                question: "What should you do if your vehicle starts to overheat?",
+                answer: "Pull over to the side of the road and turn off the engine.",
+                explanation: "If your vehicle begins to overheat, pull over to a safe location off the roadway and turn off the engine immediately." // Based on common handbook knowledge.
+            },
+            {
+                question: "When is it safe to return to the right lane after passing another vehicle?",
+                answer: "When you can see the headlights of the passed vehicle in your rearview mirror.",
+                explanation: "After passing, do not return to the right lane until you can see the headlights of the vehicle you passed in your rearview mirror." // Based on common handbook knowledge; relates to passing.
+            },
+             {
+                question: "What should you do if you are involved in a crash with injuries?",
+                answer: "Check for injuries, call 911, and do not move the injured unless necessary for safety.",
+                explanation: "If you are involved in a crash with injuries, check for injuries and call 911 immediately. Do not move injured persons unless they are in immediate danger (e.g., vehicle is on fire)." // Based on common handbook knowledge; relates to accidents.
+            },
+            {
+                question: "What should you do if you are involved in a crash with property damage only?",
+                answer: "Exchange information with the other driver(s) and move the vehicles off the roadway if possible and safe.",
+                explanation: "In a minor crash with property damage only, exchange information (name, address, phone, insurance, license, license plate) with the other drivers. If the vehicles can be moved safely, move them off the roadway to prevent blocking traffic." // Based on provided text on minor accidents and common knowledge.
+            },
+            {
+                question: "What is the main purpose of traffic laws?",
+                answer: "To ensure the safety of all road users.",
+                explanation: "Traffic laws are designed to organize and control the flow of vehicles and pedestrians, with the primary goal of preventing crashes and ensuring the safety of everyone on the road." // Based on general knowledge.
+            }
+        ];
+
+        let shuffledQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let wrongAnswers = 0;
+        let quizStartTime;
+        let quizEndTime;
+        let quizActive = false;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+            }
+            return array;
+        }
+
+        function generateChoices(correctAnswer) {
+            const choices = [correctAnswer];
+            while (choices.length < 4) {
+                // Generate simple placeholder incorrect answers
+                const dummyChoice = `Option ${String.fromCharCode(65 + Math.floor(Math.random() * 26))} ${Math.floor(Math.random() * 1000)}`;
+                if (!choices.includes(dummyChoice)) {
+                    choices.push(dummyChoice);
+                }
+            }
+            return shuffleArray(choices);
+        }
+
+        function buildQuiz() {
+            shuffledQuestions = shuffleArray([...questions]);
+            const output = [];
+
+            shuffledQuestions.forEach((currentQuestion, index) => {
+                const choices = generateChoices(currentQuestion.answer);
+                const choicesHtml = choices.map((choice, choiceIndex) =>
+                    `<label>
+                        <input type="radio" name="question${index}" value="${choice}">
+                        ${choice}
+                    </label>`
+                ).join('');
+
+                output.push(
+                    `<div class="question" id="question-${index}">
+                        <h3>Question ${index + 1}: ${currentQuestion.question}</h3>
+                        <div class="choices">${choicesHtml}</div>
+                        <div class="feedback" style="display:none;"></div>
+                        <div class="explanation" style="display:none;">${currentQuestion.explanation}</div>
+                    </div>`
+                );
+            });
+
+            document.getElementById('quiz').innerHTML = output.join('');
+            addEventListeners();
+            quizStartTime = new Date();
+            quizActive = true;
+        }
+
+        function addEventListeners() {
+            document.querySelectorAll('.choices input[type="radio"]').forEach(input => {
+                input.addEventListener('change', handleAnswer);
+            });
+        }
+
+        function handleAnswer(event) {
+            if (!quizActive) return;
+
+            const selectedInput = event.target;
+            const questionElement = selectedInput.closest('.question');
+            const feedbackElement = questionElement.querySelector('.feedback');
+            const explanationElement = questionElement.querySelector('.explanation');
+            const questionIndex = parseInt(questionElement.id.replace('question-', ''));
+            const correctAnswer = shuffledQuestions[questionIndex].answer;
+            const selectedAnswer = selectedInput.value;
+
+            // Disable all radio buttons for this question
+            questionElement.querySelectorAll('input[type="radio"]').forEach(input => {
+                input.disabled = true;
+                // Highlight the correct answer
+                if (input.value === correctAnswer) {
+                     input.closest('label').style.fontWeight = 'bold';
+                     input.closest('label').style.color = '#155724';
+                }
+            });
+
+
+            if (selectedAnswer === correctAnswer) {
+                feedbackElement.textContent = "Correct!";
+                feedbackElement.className = 'feedback correct';
+                score++;
+            } else {
+                feedbackElement.textContent = "Wrong!";
+                feedbackElement.className = 'feedback wrong';
+                wrongAnswers++;
+                // Indicate the chosen wrong answer
+                 selectedInput.closest('label').style.color = '#721c24';
+                 selectedInput.closest('label').style.fontWeight = 'bold';
+
+                explanationElement.style.display = 'block'; // Show explanation
+            }
+             feedbackElement.style.display = 'block'; // Show feedback
+
+
+        }
+
+        function showResults() {
+            quizEndTime = new Date();
+            quizActive = false;
+
+            const totalQuestions = questions.length;
+            const timeTaken = ((quizEndTime - quizStartTime) / 1000).toFixed(2); // Time in seconds
+
+            document.getElementById('score').textContent = `Correct: ${score} | Wrong: ${wrongAnswers} | Total: ${totalQuestions}`;
+            document.getElementById('time').textContent = `Time Taken: ${timeTaken} seconds`;
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('submit').style.display = 'none'; // Hide submit button
+
+            // Scroll to the top to show results
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Build quiz on page load
+        document.addEventListener('DOMContentLoaded', buildQuiz);
+
+        // Add event listener for the submit button
+        document.getElementById('submit').addEventListener('click', showResults);
+
+    </script>
+</body>
+</html>

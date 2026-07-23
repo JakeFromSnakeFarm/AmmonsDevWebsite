@@ -1,0 +1,15 @@
+[09-Dec-2025 15:29:50 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: Salt must be exactly 22 chars from the bcrypt alphabet ./0-9A-Za-z in /home/ammonsdev/public_html/bcrypt_playground.php:7
+Stack trace:
+#0 /home/ammonsdev/public_html/bcrypt_playground.php(23): BcryptPlayground::make('money9000', '', 10)
+#1 {main}
+  thrown in /home/ammonsdev/public_html/bcrypt_playground.php on line 7
+[09-Dec-2025 15:29:59 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: Salt must be exactly 22 chars from the bcrypt alphabet ./0-9A-Za-z in /home/ammonsdev/public_html/bcrypt_playground.php:7
+Stack trace:
+#0 /home/ammonsdev/public_html/bcrypt_playground.php(23): BcryptPlayground::make('money9000', '', 10)
+#1 {main}
+  thrown in /home/ammonsdev/public_html/bcrypt_playground.php on line 7
+[09-Dec-2025 15:30:18 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: Salt must be exactly 22 chars from the bcrypt alphabet ./0-9A-Za-z in /home/ammonsdev/public_html/bcrypt_playground.php:7
+Stack trace:
+#0 /home/ammonsdev/public_html/bcrypt_playground.php(23): BcryptPlayground::make('money9000', '', 10)
+#1 {main}
+  thrown in /home/ammonsdev/public_html/bcrypt_playground.php on line 7

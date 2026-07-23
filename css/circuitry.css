@@ -1,0 +1,25 @@
+* {
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    overflow: hidden;
+}
+
+.grid-container {
+    background-color: #2196F3;
+    display: grid;
+    grid-template-columns: 20vw 20vw 20vw 20vw 20vw;
+    height: 100vh;
+    margin: auto;
+    width: 100vw;
+}
+
+.grid-container img {
+    -webkit-transition: 0.2s ease-in-out;
+    -webkit-user-select: none;
+    /* Safari */
+    transition: 0.2s ease-in-out;
+    user-select: none;
+    /* supported by Chrome and Opera */
+    width: 20vw;
+    height: 20vw;
+}
