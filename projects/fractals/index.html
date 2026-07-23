@@ -1,0 +1,69 @@
+<html>
+<head>
+	<link rel="preload" href="./gifs/tSquare.gif" as="image">
+	<link rel="preload" href="./gifs/tSquareCurve.gif" as="image">
+	<link rel="preload" href="./gifs/sirSquare.gif" as="image">
+	<link rel="preload" href="./gifs/dlrOne.png" as="image">
+</head>
+<style>
+body {
+	background-image: radial-gradient(#444444 30%, #5e5e5e 100%); 
+}
+.main-container {
+	display: flex;
+	justify-content: space-around;
+	margin-bottom: 90px;
+}
+.img-container {
+	transition: 1s;
+	color: transparent;
+	width: 256px;
+	height: 256px;
+	text-align: center;
+}
+.img-container:hover {
+	color: white;
+}
+.img-container:hover > .opacity-box{
+	background-color:rgba(192,192,192,0.5);
+	cursor: pointer;
+}
+.opacity-box {
+	transition: 1s;
+	position: absolute;
+	width: 256px;
+	height: 256px;
+	background-color:rgba(192,192,192,0);
+	border-radius: 20px;
+}
+img {
+	border-radius: 20px;
+}
+.text-display {
+	position: relative;
+	width:100%;
+}
+</style>
+<div class="main-container">
+	<div class="img-container" onclick="location.href='tSquare.html'">
+		<div class="opacity-box"></div>
+		<img src="./gifs/tSquare.gif" width="256" height="256">
+		<h1 class="text-display">T Square Fractal</h1>
+	</div>
+	<div class="img-container" onclick="location.href='tSquareCurve.html'">
+		<div class="opacity-box"></div>
+		<img src="./gifs/tSquareCurve.gif" width="256" height="256">
+		<h1 class="text-display">U Curve Fractal</h1>
+	</div>
+	<div class="img-container" onclick="location.href='carpetFractal.html'">
+		<div class="opacity-box"></div>
+		<img src="./gifs/sirSquare.gif" width="256" height="256">
+		<h1 class="text-display">Carpet Fractal</h1>
+	</div>
+	<div class="img-container" onclick="location.href='dlr.html'">
+		<div class="opacity-box"></div>
+		<img src="./gifs/dlrOne.png" width="256" height="256">
+		<h1 class="text-display">Diffusion Limited Agregation</h1>
+	</div>
+</div>
+</html>

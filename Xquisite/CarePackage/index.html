@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="./css/style.css" />
+</head>
+
+<body>
+    <h1>X5001</h1>
+    <div class="main-box">
+        <div class="fillable-item">
+            <div class="item-label">
+                <label for="item0">Run dishwasher</label>
+                <input type="checkbox" name="" id="item0"></div>
+            <div class="notes-area">
+                <textarea placeholder="Notes (If needed)"></textarea>
+                <input type="file" accept="image/*" capture="environment" name="" id="item0file" style="display:none" />
+                <input type="button" id="item0upload" value="Upload Photo" onclick="photoUpload(this,document.getElementById('item0file'))" />
+            </div>
+        </div>
+        <div class="fillable-item">
+            <div class="item-label">
+                <label for="item1">Run stove</label>
+                <input type="checkbox" name="" id="item1"></div>
+            <div class="notes-area">
+                <textarea placeholder="Notes (If needed)"></textarea>
+                <input type="file" accept="image/*" capture="environment" name="" id="item1file" style="display:none" />
+                <input type="button" id="item1upload" value="Upload Photo" onclick="photoUpload(this,document.getElementById('item1file'))" />
+            </div>
+        </div>
+<!--         <div class="fillable-item">
+            <div class="item-label">
+                <label for="item2">Check bilge</label>
+                <input type="checkbox" name="" id="item2"></div>
+            <div class="notes-area">
+                <textarea placeholder="Notes (If needed)"></textarea>
+                <input type="file" accept="image/*" capture="environment" name="" id="item2file" style="display:none" />
+                <input type="button" id="item2upload" value="Upload Photo" onclick="photoUpload(this,document.getElementById('item2file'))" />
+            </div>
+        </div>
+        <div class="fillable-item">
+            <div class="item-label">
+                <label for="item3">Clean sea strainer</label>
+                <input type="checkbox" name="" id="item3"></div>
+            <div class="notes-area">
+                <textarea placeholder="Notes (If needed)"></textarea>
+                <input type="file" accept="image/*" capture="environment" name="" id="item3file" style="display:none" />
+                <input type="button" id="item3upload" value="Upload Photo" onclick="photoUpload(this,document.getElementById('item3file'))" />
+            </div>
+        </div> -->
+        <!-- <div class="fillable-item">
+            <div class="item-label">
+                <label for="item4">Run port engine</label>
+                <input type="checkbox" name="" id="item4"></div>
+            <div class="notes-area">
+                <textarea placeholder="Notes (If needed)"></textarea>
+                <input type="file" accept="image/*" capture="environment" name="" id="item4file" style="display:none" />
+                <input type="button" id="item4upload" value="Upload Photo" onclick="photoUpload(this,document.getElementById('item4file'))" />
+            </div>
+        </div>
+
+        <div class="fillable-item">
+            <div class="item-label">
+                <label for="item5">Run starboard engine</label>
+                <input type="checkbox" name="" id="item5"></div>
+            <div class="notes-area">
+                <textarea placeholder="Notes (If needed)"></textarea>
+                <input type="file" accept="image/*" capture="environment" name="" id="item5file" style="display:none" />
+                <input type="button" id="item5upload" value="Upload Photo" onclick="photoUpload(this,document.getElementById('item5file'))" />
+            </div>
+        </div>
+
+        <div class="fillable-item">
+            <div class="item-label">
+                <label for="item6">Check light assembly</label>
+                <input type="checkbox" name="" id="item6"></div>
+            <div class="notes-area">
+                <textarea placeholder="Notes (If needed)"></textarea>
+                <input type="file" accept="image/*" capture="environment" name="" id="item6file" style="display:none" />
+                <input type="button" id="item6upload" value="Upload Photo" onclick="photoUpload(this,document.getElementById('item6file'))" />
+            </div>
+        </div>
+
+        <div class="fillable-item">
+            <div class="item-label">
+                <label for="item7">Add treatment to tank</label>
+                <input type="checkbox" name="" id="item7"></div>
+            <div class="notes-area">
+                <textarea placeholder="Notes (If needed)"></textarea>
+                <input type="file" accept="image/*" capture="environment" name="" id="item7file" style="display:none" />
+                <input type="button" id="item7upload" value="Upload Photo" onclick="photoUpload(this,document.getElementById('item7file'))" />
+            </div>
+        </div>
+
+        <div class="fillable-item">
+            <div class="item-label">
+                <label for="item8">Check fuel level</label>
+                <input type="checkbox" name="" id="item8"></div>
+            <div class="notes-area">
+                <textarea placeholder="Notes (If needed)"></textarea>
+                <input type="file" accept="image/*" capture="environment" name="" id="item8file" style="display:none" />
+                <input type="button" id="item8upload" value="Upload Photo" onclick="photoUpload(this,document.getElementById('item8file'))" />
+            </div>
+        </div> -->
+        <div onclick="generatePDF()">Generate PDF</div>
+        <img src="" id="testimg">
+    </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+<script src="./js/html.js"></script>
+<script src="./js/canvas.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script type="text/javascript">
+var doc = new jsPDF();
+
+$("input[type=checkbox]").parent().parent().children(".notes-area").hide();
+$("input[type=checkbox]").change(
+    function() {
+        if (this.checked) {
+            $(this).parent().parent().children(".notes-area").show();
+        } else {
+            $(this).parent().parent().children(".notes-area").hide();
+        }
+    }
+)
+
+function photoUpload(label, input) {
+
+    input.click();
+    label.value = "";
+    $("input[type=file]").change(
+        function() {
+            label.style.backgroundImage = "url(" + window.URL.createObjectURL(input.files[0]) + ")";
+        }
+    )
+}
+
+
+var imgData,
+    heightCount = -180,
+    leftMargin = 10;
+
+async function getBase64(url, prompt, notes) {
+    const data = await fetch(url);
+    const blob = await data.blob();
+    const reader = new FileReader();
+    //console.log(blob)
+    let myPromise = new Promise(function(resolve) {
+        reader.readAsDataURL(blob);
+        reader.onloadend = () => {
+            resolve([reader.result, prompt, notes]);
+        }
+    })
+    return myPromise;
+}
+
+async function generatePDF() {
+    doc = new jsPDF();
+    const promises = [];
+    for (let i = 0; i < $(".main-box").children().children().children().length; i += 5) {
+        let prompt = $(".main-box").children().children().children()[i].innerHTML;
+        let notes = $(".main-box").children().children().children()[i + 2].value;
+        let image = "";
+        //if ($(".main-box").children().children().children()[i + 3].files.length > 0) {
+        image = window.URL.createObjectURL($(".main-box").children().children().children()[i + 3].files[0]);
+        //}
+
+        promises.push(getBase64(image, prompt, notes));
+        //let base64Data = getBase64(image);
+        //writeIterations++;
+        //base64Data.then(function(base64) {
+        //    writeToPDF(prompt, notes, base64)
+        //})
+    }
+    Promise.all(promises)
+        .then((results) => {
+            console.log("All done", results);
+            for(let i = 0; i<results.length;i++) {
+                writeToPDF(results[i][1], results[i][2], results[i][0]);
+            }
+            doc.save();
+        })
+        .catch((e) => {
+            // Handle errors here
+        });
+}
+
+function writeToPDF(prompt, notes, imageData) {
+    if (heightCount + 345 > doc.internal.pageSize.height) {
+        doc.addPage();
+        heightCount = -180;
+    }
+    heightCount += 190;
+    doc.text(prompt, leftMargin, heightCount);
+    heightCount += 5;
+    doc.text(notes, leftMargin, heightCount);
+    heightCount += 5;
+    doc.addImage(imageData, 'JPEG', leftMargin, heightCount, 160, 90, null, 'NONE', 210);
+
+}
+</script>
+
+</html>

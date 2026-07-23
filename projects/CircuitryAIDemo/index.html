@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+<link href='https://fonts.googleapis.com/css?family=Anton' rel='stylesheet'>
+<style>
+* {
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+}
+
+body {
+    background-color: gray;
+    font-family: 'Anton';
+    font-size: 22px;
+}
+
+.grid-container {
+    background-color: #2196F3;
+    border: 5px solid black;
+    display: grid;
+    grid-template-columns: 101px 101px 101px 101px 101px;
+    height: 505px;
+    margin: auto;
+    width: 505px;
+}
+
+img {
+    -webkit-transition: 0.2s ease-in-out;
+    -webkit-user-select: none;
+    /* Safari */
+    height: 101px;
+    transition: 0.2s ease-in-out;
+    user-select: none;
+    /* supported by Chrome and Opera */
+    width: 101px;
+}
+
+.button {
+    background-color: rgba(255, 0, 0, 0.7);
+    border: 2px solid black;
+    border-radius: 3px;
+    color: white;
+    cursor: pointer;
+    text-align: center;
+    width: 180px;
+}
+</style>
+
+<body ondragstart="return false" ondrop="return false">
+    <div class="grid-container">
+        <img class="crossRotate" id="0" src="http://marinestars.net/jake/games/Circuitry/tiles/null.png" />
+        <img class="crossRotate" id="1" src="http://marinestars.net/jake/games/Circuitry/tiles/null.png" />
+        <img class="crossRotate" id="2" src="http://marinestars.net/jake/games/Circuitry/tiles/null.png" />
+        <img class="crossRotate" id="3" src="http://marinestars.net/jake/games/Circuitry/tiles/null.png" />
+        <img class="crossRotate" id="4" src="http://marinestars.net/jake/games/Circuitry/tiles/null.png" />
+        <img class="crossRotate" id="5" src="http://marinestars.net/jake/games/Circuitry/tiles/null.png" />
+        <img class="crossRotate" id="6" src="http://marinestars.net/jake/games/Circuitry/tiles/null.png" />
+        <img class="crossRotate" id="7" src="http://marinestars.net/jake/games/Circuitry/tiles/null.png" />
+        <img class="crossRotate" id="8" src="http://marinestars.net/jake/games/Circuitry/tiles/null.png" />
+        <img class="crossRotate" id="9" src="http://marinestars.net/jake/games/Circuitry/tiles/null.png" />
+        <img class="crossRotate" id="10" src="http://marinestars.net/jake/games/Circuitry/tiles/null.png" />
+        <img class="crossRotate" id="11" src="http://marinestars.net/jake/games/Circuitry/tiles/null.png" />
+        <img class="crossRotate" id="12" src="http://marinestars.net/jake/games/Circuitry/tiles/null.png" />
+        <img class="crossRotate" id="13" src="http://marinestars.net/jake/games/Circuitry/tiles/null.png" />
+        <img class="crossRotate" id="14" src="http://marinestars.net/jake/games/Circuitry/tiles/null.png" />
+        <img class="crossRotate" id="15" src="http://marinestars.net/jake/games/Circuitry/tiles/null.png" />
+        <img class="crossRotate" id="16" src="http://marinestars.net/jake/games/Circuitry/tiles/null.png" />
+        <img class="crossRotate" id="17" src="http://marinestars.net/jake/games/Circuitry/tiles/null.png" />
+        <img class="crossRotate" id="18" src="http://marinestars.net/jake/games/Circuitry/tiles/null.png" />
+        <img class="crossRotate" id="19" src="http://marinestars.net/jake/games/Circuitry/tiles/null.png" />
+        <img class="crossRotate" id="20" src="http://marinestars.net/jake/games/Circuitry/tiles/null.png" />
+        <img class="crossRotate" id="21" src="http://marinestars.net/jake/games/Circuitry/tiles/null.png" />
+        <img class="crossRotate" id="22" src="http://marinestars.net/jake/games/Circuitry/tiles/null.png" />
+        <img class="crossRotate" id="23" src="http://marinestars.net/jake/games/Circuitry/tiles/null.png" />
+        <img class="crossRotate" id="24" src="http://marinestars.net/jake/games/Circuitry/tiles/null.png" />
+    </div>
+    <h1 style="margin: auto;text-align: center;">&#9889 C I R C U I T R Y &nbspA I &#9889</h1>
+    <div class="button" onclick="init()" style="cursor: pointer;margin: auto;">New Puzzle</div>
+    <div class="button" id="pauseBut" onclick="pauseUnpause(this)" style="cursor: pointer;margin: auto;">Pause</div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script>
+    var solution = [],
+        pieces = [],
+        toVisitPieces = [],
+        power = false,
+        interval, fails,
+        index1 = 0,
+        index2 = 0,
+        paused = false,
+        intervalSpeed = 700;
+
+    function Piece(i, j, id) { //Object constructor function
+        this.trueRot = 0; //Var for mathematical 0-360
+        this.cssRot = 90; //Var for CSS rotation that >360
+        this.id = id; //Stores non matrix ID
+        this.index = { i, j, id }; //Stores own index value
+        this.src = null; //Serves as tile type
+        this.connections = []; //0-3 correspond to up,down,left,right respective
+        this.hasUp = false; //Bools used to determine random direction
+        this.hasDown = false;
+        this.hasLeft = false;
+        this.hasRight = false;
+        this.isSetTile = false;
+        this.wasSpliced = false;
+        //this.connected = false;
+        this.tick = function() {
+            if (!this.isSetTile && this.checkCons()) { //Tiles has to be unset and have <3 connections
+                this.freeRandomDir();
+                fails = 0; //Fails var for ending loop
+                this.setSrc();
+                this.connections.sort(function(a, b) { return a - b; });
+                this.selfRotate(this.calcSolution());
+
+            } else {
+                if (fails++ == 25) { //If 25 objects come back unedited, declare the loop over
+                    clearInterval(interval);
+                    $(".crossRotate").css("background-color", "#2196F3");
+                    vectorToSolutionArray();
+                }
+                this.setSrc(); //Set the png for every finished tile
+                this.selfRotate(this.calcSolution());
+            }
+        };
+        this.checkCons = function() {
+            if (this.connections.length >= 3 || this.connections.length == 0) {
+                if (this.connections.length >= 3) {
+                    this.tileSet();
+                }
+                return false;
+            }
+            return true;
+        };
+        this.freeRandomDir = function() {
+            let excluded = [],
+                neighbors;
+            neighbors = this.grabExclusions();
+            excluded = neighbors.excluded;
+            if (excluded.length < 4) { //If all 4 directions arent blocks, then:
+                this.connections[this.connections.length] = random(0, 3, excluded); //Reference homebrew random function
+                switch (this.connections[this.connections.length - 1]) { //Switch statement for each direction
+                    case 0:
+                        this.hasUp = true; //Change boolen if this random direction is selected
+                        neighbors.pieceUp.connections[neighbors.pieceUp.connections.length] = 1; //Assign the respective neighbor the opposite direction
+                        neighbors.pieceUp.hasDown = true; //Assing boolean to neighbor as well, otherwise we get repetition in direction
+                        neighbors.pieceUp.setSrc("holder")
+                        neighbors.pieceUp.selfRotate(neighbors.pieceUp.calcSolution())
+                        toVisitPieces[toVisitPieces.length] = neighbors.pieceUp.index;
+                        break;
+                    case 1:
+                        this.hasDown = true;
+                        neighbors.pieceDown.connections[neighbors.pieceDown.connections.length] = 0;
+                        neighbors.pieceDown.hasUp = true;
+                        neighbors.pieceDown.setSrc("holder")
+                        neighbors.pieceDown.selfRotate(neighbors.pieceDown.calcSolution())
+                        toVisitPieces[toVisitPieces.length] = neighbors.pieceDown.index;
+                        break;
+                    case 2:
+                        this.hasLeft = true;
+                        neighbors.pieceLeft.connections[neighbors.pieceLeft.connections.length] = 3;
+                        neighbors.pieceLeft.hasRight = true;
+                        neighbors.pieceLeft.setSrc("holder")
+                        neighbors.pieceLeft.selfRotate(neighbors.pieceLeft.calcSolution())
+                        toVisitPieces[toVisitPieces.length] = neighbors.pieceLeft.index;
+                        break;
+                    case 3:
+                        this.hasRight = true;
+                        neighbors.pieceRight.connections[neighbors.pieceRight.connections.length] = 2;
+                        neighbors.pieceRight.hasLeft = true;
+                        neighbors.pieceRight.setSrc("holder")
+                        neighbors.pieceRight.selfRotate(neighbors.pieceRight.calcSolution())
+                        toVisitPieces[toVisitPieces.length] = neighbors.pieceRight.index;
+                        break;
+                }
+            } else {
+                this.tileSet(); //If all neighbors are invalid, quit doing ticks
+            }
+        };
+        this.grabExclusions = function() {
+            let excluded = [],
+                pieceUp, pieceDown, pieceLeft, pieceRight;
+            try {
+                pieceUp = pieces[this.index.i - 1][this.index.j];
+            } catch { //Catches error if index is a negative #, otherwise assigns the variable
+                pieceUp = null;
+            }
+            try {
+                pieceDown = pieces[this.index.i + 1][this.index.j];
+            } catch {
+                pieceDown = null;
+            }
+            try {
+                pieceLeft = pieces[this.index.i][this.index.j - 1];
+            } catch {
+                pieceLeft = null;
+            }
+            try {
+                pieceRight = pieces[this.index.i][this.index.j + 1];
+            } catch {
+                pieceRight = null;
+            }
+            if (this.connections.length > 0) { //Add connections to random numbers occlusion list
+                for (let i = 0; i < this.connections.length; i++) { //For loop to convert to avoid pointers
+                    excluded[i] = this.connections[i];
+                }
+            }
+            if (pieceUp == null || pieceUp.connections.length >= 1) { //If the neighbor is a wall (null) or exists, dont connect to him
+                if (!this.hasUp) //If there is an up connection, dont add another 0 to the array
+                    excluded[excluded.length] = 0;
+            }
+            if (pieceDown == null || pieceDown.connections.length >= 1) {
+                if (!this.hasDown)
+                    excluded[excluded.length] = 1;
+            }
+            if (pieceLeft == null || pieceLeft.connections.length >= 1) {
+                if (!this.hasLeft)
+                    excluded[excluded.length] = 2;
+            }
+            if (pieceRight == null || pieceRight.connections.length >= 1) {
+                if (!this.hasRight)
+                    excluded[excluded.length] = 3;
+            }
+            return { excluded, pieceUp, pieceDown, pieceLeft, pieceRight };
+        }
+        this.setSrc = function(forceSrc) {
+            if (!forceSrc) {
+                switch (this.connections.length) {
+                    case 1:
+                        this.src = "node"; //1 connections means is a node
+                        break;
+                    case 2:
+                        if (this.connections[0] > this.connections[1]) { //Simple array sort
+                            let temp = this.connections[0];
+                            this.connections[0] = this.connections[1];
+                            this.connections[1] = temp;
+                        }
+                        if ((this.connections[0] == 0 && this.connections[1] == 1) || (this.connections[0] == 2 && this.connections[1] == 3))
+                            this.src = "straight"; //If array contains opposites, its a straight
+                        else
+                            this.src = "ljoint"
+                        break;
+                    case 3:
+                        this.src = "tjoint"; //3 Connections means T
+                        break;
+                }
+            } else {
+                this.src = forceSrc;
+            }
+            if (this.index.i == 2 && this.index.j == 2) { //Hard code to make middle power
+                this.src = "power"
+            }
+            document.getElementById(this.id + "").src = "http://marinestars.net/jake/games/Circuitry/tiles/" + this.src + ".png";
+        };
+        this.calcSolution = function() {
+            if (this.src == "node" || this.src == "straight" || this.src == "holder") {
+                switch (this.connections[this.connections.length - 1]) {
+                    case 0:
+                        return 0;
+                    case 1:
+                        if (this.src == "straight")
+                            return 0;
+                        return 180; //Should reassign 0-3 to be cardinals so i can multiple by 90 for answer or just give hard code solution to reduce run time. I guess less runtime > less code0.
+                    case 2:
+                        if (this.src == "straight")
+                            return 90;
+                        return 270;
+                    case 3:
+                        return 90;
+                }
+            } else if (this.src == "ljoint") {
+                if (arraysEqual(this.connections, [1, 2])) {
+                    return 180;
+                } else if (arraysEqual(this.connections, [1, 3])) {
+                    return 90;
+                } else if (arraysEqual(this.connections, [0, 2])) {
+                    return 270;
+                } else {
+                    return 0;
+                }
+            } else {
+                if (arraysEqual(this.connections, [1, 2, 3])) {
+                    return 180;
+                } else if (arraysEqual(this.connections, [0, 2, 3])) {
+                    return 0;
+                } else if (arraysEqual(this.connections, [0, 1, 2])) {
+                    return 270;
+                } else {
+                    return 90;
+                }
+            }
+        };
+        this.selfRotate = function(angle) {
+            $("#" + this.id).css("transform", "rotate(" + angle + "deg)")
+        }
+        this.tileSet = function() {
+            if (!this.wasSpliced) {
+                splicePiece(this.index);
+                this.isSetTile = true;
+                this.setSrc();
+            }
+        }
+    }
+
+    function init() {
+        $(".crossRotate").css("transform", "rotate(0deg)"); //Resets rotation. Plans to make a random rotation later
+        $(".crossRotate").attr("src", "http://marinestars.net/jake/games/Circuitry/tiles/null.png");
+        document.getElementById("pauseBut").innerHTML = "Pause";
+        paused=false;
+        clearInterval(interval);
+        clearInterval(conditionsInterval);
+        toVisitPieces = [];
+        for (let i = 5; i--;) { //Initialize 2d array
+            pieces[i] = [];
+        }
+        for (let i = 0, count = 0; i < pieces.length; i++) { //Create 25 objects
+            for (let j = 0; j < 5; j++, count++) {
+                pieces[i][j] = new Piece(i, j, count);
+            }
+        }
+        if (!power) {
+            pieces[2][2].freeRandomDir(); //Start tree
+            pieces[2][2].freeRandomDir();
+            pieces[2][2].freeRandomDir(); //3 times to ensure it has 3 connections
+            pieces[2][2].setSrc();
+            pieces[2][2].connections.sort(function(a, b) { return a - b });
+            pieces[2][2].selfRotate(pieces[2][2].calcSolution());
+        }
+        interval = setInterval(generatePuzzle, intervalSpeed); //Function timer
+        intervalCons = setInterval(conditionsInterval, 50);
+    }
+
+    function generatePuzzle() {
+        $(".crossRotate").css("background-color", "#2196F3");
+        if (toVisitPieces.length != 0) {
+            let index = toVisitPieces[random(0, toVisitPieces.length - 1)];
+            pieces[index.i][index.j].tick();
+        }
+    }
+
+    function conditionsInterval() {
+        for (let i = 0; i < toVisitPieces.length; i++) {
+            $("#" + toVisitPieces[i].id).css("background-color", "#63db65");
+        }
+        for (let i = 0; i < pieces.length; i++) {
+            for (let j = 0; j < pieces[i].length; j++) {
+                pieces[i][j].checkCons();
+                let x = pieces[i][j].grabExclusions()
+                if (x.excluded.length == 4) {
+                    pieces[i][j].tileSet();
+                }
+            }
+        }
+    }
+
+    function findIndex(id) {
+        let x = Math.floor(id / 5),
+            y = id % 5; //Translates a base 10 number to a matrix index
+        return { x, y };
+    }
+
+    function checkWin() {
+        if (arraysEqual(grabCurrentRot(), solution)) { //Check if piece angle matches solution
+            $("img[src='http://marinestars.net/jake/games/Circuitry/tiles/node.png']").attr('src', 'http://marinestars.net/jake/games/Circuitry/tiles/anode.png');
+            setTimeout(function() { alert("Ay you completed it nice job"); }, 500)
+        }
+    }
+
+    function grabCurrentRot() {
+        let temparr = [];
+        for (let i = 0; i < pieces.length; i++) {
+            for (let j = 0; j < pieces[i].length; j++) {
+                temparr[temparr.length] = pieces[i][j].trueRot;
+            }
+        }
+        return temparr;
+    }
+
+    function arraysEqual(a, b) {
+        for (var i = 0; i < a.length; ++i) {
+            if (a[i] != b[i])
+                return false;
+        }
+        return true;
+    }
+
+    function vectorToSolutionArray() {
+        for (let i = 0, count = 0; i < pieces.length; i++) {
+            for (let j = 0; j < pieces[i].length; j++, count++) {
+                solution[count] = pieces[i][j].calcSolution();
+            }
+        }
+    }
+
+    function splicePiece(index) {
+        for (let i = 0; i < toVisitPieces.length; i++) {
+            if (toVisitPieces[i] == index) {
+                $("#" + index.id).css("background-color", "#2196F3")
+                toVisitPieces.splice(i, 1)
+                break;
+            }
+        }
+    }
+
+    function pauseUnpause(button) {
+        paused = !paused
+        if (paused) {
+            clearInterval(interval)
+            clearInterval(conditionsInterval);
+            button.innerHTML = "Unpause"
+        } else {
+            interval = setInterval(generatePuzzle, intervalSpeed);
+            intervalCons = setInterval(conditionsInterval, 50);
+            button.innerHTML = "Pause"
+        }
+    }
+
+    function random(min, max, occlusion) { //Homebrew random function for generating random numbers, occlusion is an array that holds #s our random cant be
+        this.value = Math.round(Math.random() * (max - min)) + min;
+        if (occlusion) {
+            for (let i = 0; i < occlusion.length; i++) {
+                if (this.value == occlusion[i]) {
+                    this.value = random(min, max, occlusion); //Recursive function to cycle until it finds our number
+                }
+            }
+            return this.value;
+        } else
+            return this.value;
+    }
+
+    $(".crossRotate").click(function() { //When a crossRotate class is clicked run this
+        let index = findIndex($(this).attr("id")); //Grab id of the element to use as array location
+        $(this).css("transform", "rotate(" + pieces[index.x][index.y].cssRot + "deg)"); //Rotate using totalRot value
+        if (pieces[index.x][index.y].cssRot % 360 == 0) { //Check to keep trueRot under mathematical 360 degrees
+            pieces[index.x][index.y].trueRot = 0;
+        } else {
+            pieces[index.x][index.y].trueRot += 90;
+            if (pieces[index.x][index.y].src == "straight") {
+                if ((pieces[index.x][index.y].trueRot == 270))
+                    pieces[index.x][index.y].trueRot = 90; //Logic to make a straight piece have the same angle when rotated 180 degrees
+                if ((pieces[index.x][index.y].trueRot == 180))
+                    pieces[index.x][index.y].trueRot = 0; //Logic to make a straight piece have the same angle when rotated 180 degrees
+            }
+        }
+        pieces[index.x][index.y].cssRot += 90; //Add 90 for the next CSS rotation
+        checkWin();
+    });
+    init();
+    </script>
+</body>
+
+</html>

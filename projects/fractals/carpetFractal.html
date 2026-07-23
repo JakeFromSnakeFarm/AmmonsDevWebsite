@@ -1,0 +1,51 @@
+<html>
+<link rel="stylesheet" href="./fractalStyle.css">
+<canvas id="can"></canvas>
+<input type="range" min="1" max="8" value="1" id="slider" class="slider">
+<script>
+const c = document.getElementById("can"),
+  ctx = c.getContext("2d");
+  c.width = window.innerHeight;
+  c.height = window.innerHeight,
+  sLength = c.width;
+var colors = [], slider = document.getElementById("slider");
+colorArr();
+draw(1)
+slider.oninput = function() {
+  draw(slider.value)
+}
+function draw(steps) {
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, sLength, sLength);
+    for (let i = 1; i < steps; i++) {
+      ctx.fillStyle = colors[i]
+      let s = Math.pow(1 / 3, steps-i),
+        squareS = sLength * s;
+      for (let j = 1; j < Math.pow(3, steps - 1); j += 3) {
+        if(squareS * j > sLength) {
+          break;
+        }
+        for (let k = 1; k < Math.pow(3, steps -1); k += 3) {
+          if(squareS * k > sLength) {
+            break;
+          }
+          ctx.fillRect(squareS * j, squareS * k, squareS, squareS);
+        }
+      }
+    }
+}
+
+function colorArr() {
+  let x = 50+Math.random() * 205,y = 50+Math.random() * 205, z = 50+Math.random() * 205;
+    for(let i=0;i<=7;++i) {
+        colors[7-i] = "rgb(" +
+        (x+(i*20)) +
+        "," +
+        (y+(i*20)) +
+        "," +
+        (z+(i*20)) +
+        ")";
+    }
+}
+</script>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Boat Log</title>
+    <style type="text/css">
+    body {
+        background-color: #485a58;
+    }
+
+    body>* {
+        margin: auto;
+        background-color: #f7f7f7;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        max-width: 500px;
+        padding-bottom: 12px;
+    }
+
+    form input,
+    form textarea {
+        margin: 10px 5px;
+        font-size: 2em;
+    }
+
+    form textarea {
+        height: 300px;
+    }
+
+    form div {
+        width: 100%;
+        display: flex;
+    }
+
+    form button {
+        height: 90px;
+        width: 90%;
+        margin: auto;
+        background-color: #c5c5c5;
+        font-size: 22px;
+    }
+
+    div input {
+        width: 50%;
+    }
+
+    #logDisplay {
+        max-width: 500px;
+        text-align: center;
+    }
+
+    #logDisplay * {
+        margin: 0;
+    }
+
+    #logDisplay h1 {
+        background-color: #eee;
+        font-size: 24px;
+        border-bottom: 1px solid black;
+    }
+
+    #logDisplay h2 {
+        font-weight: normal;
+    }
+
+    #logDisplay div {
+        background-color: #f7f7f7;
+        padding-bottom: 8px;
+    }
+
+    #logDisplay p {
+        font-size: 18px;
+    }
+    </style>
+</head>
+
+<body>
+    <!-- Entering Log Data -->
+    <form>
+        <input type="date" id="date" placeholder="Date">
+        <input type="time" id="time" placeholder="Time">
+        <textarea id="notes" placeholder="Log Entry"></textarea>
+        <div><input type="number" id="port" placeholder="Port Hrs"><input type="number" id="stbd" placeholder="Stbd Hrs"></div>
+        <button type="button" onclick="submitLog()">Submit Log Entry</button>
+    </form>
+    <!-- Viewing Logs -->
+    <div id="logDisplay">
+    </div>
+</body>
+<script type="text/javascript">
+var rawLog = [];
+downloadJSON();
+var date = new Date();
+//Format to a yyyy/mm/dd 2 digits
+var currentDate = date.getFullYear() + "-" + String((date.getMonth() + 1)).padStart(2, "0") + "-" + String(date.getDate()).padStart(2, "0");
+var currentTime = date.getHours() + ':' + String(date.getMinutes()).padStart(2, "0");
+document.getElementById('date').value = currentDate;
+document.getElementById('time').value = currentTime;
+
+//Pull JSON file from server
+async function downloadJSON() {
+    fetch('./log0.json')
+        .then(response => response.json()
+            .then(data =>
+                populateLogDisplay(data)
+            ));
+}
+
+//Pull object data from downloadJSON function
+function populateLogDisplay(logData) {
+    rawLog = logData;
+    let main = document.getElementById("logDisplay")
+    for (let i = 0; i < logData.length; i++) {
+        let entry = document.createElement("div");
+        let date = document.createElement("h1");
+        let time = document.createElement("h2");
+        let info = document.createElement("p");
+        let hrs = document.createElement("p");
+        date.innerHTML = logData[i].date;
+        time.innerHTML = logData[i].time;
+        info.innerHTML = logData[i].notes;
+        hrs.innerHTML = "Port: " + logData[i].port + " Stbd: " + logData[i].stbd;
+
+        entry.appendChild(date);
+        entry.appendChild(time);
+        entry.appendChild(info);
+        entry.appendChild(hrs);
+        main.appendChild(entry);
+    }
+}
+
+//Pull all data from on screen fields
+function submitLog() {
+    let date = document.getElementById("date").value,
+        time = document.getElementById("time").value,
+        notes = document.getElementById("notes").value,
+        port = document.getElementById("port").value,
+        stbd = document.getElementById("stbd").value;
+    let toPushArray = { date, time, notes, port, stbd };
+    rawLog.push(toPushArray);
+    uploadJSON(rawLog);
+}
+
+//Upload using POST to a php file
+function uploadJSON(obj) {
+    fetch('./updateLog.php', {
+            method: 'POST', // or 'PUT'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(obj),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            location.reload();
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+}
+</script>
+
+</html>

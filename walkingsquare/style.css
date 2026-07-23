@@ -1,0 +1,18 @@
+    body {
+        margin: 0;
+    }
+
+    .walkingSquare {
+        --rotations: 720;
+        --width: 50px;
+        --yoffset: 0px;
+        background-color: lime;
+        height: var(--width);
+        width: var(--width);
+        transform-origin: center;
+        transform: translate(calc(calc(var(--rotations)/90)*var(--width)), var(--yoffset)) rotate(calc(var(--rotations)*1deg));
+    }
+    .border {
+        border-bottom: 1px solid black;
+        width: 100%;
+    }

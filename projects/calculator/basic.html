@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <style type="text/css">
+    body {
+    	font-family: arial;
+    }
+    .main-box {
+    	margin: auto;
+    	position: relative;
+        width: 550px;
+        background-color: #f0f0f0;
+        padding: 1rem;
+    }
+
+    .select-box {
+    	width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .select-box h1 {
+    	font-weight: normal;
+    	margin-top:  0;
+    }
+
+    .select-option {
+    	background-color: #fff;
+    	height: 32px;
+    	padding: 1rem 0.25rem;
+    	width: 100%;
+    	font-size: 1.2rem;
+    	display: flex;
+    	justify-content: space-between;
+    	border-bottom: 1px solid #f0f0f0;
+    }
+
+    .select-option div {
+    	display: flex;
+    	align-items: center;
+    }
+    .select-option div>span {
+    	font-size: 1.25em;
+    	color: #aaa;
+    }
+    .select-option select, .select-option input {
+    	font-size: 1em;
+    	border: none;
+    	text-align: right;
+    	background-color: transparent;
+    }
+    .submit-button {
+    	margin-top: 1.33rem;
+    	border: 1px solid #3498DB;
+    	color: #3498DB;
+    	padding: 0.33em;
+    	border-radius: 1em;
+    	font-size: 1.5rem;
+    	background-color: #fff;
+    	cursor: pointer;
+    }
+    .submit-button:hover {
+    	background-color: #AEC6CF;
+    }
+
+    .results-box {
+    	opacity: 0;
+    	z-index: -1;
+    	position: absolute;
+    	top: 0;
+    	left: 0;
+    	font-size: 2rem;
+    	background-color: #f0f0f0dd;
+    	width: 100%;
+    	height: 100%;
+    	display: flex;
+    	flex-direction: column;
+    	justify-content: center;
+    	text-align: center;
+    	transition: 1s ease-in-out;
+    }
+
+    .results-box span {
+    	margin: 0.25em auto;
+    }
+
+   .results-box #savings {
+   	color: #3498D8;
+   	font-size: 1.5em;
+   }
+
+   .results-box #cta, .results-box #redo {
+   	width: auto;
+   	border: 1px solid #3498D8;
+   	border-radius: 1em;
+   	color: #3498D8;
+   	cursor: pointer;
+   	padding: 0.5em;
+   	background-color: #fff;
+   }
+
+   .results-box #cta:hover, .results-box #redo:hover {
+   	background-color: #AEC6CF;
+   }
+
+   .results-box #redo {
+   	font-size: 0.75em;
+   }
+    </style>
+</head>
+
+<body>
+    <div class="main-box">
+        <div class="select-box">
+            <h1>Repair or Buy New?</h1>
+            <div class="select-option">
+                <label>Select Appliance</label>
+                <select onchange="changeDependant(this.value)">
+                    <option value="" disabled selected hidden>Select Appliance...</option>
+                    <option>Dryer</option>
+                    <option>Washer</option>
+                </select>
+            </div>
+            <div class="select-option">
+                <label>Select Issue</label>
+                <select id="dependant-drop" onchange="changeRepairCost(this.value)">
+                    <option value="" disabled selected>Select Issue...</option>
+                </select>
+            </div>
+            <div class="select-option">
+            	<label>Cost To Repair</label>
+            	<div>
+            		<span>$</span><input type="number" min="0" max="10000" value="0" name="" id="repairCost">
+            	</div>
+            </div>
+            <div class="select-option">
+            	<label>Cost Of Appliance</label>
+            	<div>
+            		<span>$</span><input type="number" min="0" max="10000" value="0" name="" id="purchaseCost">
+            	</div>
+            </div>
+            <button class="submit-button" onclick="calculateSavings()">Calculate</button>
+        </div>
+        <div class="results-box" id="results">
+        	<span>You Save:</span>
+        	<span id="savings">400</span>
+        	<span>By Repairing Instead of Buying New</span>
+        	<span id="cta">Call Today For Repair</span>
+        	<span id="redo" onclick="resetCalculator()">&orarr;</span>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+const dryer = ["No heat", "No Spin", "Light Wont Turn On"],
+    washer = ["No water", "No Drain", "No Spin"];
+var dependantDrop = document.getElementById("dependant-drop"),
+repairCost = document.getElementById("repairCost"),
+purchaseCost = document.getElementById("purchaseCost"),
+savingsField = document.getElementById("savings"),
+results = document.getElementById("results");
+
+function changeDependant(val) {
+    switch (val) {
+        case "Dryer":
+            dependantDrop.innerHTML = populateSelect(dryer);
+            purchaseCost.value = "400"
+            break;
+
+        case "Washer":
+            dependantDrop.innerHTML = populateSelect(washer);
+            purchaseCost.value = "600"
+            break;
+    }
+}
+
+function changeRepairCost(val) {
+	switch (val) {
+		default:
+		repairCost.value = "250"
+		break;
+	}
+}
+
+function calculateSavings() {
+	let saving = purchaseCost.value - repairCost.value;
+	savingsField.innerHTML = "$"+saving;
+	results.style.opacity = 1;
+	results.style.zIndex = 2;
+}
+
+function resetCalculator() {
+	results.style.opacity = 0;
+	results.style.zIndex = -1;
+}
+
+function populateSelect(array) {
+    let temp = "<option disabled selected hidden>Select Issue...</option>";
+    for (let i = 0; i < array.length; i++) {
+        temp += "<option>" + array[i] + "</option>"
+    }
+    return temp;
+}
+</script>
+
+</html>
