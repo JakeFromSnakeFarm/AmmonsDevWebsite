@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="How Jacob Ammons replaced exact square-wheel trigonometry with a 99.30% accurate, substantially cheaper parabolic estimate.">
+    <title>99.3% of the Curve, Half the Compute | Jacob Ammons</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nova+Round&family=Nova+Square&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #2f2d2e;
+            --paper: #efefef;
+            --paper-deep: #e1e0e0;
+            --teal: #048ba8;
+            --orange: #f18f01;
+            --green: #a2ce32;
+            --white: #f7f7f5;
+            --muted: #686466;
+            --line: rgba(47, 45, 46, 0.18);
+            --shadow: 0 18px 55px rgba(47, 45, 46, 0.14);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            background: var(--paper);
+        }
+
+        body {
+            margin: 0;
+            color: var(--ink);
+            background:
+                linear-gradient(rgba(47, 45, 46, 0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(47, 45, 46, 0.035) 1px, transparent 1px),
+                var(--paper);
+            background-size: 32px 32px;
+            font-family: "Nova Round", sans-serif;
+            line-height: 1.75;
+        }
+
+        h1,
+        h2,
+        h3,
+        .eyebrow,
+        .site-nav,
+        .equation,
+        .figure-label,
+        .control-label {
+            font-family: "Nova Square", sans-serif;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        .site-nav {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            min-height: 72px;
+            padding: 0 5vw;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            color: var(--white);
+            background: rgba(47, 45, 46, 0.94);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(14px);
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .brand img {
+            width: 44px;
+            height: 44px;
+            object-fit: contain;
+        }
+
+        .site-nav nav {
+            display: flex;
+            align-items: center;
+            gap: clamp(14px, 3vw, 34px);
+        }
+
+        .site-nav nav a {
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+        }
+
+        .site-nav nav a:hover,
+        .site-nav nav a:focus-visible {
+            border-color: var(--green);
+        }
+
+        .hero {
+            min-height: calc(88vh - 72px);
+            display: grid;
+            place-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: 90px 5vw 110px;
+            color: var(--white);
+            background: var(--ink);
+            isolation: isolate;
+        }
+
+        .hero::before,
+        .hero::after {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            animation: drift 16s ease-in-out infinite alternate;
+        }
+
+        .hero::before {
+            width: min(42vw, 540px);
+            aspect-ratio: 1;
+            right: -10vw;
+            top: -14vw;
+            transform: rotate(28deg);
+            box-shadow: inset 0 0 0 36px rgba(4, 139, 168, 0.08);
+        }
+
+        .hero::after {
+            width: min(30vw, 380px);
+            aspect-ratio: 1;
+            left: -9vw;
+            bottom: -12vw;
+            transform: rotate(58deg);
+            box-shadow: inset 0 0 0 24px rgba(241, 143, 1, 0.08);
+            animation-delay: -7s;
+        }
+
+        @keyframes drift {
+            from {
+                translate: 0 -8px;
+            }
+
+            to {
+                translate: 18px 12px;
+            }
+        }
+
+        .hero-content {
+            width: min(100%, 1040px);
+        }
+
+        .eyebrow {
+            margin: 0 0 14px;
+            color: var(--green);
+            font-size: 0.82rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            max-width: 900px;
+            margin: 0;
+            font-size: clamp(2.7rem, 7vw, 6.8rem);
+            line-height: 0.98;
+            letter-spacing: -0.045em;
+        }
+
+        .hero-deck {
+            max-width: 720px;
+            margin: 30px 0 0;
+            color: rgba(247, 247, 245, 0.78);
+            font-size: clamp(1.05rem, 2vw, 1.35rem);
+        }
+
+        .hero-meta {
+            margin-top: 42px;
+            padding-top: 18px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 28px;
+            color: rgba(247, 247, 245, 0.58);
+            border-top: 1px solid rgba(255, 255, 255, 0.16);
+            font-family: "Nova Square", sans-serif;
+            font-size: 0.86rem;
+        }
+
+        .report-shell {
+            width: min(100% - 32px, 1120px);
+            margin: -50px auto 90px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .paper {
+            padding: clamp(28px, 6vw, 78px);
+            background: rgba(247, 247, 245, 0.97);
+            border: 1px solid rgba(47, 45, 46, 0.11);
+            box-shadow: var(--shadow);
+        }
+
+        .abstract {
+            margin-bottom: 72px;
+            padding: clamp(24px, 4vw, 42px);
+            border-left: 6px solid var(--teal);
+            background: var(--paper);
+        }
+
+        .abstract h2 {
+            margin-top: 0;
+        }
+
+        .abstract p:last-child {
+            margin-bottom: 0;
+        }
+
+        .results {
+            margin: -34px 0 78px;
+        }
+
+        .results-kicker {
+            margin: 0 0 16px;
+            color: var(--muted);
+            font-family: "Nova Square", sans-serif;
+            font-size: 0.78rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            border: 1px solid var(--ink);
+        }
+
+        .result {
+            min-height: 176px;
+            padding: 22px 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: var(--white);
+            border-right: 1px solid var(--ink);
+        }
+
+        .result:last-child {
+            border-right: 0;
+        }
+
+        .result:first-child {
+            color: var(--white);
+            background: var(--teal);
+        }
+
+        .result-value {
+            display: block;
+            font-family: "Nova Square", sans-serif;
+            font-size: clamp(2rem, 4vw, 3.4rem);
+            line-height: 1;
+            letter-spacing: -0.05em;
+        }
+
+        .result-label {
+            display: block;
+            margin-top: 18px;
+            font-size: 0.9rem;
+            line-height: 1.35;
+        }
+
+        .benchmark-note {
+            margin: 0;
+            padding: 18px 20px;
+            color: rgba(247, 247, 245, 0.76);
+            background: var(--ink);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .benchmark-note strong {
+            color: var(--green);
+            font-family: "Nova Square", sans-serif;
+        }
+
+        .process-flow {
+            margin: 34px 0;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+            gap: 10px;
+            align-items: stretch;
+        }
+
+        .flow-step {
+            min-width: 0;
+            padding: 18px 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: var(--paper);
+            border: 1px solid var(--line);
+        }
+
+        .flow-step strong {
+            margin-bottom: 8px;
+            color: var(--teal);
+            font-family: "Nova Square", sans-serif;
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .flow-step code {
+            overflow-wrap: anywhere;
+            font-size: 0.84rem;
+            line-height: 1.6;
+        }
+
+        .flow-arrow {
+            display: grid;
+            place-items: center;
+            color: var(--orange);
+            font-family: "Nova Square", sans-serif;
+            font-size: 1.4rem;
+        }
+
+        .translation-grid {
+            margin: 32px 0;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            border: 1px solid var(--ink);
+        }
+
+        .translation-card {
+            min-width: 0;
+            padding: clamp(20px, 3vw, 30px);
+            background: var(--white);
+        }
+
+        .translation-card:first-child {
+            border-right: 1px solid var(--ink);
+        }
+
+        .translation-card h3 {
+            margin: 0 0 18px;
+            color: var(--teal);
+            font-size: 0.92rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .translation-card .large-expression {
+            display: block;
+            overflow-x: auto;
+            font-family: "Nova Square", sans-serif;
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            line-height: 1.7;
+            white-space: nowrap;
+        }
+
+        .translation-card pre {
+            height: calc(100% - 42px);
+            min-height: 96px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            border-left: 0;
+        }
+
+        .metric-list {
+            margin: 30px 0;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            border-top: 1px solid var(--line);
+            list-style: none;
+        }
+
+        .metric-list li {
+            padding: 20px;
+            border-right: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .metric-list li:last-child {
+            border-right: 0;
+        }
+
+        .metric-list strong {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--teal);
+            font-family: "Nova Square", sans-serif;
+            font-size: 1.35rem;
+        }
+
+        .metric-list span {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .contents {
+            margin: 0 0 84px;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            border-top: 1px solid var(--line);
+            list-style: none;
+        }
+
+        .contents a {
+            min-height: 68px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .contents li:nth-child(odd) a {
+            border-right: 1px solid var(--line);
+        }
+
+        .contents a:hover,
+        .contents a:focus-visible {
+            background: var(--paper-deep);
+        }
+
+        .contents span {
+            color: var(--teal);
+            font-family: "Nova Square", sans-serif;
+        }
+
+        .section {
+            scroll-margin-top: 100px;
+            margin: 0 0 90px;
+        }
+
+        .section-number {
+            margin-bottom: 5px;
+            color: var(--teal);
+            font-family: "Nova Square", sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            margin: 0 0 22px;
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            line-height: 1.15;
+        }
+
+        h3 {
+            margin: 42px 0 12px;
+            font-size: clamp(1.2rem, 2.5vw, 1.55rem);
+            line-height: 1.25;
+        }
+
+        p {
+            margin: 0 0 22px;
+            font-size: 1.06rem;
+        }
+
+        .lead {
+            font-size: clamp(1.18rem, 2vw, 1.42rem);
+            line-height: 1.65;
+        }
+
+        .equation {
+            margin: 28px 0;
+            padding: 24px;
+            overflow-x: auto;
+            color: var(--white);
+            background: var(--ink);
+            border-left: 6px solid var(--orange);
+            font-size: clamp(1rem, 2.5vw, 1.35rem);
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+        }
+
+        .equation small {
+            display: block;
+            margin-top: 9px;
+            color: rgba(247, 247, 245, 0.63);
+            font-family: "Nova Round", sans-serif;
+            font-size: 0.75em;
+            white-space: normal;
+        }
+
+        .callout-grid {
+            margin: 30px 0;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .callout {
+            padding: 24px;
+            border: 1px solid var(--line);
+            background: var(--paper);
+        }
+
+        .callout h3 {
+            margin: 0 0 9px;
+            color: var(--teal);
+            font-size: 1.08rem;
+        }
+
+        .callout p {
+            margin: 0;
+            font-size: 0.98rem;
+        }
+
+        .figure {
+            margin: 42px 0;
+            border: 1px solid var(--line);
+            background: var(--paper);
+        }
+
+        .figure-label {
+            padding: 12px 18px;
+            color: var(--white);
+            background: var(--ink);
+            font-size: 0.78rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .figure-body {
+            padding: clamp(18px, 4vw, 38px);
+        }
+
+        .concept-figure-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: clamp(16px, 3vw, 28px);
+        }
+
+        .concept-panel {
+            padding: clamp(12px, 2vw, 18px);
+            background: var(--white);
+            border: 1px solid var(--line);
+        }
+
+        .concept-panel h4 {
+            margin: 0 0 12px;
+            color: var(--teal);
+            font-family: "Nova Square", sans-serif;
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .concept-svg {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .concept-caption {
+            margin: 12px 0 0;
+            color: var(--muted);
+            font-size: 0.88rem;
+            line-height: 1.55;
+        }
+
+        .geo-axis {
+            stroke: rgba(47, 45, 46, 0.22);
+            stroke-width: 1;
+            stroke-dasharray: 5 4;
+        }
+
+        .geo-square {
+            fill: none;
+            stroke: rgba(47, 45, 46, 0.35);
+            stroke-width: 1.5;
+        }
+
+        .geo-side {
+            stroke: var(--teal);
+            stroke-width: 3.5;
+            stroke-linecap: square;
+        }
+
+        .geo-radius {
+            fill: none;
+            stroke: var(--orange);
+            stroke-width: 2.5;
+        }
+
+        .geo-theta {
+            fill: none;
+            stroke: var(--orange);
+            stroke-width: 2;
+        }
+
+        .geo-point {
+            fill: var(--orange);
+        }
+
+        .geo-center {
+            fill: var(--ink);
+        }
+
+        .geo-catenary {
+            fill: none;
+            stroke: var(--teal);
+            stroke-width: 3;
+            stroke-linecap: round;
+        }
+
+        .geo-road {
+            stroke: rgba(47, 45, 46, 0.28);
+            stroke-width: 1.5;
+            stroke-dasharray: 6 5;
+        }
+
+        .geo-label {
+            fill: var(--ink);
+            font-family: "Nova Square", sans-serif;
+            font-size: 13px;
+        }
+
+        .geo-label-muted {
+            fill: var(--muted);
+            font-family: "Nova Round", sans-serif;
+            font-size: 12px;
+        }
+
+        .demo-stage {
+            height: 238px;
+            position: relative;
+            overflow: hidden;
+            background:
+                linear-gradient(rgba(47, 45, 46, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(47, 45, 46, 0.05) 1px, transparent 1px),
+                var(--white);
+            background-size: 24px 24px;
+            border: 1px solid var(--line);
+        }
+
+        .demo-baseline {
+            position: absolute;
+            top: 196px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--ink);
+        }
+
+        .demo-square {
+            width: 84px;
+            height: 84px;
+            position: absolute;
+            top: 112px;
+            left: calc(50% - 42px);
+            background:
+                url("../assets/logotransparentgray.png") center / contain no-repeat,
+                var(--teal);
+            transform-origin: center;
+            will-change: transform;
+        }
+
+        .demo-center {
+            width: 8px;
+            height: 8px;
+            position: absolute;
+            top: 150px;
+            left: calc(50% - 4px);
+            z-index: 2;
+            border: 2px solid var(--ink);
+            border-radius: 50%;
+            background: var(--white);
+            pointer-events: none;
+            will-change: transform;
+        }
+
+        .demo-controls {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 14px 22px;
+            align-items: center;
+        }
+
+        .demo-controls input[type="range"] {
+            width: 100%;
+            accent-color: var(--teal);
+        }
+
+        .control-label {
+            font-size: 0.85rem;
+        }
+
+        .mode-switch {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .mode-switch button {
+            padding: 9px 12px;
+            color: var(--ink);
+            background: transparent;
+            border: 1px solid var(--ink);
+            cursor: pointer;
+            font-family: "Nova Square", sans-serif;
+        }
+
+        .mode-switch button[data-mode="approx"] {
+            border-color: var(--teal);
+            color: var(--teal);
+        }
+
+        .mode-switch button[data-mode="exact"] {
+            border-color: var(--orange);
+            color: var(--orange);
+        }
+
+        .mode-switch button[data-mode="approx"][aria-pressed="true"] {
+            color: var(--white);
+            background: var(--teal);
+            border-color: var(--teal);
+        }
+
+        .mode-switch button[data-mode="exact"][aria-pressed="true"] {
+            color: var(--white);
+            background: var(--orange);
+            border-color: var(--orange);
+        }
+
+        .demo-square.is-exact {
+            background:
+                url("../assets/logotransparentgray.png") center / contain no-repeat,
+                var(--orange);
+        }
+
+        .demo-readout .readout-approx {
+            color: var(--teal);
+        }
+
+        .demo-readout .readout-exact {
+            color: var(--orange);
+        }
+
+        .demo-readout {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .demo-readout div {
+            padding: 10px 12px;
+            background: var(--paper-deep);
+        }
+
+        .demo-readout strong {
+            display: block;
+            font-family: "Nova Square", sans-serif;
+            font-size: 0.75rem;
+        }
+
+        .comparison-plot {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin-top: 30px;
+            overflow: visible;
+        }
+
+        .plot-axis {
+            stroke: rgba(47, 45, 46, 0.28);
+            stroke-width: 1;
+        }
+
+        .plot-exact,
+        .plot-approx {
+            fill: none;
+            stroke-width: 4;
+            stroke-linecap: round;
+        }
+
+        .plot-exact {
+            stroke: var(--orange);
+        }
+
+        .plot-approx {
+            stroke: var(--teal);
+            stroke-dasharray: 8 8;
+        }
+
+        .legend {
+            margin-top: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 24px;
+            font-size: 0.9rem;
+        }
+
+        .legend span::before {
+            content: "";
+            width: 24px;
+            height: 3px;
+            display: inline-block;
+            margin-right: 8px;
+            vertical-align: middle;
+            background: currentColor;
+        }
+
+        .legend .exact {
+            color: var(--orange);
+        }
+
+        .legend .approx {
+            color: var(--teal);
+        }
+
+        pre {
+            margin: 28px 0;
+            padding: 24px;
+            overflow-x: auto;
+            color: #f1f1ec;
+            background: var(--ink);
+            border-left: 6px solid var(--teal);
+            font: 0.92rem/1.65 Consolas, "Courier New", monospace;
+        }
+
+        code {
+            font-family: Consolas, "Courier New", monospace;
+        }
+
+        .code-comment {
+            color: #a2ce32;
+        }
+
+        .code-block {
+            margin: 28px 0;
+        }
+
+        .code-caption {
+            margin: 0;
+            padding: 10px 18px;
+            color: var(--white);
+            background: var(--ink);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            font-family: "Nova Square", sans-serif;
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .code-block pre {
+            margin: 0;
+            border-left: 6px solid var(--teal);
+        }
+
+        .code-block .code-caption + pre {
+            border-top: 0;
+        }
+
+        .implementation-steps {
+            margin: 28px 0;
+            padding: 0;
+            list-style: none;
+            display: grid;
+            gap: 10px;
+        }
+
+        .implementation-steps li {
+            padding: 12px 16px;
+            background: var(--paper-deep);
+            border-left: 4px solid var(--teal);
+            font-size: 0.96rem;
+        }
+
+        .implementation-steps strong {
+            font-family: "Nova Square", sans-serif;
+        }
+
+        .distinction {
+            margin: 32px 0;
+            padding: 26px;
+            color: var(--white);
+            background: linear-gradient(135deg, #087a92, #045b70);
+        }
+
+        .distinction strong {
+            display: block;
+            margin-bottom: 8px;
+            font-family: "Nova Square", sans-serif;
+            font-size: 1.15rem;
+        }
+
+        .distinction p {
+            margin: 0;
+        }
+
+        .reference-list {
+            padding: 0;
+            list-style: none;
+            counter-reset: references;
+        }
+
+        .reference-list li {
+            padding: 16px 0 16px 48px;
+            position: relative;
+            border-bottom: 1px solid var(--line);
+            counter-increment: references;
+        }
+
+        .reference-list li::before {
+            content: counter(references, decimal-leading-zero);
+            position: absolute;
+            left: 0;
+            top: 17px;
+            color: var(--teal);
+            font-family: "Nova Square", sans-serif;
+        }
+
+        .reference-list a {
+            text-decoration-color: var(--teal);
+            text-underline-offset: 3px;
+        }
+
+        .closing {
+            margin-bottom: 0;
+            padding: clamp(28px, 5vw, 54px);
+            color: var(--white);
+            background: var(--ink);
+        }
+
+        .closing h2 {
+            color: var(--green);
+        }
+
+        .closing p:last-child {
+            margin-bottom: 0;
+        }
+
+        footer {
+            padding: 34px 20px;
+            text-align: center;
+            color: rgba(247, 247, 245, 0.7);
+            background: var(--ink);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 720px) {
+            .site-nav {
+                padding: 0 16px;
+            }
+
+            .brand span,
+            .site-nav nav a:not(:last-child) {
+                display: none;
+            }
+
+            .hero {
+                min-height: 75vh;
+                padding-inline: 22px;
+            }
+
+            .report-shell {
+                width: min(100% - 18px, 1120px);
+            }
+
+            .paper {
+                padding-inline: 20px;
+            }
+
+            .contents,
+            .results-grid,
+            .metric-list,
+            .translation-grid,
+            .callout-grid,
+            .concept-figure-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .process-flow {
+                grid-template-columns: 1fr;
+            }
+
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+
+            .translation-card:first-child {
+                border-right: 0;
+                border-bottom: 1px solid var(--ink);
+            }
+
+            .contents li:nth-child(odd) a {
+                border-right: 0;
+            }
+
+            .result,
+            .metric-list li {
+                min-height: auto;
+                border-right: 0;
+                border-bottom: 1px solid var(--ink);
+            }
+
+            .result:last-child,
+            .metric-list li:last-child {
+                border-bottom: 0;
+            }
+
+            .demo-controls {
+                grid-template-columns: 1fr;
+            }
+
+            .demo-readout {
+                grid-template-columns: 1fr;
+            }
+
+            .mode-switch {
+                grid-row: 1;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            .hero::before,
+            .hero::after {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-nav">
+        <a class="brand" href="../" aria-label="Return to Jacob Ammons' home page">
+            <img src="../assets/logotransparentwhite.png" alt="">
+            <span>Jacob Ammons</span>
+        </a>
+        <nav aria-label="Report navigation">
+            <a href="#implementation">Implementation</a>
+            <a href="#mathematics">Mathematics</a>
+            <a href="../">Back home</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <p class="eyebrow">A measured mathematical approximation</p>
+                <h1>99.3% of the Curve. Half the Compute.</h1>
+                <p class="hero-deck">Most people see a square rolling across a screen. I see a catenary problem whose exact solution asks the browser to do far more math than the final animation needs. This is how I reduced that problem to one line while keeping its worst error below a quarter of a pixel.</p>
+                <div class="hero-meta">
+                    <span>Jacob Ammons</span>
+                    <span>Applied Mathematics / Performance Engineering</span>
+                    <span>Measured in Chromium</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="report-shell">
+            <article class="paper">
+                <section class="abstract" aria-labelledby="abstract-title">
+                    <h2 id="abstract-title">The result</h2>
+                    <p>Most people have seen a catenary curve before, even if they have never heard its name. If you hang a chain or cable loosely between two points, gravity pulls it into a smooth hanging arc. That arc is a catenary, not a semi circle. If we flip several of those arcs upside down and place them next to one another, we receive the strange road that allows a square wheel to roll while keeping its center level. This is already an interesting mathematical solution, but processing that complete solution for a small decoration on a website would be somewhat absurd.</p>
+                    <p>Instead of calculating the road, I focused on the part the user can actually see: how far the center of the square must move during each quarter-turn. I replaced the exact trigonometric motion with a parabola fitted to the three positions that visually define it—side down, corner down, side down. Across the complete motion this shortcut reproduces the exact center-height curve with <strong>99.30 percent mean normalized accuracy</strong>, and at the 84-pixel size used in this report the largest disagreement is only 0.23 CSS pixels. The interesting part is not that the browser is incapable of doing the full math. It is that understanding the math allowed me to prove that almost none of it needed to be done.</p>
+                </section>
+
+                <section class="results" aria-labelledby="results-title">
+                    <p class="results-kicker" id="results-title">Measured outcome</p>
+                    <div class="results-grid">
+                        <div class="result">
+                            <span class="result-value">99.30%</span>
+                            <span class="result-label">Mean shape accuracy over the complete 90° interval</span>
+                        </div>
+                        <div class="result">
+                            <span class="result-value">0.23px</span>
+                            <span class="result-label">Worst geometric error for an 84px square</span>
+                        </div>
+                        <div class="result">
+                            <span class="result-value">2.7×</span>
+                            <span class="result-label">Faster than the direct sin + cos calculation</span>
+                        </div>
+                        <div class="result">
+                            <span class="result-value">3 / 3</span>
+                            <span class="result-label">Critical poses reproduced exactly</span>
+                        </div>
+                    </div>
+                    <p class="benchmark-note"><strong>Benchmark context:</strong> five Chromium runs of 10,000,000 evaluations on Windows produced a median 2.7× ratio against the direct formula. Against a reduced one-cosine identity, the approximation remained approximately 2× faster. These numbers measure this calculation in isolation, not total page CPU usage.</p>
+                </section>
+
+                <ol class="contents" aria-label="Contents">
+                    <li><a href="#optimization"><span>01</span> From catenary to shortcut</a></li>
+                    <li><a href="#accuracy"><span>02</span> Why approximation is valid</a></li>
+                    <li><a href="#implementation"><span>03</span> Math translated into code</a></li>
+                    <li><a href="#geometry"><span>04</span> Geometry of the square</a></li>
+                    <li><a href="#mathematics"><span>05</span> The complete derivation</a></li>
+                    <li><a href="#conclusion"><span>06</span> Conclusion</a></li>
+                </ol>
+
+                <section class="section" id="optimization">
+                    <p class="section-number">Section 01</p>
+                    <h2>From a hanging chain to one line of code</h2>
+                    <p class="lead">To understand why the shortcut is impressive, we should first look at what the complete problem asks us to do.</p>
+                    <p>We begin with one side of the square, convert every possible contact point into a radius and angle, derive how quickly that contact point moves, integrate the horizontal movement, remove our temporary variable, and finally receive the inverted catenary. None of these steps are useless; they are what prove the road is correct. However, they solve a larger problem than the one presented on my home page.</p>
+
+                    <div class="process-flow" aria-label="Full mathematical path from square side to catenary">
+                        <div class="flow-step">
+                            <strong>Describe the side</strong>
+                            <code>(a, t)</code>
+                        </div>
+                        <div class="flow-arrow" aria-hidden="true">→</div>
+                        <div class="flow-step">
+                            <strong>Convert to polar</strong>
+                            <code>r = √(a²+t²)<br>θ = atan(t/a)</code>
+                        </div>
+                        <div class="flow-arrow" aria-hidden="true">→</div>
+                        <div class="flow-step">
+                            <strong>Solve the motion</strong>
+                            <code>y = −r<br>dx/dt = r(dθ/dt)</code>
+                        </div>
+                        <div class="flow-arrow" aria-hidden="true">→</div>
+                        <div class="flow-step">
+                            <strong>Integrate &amp; eliminate</strong>
+                            <code>x = a·asinh(t/a)<br>y = −a·cosh(x/a)</code>
+                        </div>
+                    </div>
+
+                    <p>The algebra above is easier to follow once you can see the geometry it is describing. On one side we mark a contact point on the vertical edge, express that point in polar coordinates from the square's center, and integrate the motion until the road profile appears as an inverted catenary.</p>
+
+                    <figure class="figure">
+                        <figcaption class="figure-label">Concept — Polar setup and the catenary road</figcaption>
+                        <div class="figure-body">
+                            <div class="concept-figure-grid">
+                                <div class="concept-panel">
+                                    <h4>One side in polar coordinates</h4>
+                                    <svg class="concept-svg" viewBox="0 0 400 280" role="img" aria-labelledby="polarTitle polarDesc">
+                                        <title id="polarTitle">Square side with polar radius and angle</title>
+                                        <desc id="polarDesc">A square centered at the origin with its right side at x equals a. A contact point on that side is joined to the center by radius r, which makes angle theta with the positive x-axis.</desc>
+                                        <line class="geo-axis" x1="20" y1="145" x2="380" y2="145"></line>
+                                        <line class="geo-axis" x1="125" y1="250" x2="125" y2="35"></line>
+                                        <rect class="geo-square" x="70" y="90" width="110" height="110"></rect>
+                                        <line class="geo-side" x1="180" y1="90" x2="180" y2="200"></line>
+                                        <line class="geo-radius" x1="125" y1="145" x2="180" y2="107"></line>
+                                        <path class="geo-theta" d="M 157 145 A 32 32 0 0 0 151.8 128.2"></path>
+                                        <circle class="geo-center" cx="125" cy="145" r="4"></circle>
+                                        <circle class="geo-point" cx="180" cy="107" r="5"></circle>
+                                        <circle fill="none" stroke="rgba(47,45,46,0.35)" stroke-width="1.5" cx="180" cy="145" r="3.5"></circle>
+                                        <text class="geo-label" x="112" y="162">O</text>
+                                        <text class="geo-label" x="188" y="103">(a, t)</text>
+                                        <text class="geo-label" x="148" y="118" fill="var(--orange)">r</text>
+                                        <text class="geo-label" x="160" y="138" fill="var(--orange)">θ</text>
+                                        <text class="geo-label-muted" x="188" y="218">side x = a</text>
+                                        <text class="geo-label-muted" x="286" y="149">+x</text>
+                                        <text class="geo-label-muted" x="118" y="48">+y</text>
+                                    </svg>
+                                    <p class="concept-caption">Pick any contact point on the side at <code>x = a</code>. From the center, its distance is <code>r = √(a² + t²)</code> and its direction is <code>θ = atan(t/a)</code>.</p>
+                                </div>
+                                <div class="concept-panel">
+                                    <h4>The inverted catenary</h4>
+                                    <svg class="concept-svg" viewBox="0 0 400 280" role="img" aria-labelledby="catTitle catDesc">
+                                        <title id="catTitle">Inverted catenary curve</title>
+                                        <desc id="catDesc">A smooth U-shaped curve dipping below a horizontal reference line, given by y equals negative a cosh of x over a.</desc>
+                                        <line class="geo-road" x1="30" y1="42" x2="370" y2="42"></line>
+                                        <path class="geo-catenary" d="M112.00,236.40L113.76,227.78L115.52,219.55L117.28,211.70L119.04,204.22L120.80,197.09L122.56,190.29L124.32,183.81L126.08,177.63L127.84,171.74L129.60,166.13L131.36,160.79L133.12,155.71L134.88,150.86L136.64,146.25L138.40,141.87L140.16,137.69L141.92,133.73L143.68,129.96L145.44,126.38L147.20,122.98L148.96,119.75L150.72,116.69L152.48,113.79L154.24,111.05L156.00,108.45L157.76,106.00L159.52,103.68L161.28,101.49L163.04,99.44L164.80,97.50L166.56,95.69L168.32,93.99L170.08,92.40L171.84,90.92L173.60,89.55L175.36,88.27L177.12,87.10L178.88,86.02L180.64,85.04L182.40,84.15L184.16,83.35L185.92,82.64L187.68,82.01L189.44,81.48L191.20,81.02L192.96,80.65L194.72,80.37L196.48,80.16L198.24,80.04L200.00,80.00L201.76,80.04L203.52,80.16L205.28,80.37L207.04,80.65L208.80,81.02L210.56,81.48L212.32,82.01L214.08,82.64L215.84,83.35L217.60,84.15L219.36,85.04L221.12,86.02L222.88,87.10L224.64,88.27L226.40,89.55L228.16,90.92L229.92,92.40L231.68,93.99L233.44,95.69L235.20,97.50L236.96,99.44L238.72,101.49L240.48,103.68L242.24,106.00L244.00,108.45L245.76,111.05L247.52,113.79L249.28,116.69L251.04,119.75L252.80,122.98L254.56,126.38L256.32,129.96L258.08,133.73L259.84,137.69L261.60,141.87L263.36,146.25L265.12,150.86L266.88,155.71L268.64,160.79L270.40,166.13L272.16,171.74L273.92,177.63L275.68,183.81L277.44,190.29L279.20,197.09L280.96,204.22L282.72,211.70L284.48,219.55L286.24,227.78L288.00,236.40"></path>
+                                        <line stroke="rgba(47,45,46,0.18)" stroke-width="1" x1="200" y1="42" x2="200" y2="252"></line>
+                                        <text class="geo-label" x="208" y="66">y = −a cosh(x/a)</text>
+                                        <text class="geo-label-muted" x="318" y="39">reference level</text>
+                                        <text class="geo-label-muted" x="194" y="258">x</text>
+                                    </svg>
+                                    <p class="concept-caption">After integrating the horizontal motion and eliminating <code>t</code>, the road profile is a catenary turned upside down. This is the shape the full derivation produces; the home page never draws it.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </figure>
+
+                    <p>After all of this, we have a mathematically perfect road. The issue is that my website never draws this road. The user only sees a square rotating over a flat section of the page. Therefore, instead of solving for every point on an invisible road, I asked a smaller question: what are the minimum, maximum, and repeating limits of the movement I can see?</p>
+
+                    <div class="translation-grid">
+                        <div class="translation-card">
+                            <h3>The mathematical estimate</h3>
+                            <span class="large-expression">p(φ) = 1 − ((φ − 45) / 45)²</span>
+                        </div>
+                        <div class="translation-card">
+                            <h3>The implemented line</h3>
+                            <pre><code>let anglemap =
+  1 - Math.pow((cleanang - 45) / 45, 2);</code></pre>
+                        </div>
+                    </div>
+
+                    <p>This one line produces a value of zero when a side is flat, one when the diagonal is vertical, and zero again when the next side becomes flat. I then multiply it by the known difference between half a side and half a diagonal. The equation does not blindly imitate the catenary; it extracts the visible consequence of that geometry and represents it with the smallest useful function.</p>
+
+                    <h3>What the processor avoids</h3>
+                    <p>Functions such as <code>sin</code>, <code>cos</code>, and <code>cosh</code> are known as transcendental functions. A CPU cannot generally resolve them with one ordinary addition or multiplication instruction. JavaScript engines may use range reduction, polynomial approximations, lookup data, native math libraries, or hardware-assisted routines depending on the browser and processor. Ironically, even the computer commonly approximates these “exact” functions internally.</p>
+                    <p>Since JavaScript is compiled at runtime, there is no honest universal number of CPU cycles that can be assigned to either expression. What I can measure is elapsed execution time. In Chromium 144, 10 million evaluations of my expression completed in roughly 144–169 milliseconds after the engine warmed up. The direct sine-plus-cosine version required roughly 396–421 milliseconds. Even if we use a trigonometric identity to reduce the exact equation to only one cosine, my estimate remains approximately twice as fast.</p>
+
+                    <div class="distinction">
+                        <strong>What did I actually save?</strong>
+                        <p>The offset calculation uses about 50–63 percent less execution time in isolation, depending on which exact formula we compare it against. At 60 updates per second both versions are inexpensive on a modern desktop, so I am not going to pretend one trigonometric call would melt your computer. What matters is that the cheaper calculation produces nearly identical output, stays constant regardless of screen size, and avoids creating an entire road that never appears on the page.</p>
+                    </div>
+                </section>
+
+                <section class="section" id="accuracy">
+                    <p class="section-number">Section 02</p>
+                    <h2>Is approximation bad mathematics?</h2>
+                    <p class="lead">Now you may question why I would knowingly use an inaccurate equation when the entire point of mathematics is to receive an accurate answer. Just to prove a point, not everything has to be done by the book.</p>
+                    <p>Approximations are used everywhere in mathematics. We shorten π, use numerical integration when an antiderivative is impractical, and replace complicated functions with Taylor polynomials that are easier to calculate over a controlled range. The distinction between a poor guess and a useful approximation is that a useful approximation has a defined domain, preserves known properties, and carries an error we can measure.</p>
+                    <p>In my case the domain is only one quarter-turn, from 0 to 90 degrees. I know the normalized lift must pass through the points (0, 0), (45, 1), and (90, 0). There is exactly one quadratic function that passes through all three of those points:</p>
+
+                    <div class="equation">
+                        p(φ) = φ(90 − φ) / 2025 = 1 − ((φ − 45) / 45)²
+                        <small>This is quadratic interpolation through the three required poses, not a curve chosen by eye.</small>
+                    </div>
+
+                    <p>This is the mathematical reason the estimate works so well. It is exact whenever the square rests on a side, exact when the diagonal reaches its maximum height, symmetrical on either side of that maximum, and continuous throughout the movement. Instead of approximating everything and hoping for the best, I selected the cheapest function that guarantees the most important parts cannot be wrong.</p>
+
+                    <h3>Measuring what remains</h3>
+                    <p>Of course, matching three points does not prove everything between those points is accurate. To test the remaining curve, I sampled 1,000,001 evenly spaced angles from 0 through 90 degrees. At each angle I normalized both functions against the maximum lift <em>Δh</em>, measured the absolute difference, and averaged those differences. Mean shape accuracy is defined here as one minus that mean normalized error.</p>
+
+                    <ul class="metric-list">
+                        <li><strong>0.7008%</strong><span>Mean absolute error relative to the full lift</span></li>
+                        <li><strong>0.8372%</strong><span>Root-mean-square normalized error</span></li>
+                        <li><strong>1.3121%</strong><span>Largest error, occurring near 13.26° and 76.74°</span></li>
+                    </ul>
+
+                    <p>Observing the results, the average error is only 0.7008 percent of the complete lift. For an 84-pixel square that lift is 17.40 pixels, and even the largest error produces a difference of only 0.228 pixels. Put differently, the worst disagreement is 0.272 percent of the square's side length. The equation is not symbolically equal to the exact function, but at the scale it is being used the disagreement is smaller than a rendered pixel.</p>
+
+                    <figure class="figure">
+                        <figcaption class="figure-label">Figure 1 — Exact motion against the inexpensive estimate</figcaption>
+                        <div class="figure-body">
+                            <div class="demo-stage" aria-label="Interactive rotating square above a baseline">
+                                <div class="demo-baseline"></div>
+                                <div class="demo-square" id="demoSquare"></div>
+                                <div class="demo-center" id="demoCenter" aria-hidden="true"></div>
+                            </div>
+                            <div class="demo-controls">
+                                <label class="control-label" for="angleControl">Rotation: <span id="angleValue">45°</span></label>
+                                <div class="mode-switch" aria-label="Vertical correction model">
+                                    <button type="button" data-mode="approx" aria-pressed="true">Site approximation</button>
+                                    <button type="button" data-mode="exact" aria-pressed="false">Exact center correction</button>
+                                </div>
+                                <input id="angleControl" type="range" min="0" max="360" value="45" step="1">
+                                <div class="demo-readout" aria-live="polite">
+                                    <div><strong>Quarter-turn phase</strong><span id="phaseValue">45°</span></div>
+                                    <div><strong>Vertical correction</strong><span id="offsetValue" class="readout-approx">17.40 px</span></div>
+                                    <div><strong id="comparisonLabel">Difference from exact</strong><span id="comparisonValue">0.00 px</span></div>
+                                </div>
+                            </div>
+
+                            <svg class="comparison-plot" viewBox="0 0 800 190" role="img" aria-labelledby="plotTitle plotDescription">
+                                <title id="plotTitle">Comparison of exact and approximated vertical correction</title>
+                                <desc id="plotDescription">The exact trigonometric curve and the parabolic site approximation share the same endpoints and midpoint, with a small difference between those points.</desc>
+                                <line class="plot-axis" x1="35" y1="155" x2="775" y2="155"></line>
+                                <line class="plot-axis" x1="35" y1="20" x2="35" y2="155"></line>
+                                <path class="plot-exact" id="plotExact"></path>
+                                <path class="plot-approx" id="plotApprox"></path>
+                                <text x="30" y="176" font-size="13">0°</text>
+                                <text x="382" y="176" font-size="13">45°</text>
+                                <text x="744" y="176" font-size="13">90°</text>
+                            </svg>
+                            <div class="legend" aria-hidden="true">
+                                <span class="exact">Exact trigonometric correction</span>
+                                <span class="approx">Parabolic approximation in the site</span>
+                            </div>
+                        </div>
+                    </figure>
+
+                    <h3>Why the estimate holds together</h3>
+                    <p>If you move the slider in Figure 1, it becomes incredibly difficult to tell which equation is active without reading the button. At 0 degrees a side is flat and the correction is zero. At 45 degrees the diagonal is vertical and the correction is exactly <em>Δh</em>. At 90 degrees the next side is flat and the correction returns to zero. The slight error between these positions never accumulates because every quarter-turn resets into another exact position.</p>
+
+                    <div class="callout-grid">
+                        <div class="callout">
+                            <h3>Exact at the anchors</h3>
+                            <p>Zero error at 0°, 45°, and 90° ensures every side and corner arrives where geometry says it should.</p>
+                        </div>
+                        <div class="callout">
+                            <h3>Subpixel between them</h3>
+                            <p>The largest deviation occurs between the anchors, but remains below one quarter of a pixel at 84px.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section" id="implementation">
+                    <p class="section-number">Section 03</p>
+                    <h2>Translating the math into code</h2>
+                    <p>Now that we know why the parabola is mathematically defensible, we can look at how it becomes the square on the page. The live animation is split across two files: JavaScript reads scroll position and computes the vertical correction, then CSS applies the movement. Three pieces work together:</p>
+
+                    <ol class="implementation-steps">
+                        <li><strong>JavaScript</strong> in <code>walkingsquare.js</code> sets <code>--rotations</code> and <code>--yoffset</code> from scroll position.</li>
+                        <li><strong>JavaScript</strong> in the same file defines <code>calcHeightOffset(...)</code>, which returns the parabolic lift in pixels.</li>
+                        <li><strong>CSS</strong> in <code>walkingsquare.css</code> reads those custom properties and composes translation plus rotation.</li>
+                    </ol>
+
+                    <p>The name <code>calcHeightOffset</code> is easy to misread as CSS <code>calc()</code>, but it is an ordinary JavaScript function defined in <code>walkingsquare.js</code>. The scroll loop calls it; CSS never executes it directly.</p>
+
+                    <div class="code-block">
+                        <p class="code-caption">1. JavaScript — scroll handler (<code>walkingsquare.js</code>)</p>
+                        <pre><code><span class="code-comment">// Scroll position becomes the animation parameter.</span>
+inc = window.scrollY;
+square.style.setProperty("--rotations", inc);
+square.style.setProperty(
+    "--yoffset",
+    -calcHeightOffset(squareHeight, inc) + "px"
+);</code></pre>
+                    </div>
+
+                    <p>The call above uses the JavaScript function shown in step 2. The minus sign converts the returned lift into an upward CSS translation.</p>
+
+                    <div class="code-block">
+                        <p class="code-caption">2. JavaScript — <code>calcHeightOffset(...)</code> (<code>walkingsquare.js</code>)</p>
+                        <pre><code>function calcHeightOffset(height, angle) {
+    let deltaH = ((Math.sqrt(2) * height) / 2) - (height / 2);
+    let phase = angle % 90;
+    let curve = 1 - Math.pow((phase - 45) / 45, 2);
+    return curve * deltaH;
+}</code></pre>
+                    </div>
+
+                    <p>This is the parabolic estimate from Section 01. It runs in JavaScript once per frame and returns a pixel offset height value. That value is written into <code>--yoffset</code> by the scroll handler in step 1.</p>
+
+                    <div class="code-block">
+                        <p class="code-caption">3. CSS — transform (<code>walkingsquare.css</code>)</p>
+                        <pre><code>transform:
+    translate(
+        calc((var(--rotations) / 90) * var(--width)),
+        var(--yoffset)
+    )
+    rotate(calc(var(--rotations) * 1deg));</code></pre>
+                    </div>
+
+                    <p>This separation is useful because JavaScript only has to decide where the square belongs. CSS is then allowed to do what it is good at: compositing the translation and rotation. Instead of changing margins, positions, and dimensions on every frame, I update two custom properties and let the browser's rendering pipeline handle the visible movement.</p>
+
+                    <h3>Encoding the quarter-turn</h3>
+                    <p>Inside <code>calcHeightOffset</code>, the vertical correction first uses the remainder operator to reduce any rotation into a phase between 0 and 90 degrees. I then center that phase around 45, divide by 45 to normalize it between negative and positive one, square it, and invert it. The result is our downward-opening parabola. Multiplying it by <em>Δh</em> scales the value from a generic range of zero-to-one into the real number of pixels required by the square.</p>
+                    <p>No road geometry needs to be constructed, sampled, or painted. Each frame resolves one phase and one offset regardless of screen size. In computer science terms this is constant work, or O(1), rather than work that increases with however many points we would need to draw a convincing curve.</p>
+
+                    <h3>Responsive geometry</h3>
+                    <p>The square is not assigned one permanent size. Its side length is calculated as a fraction of the viewport width, with a minimum of 75 pixels. Since <em>Δh</em> is derived from the same side length, the correction scales proportionally whenever the page is resized. Without this relationship the animation could be accurate on my monitor and completely wrong on a phone. Keeping the dimensions relative allows the same small equation to survive every screen size.</p>
+                </section>
+
+                <section class="section" id="geometry">
+                    <p class="section-number">Section 04</p>
+                    <h2>Geometry of the square</h2>
+                    <p class="lead">A circle is easy to roll because every point on its edge is the same distance from its center. A square has no such convenience.</p>
+                    <p>Let's start with the square sitting flat on one of its sides. If the side length is <em>s</em>, its center is <em>s/2</em> above the road. As we rotate the square, the road-to-center distance grows until the square balances on a corner. At this exact point the diagonal is vertical, and the center is now half a diagonal above the road, or <em>s√2/2</em>. After the corner passes, the distance falls until the next side lies flat and the entire process repeats.</p>
+                    <p>We can calculate the maximum amount the center must rise by subtracting its original height from half of the diagonal:</p>
+
+                    <div class="equation">
+                        Δh = (s√2 / 2) − (s / 2) = s(√2 − 1) / 2
+                        <small>The maximum lift is approximately 20.71 percent of the square's side length.</small>
+                    </div>
+
+                    <p>Now we know the beginning, peak, and ending height without using trigonometry at all. If we wanted every point between them to be exact, we would project the rotated half-width and half-height onto the vertical axis using <em>cos φ</em> and <em>sin φ</em>. This gives us the exact center-height function seen earlier. My animation does not need every intermediate value to be perfect, but it absolutely needs these limits to be correct. The parabola was built around those limits instead of replacing them.</p>
+
+                    <div class="callout-grid">
+                        <div class="callout">
+                            <h3>What is preserved</h3>
+                            <p>Periodicity, symmetry, diagonal height, responsive scaling, visual contact, and continuous motion.</p>
+                        </div>
+                        <div class="callout">
+                            <h3>What is intentionally omitted</h3>
+                            <p>Exact no-slip kinematics, changing contact pivots, road sampling, physical time, acceleration, and force.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section" id="mathematics">
+                    <p class="section-number">Section 05</p>
+                    <h2>The complete catenary derivation</h2>
+                    <p class="lead">Until now I have discussed the movement I took from the catenary problem. We can now look deeper into how the actual road is produced.</p>
+                    <p>Instead of trying to describe all four sides of a rotating square at once, we can begin with one vertical line segment. Let that side sit at <em>x = a</em>, and let <em>t</em> move from the bottom of the side to the top. Each possible contact point can then be written as (<em>a</em>, <em>t</em>). This rectangular form is easy to picture, but rolling is easier to describe using the point's distance and angle from the center, so we convert it into polar form:</p>
+
+                    <div class="equation">
+                        r(t) = √(a² + t²) &nbsp;&nbsp;&nbsp; θ(t) = arctan(t / a)
+                    </div>
+
+                    <p>Our radius <em>r</em> follows directly from the Pythagorean theorem, while our angle <em>θ</em> comes from the inverse tangent. We can now apply two important properties of rolling. First, the point touching the road must remain directly beneath the center, making the road height the negative radius. Second, the point touching the road is momentarily stationary, so the horizontal distance travelled must equal the small arc swept by that point. Together these properties give us:</p>
+
+                    <div class="equation">
+                        y(t) = −r(t) &nbsp;&nbsp;&nbsp; dx/dt = r(t) · dθ/dt
+                    </div>
+
+                    <p>Substituting our radius and angle gives <em>y(t) = −√(a²+t²)</em> and <em>dx/dt = a/√(a²+t²)</em>. The horizontal portion now requires integration, which returns <em>x(t) = a·asinh(t/a)</em>. At this point we have a parametric equation, but we can remove <em>t</em> and place everything back in terms of <em>x</em> and <em>y</em>. After moving through this equation chain we finally receive:</p>
+
+                    <div class="equation">
+                        y = −a cosh(x / a)
+                        <small>An inverted catenary: the hanging-chain curve turned upside down and repeated beneath each side.</small>
+                    </div>
+
+                    <p>The hyperbolic cosine, <em>cosh</em>, creates our catenary. This is the same family of curve formed by a hanging chain, except the negative sign flips it upside down. By repeating one correctly sized section for every side of the square, the road falls away at exactly the same rate the square's corner would normally push its center upward. The two movements cancel, leaving the center on a level line.</p>
+                    <p>This derivation, explored visually in Morphocular's <a href="https://www.youtube.com/watch?v=xGxSTzaID3k&t=1054s" target="_blank" rel="noopener noreferrer">The Perfect Road for a Square Wheel and How to Design It</a>, describes the complete mathematical object behind my animation. My implementation reverses the presentation: the visual road remains flat while the square's center moves. I then estimate that center movement rather than solving and displaying the road.</p>
+
+                    <div class="distinction">
+                        <strong>Same mathematical problem, smaller visual requirement</strong>
+                        <p>A complete catenary model is valuable when the road itself is the subject. On my home page, the subject is the square reacting to your scroll. I did not throw away the mathematics; I used it to identify which properties must survive and which calculations would never become visible.</p>
+                    </div>
+                </section>
+
+                <section class="section" id="conclusion">
+                    <p class="section-number">Section 06</p>
+                    <h2>Conclusion</h2>
+                    <p>In conclusion, I began with a mathematically peculiar object: a square wheel that can roll smoothly only when its road is made from repeated inverted catenaries. The complete solution moves through geometry, trigonometry, differential relationships, integration, and hyperbolic functions. However, the final object I needed was not a road or a physical simulation. I needed a square to react naturally to someone scrolling through my portfolio.</p>
+                    <p>By studying the exact problem, I was able to isolate the three positions that define the visible movement and construct the unique parabola passing through them. This estimate retains 99.30 percent mean shape accuracy, never misses the exact motion by more than 1.312 percent of the total lift, and reduces the isolated calculation time by approximately one-half to two-thirds. More importantly, its worst visual error is less than a quarter of a pixel at the displayed size.</p>
+                    <p>At first it may seem contradictory to use mathematics in order to create something knowingly inexact. Through this investigation I believe the opposite is true. Mathematics gave me the ability to define my acceptable error, prove the important positions remain exact, and measure what was lost between them. Without understanding the original catenary and square geometry, the parabola would be a guess. With that understanding, it becomes an optimization. The most elegant part of the implementation is not the single line of code by itself, but knowing enough about the ugly equation behind it to confidently decide which parts the browser never needed to process.</p>
+                </section>
+
+                <section class="section" aria-labelledby="references-title">
+                    <p class="section-number">References</p>
+                    <h2 id="references-title">Sources and implementation</h2>
+                    <ol class="reference-list">
+                        <li><a href="https://www.youtube.com/watch?v=xGxSTzaID3k&t=1054s" target="_blank" rel="noopener noreferrer">Morphocular, “The Perfect Road for a Square Wheel and How to Design It.”</a> Video discussion of rolling dynamics, road-wheel equations, and the catenary solution.</li>
+                        <li><a href="https://momath.org/sqwt/" target="_blank" rel="noopener noreferrer">National Museum of Mathematics, “Square-Wheeled Tricycle.”</a> A physical realization of square wheels rolling on linked inverted catenaries.</li>                        <li><a href="../js/walkingsquare.js">Ammons, Jacob. <code>walkingsquare.js</code>.</a> Scroll sampling and parabolic center-height correction used on the home page.</li>
+                        <li><a href="../css/walkingsquare.css">Ammons, Jacob. <code>walkingsquare.css</code>.</a> CSS-variable translation, rotation, and responsive square sizing.</li>
+                    </ol>
+                </section>
+
+                <section class="closing">
+                    <h2>From the report back to the experiment</h2>
+                    <p>The square is still meant to be played with. Return to the home page, grab the scroll bar, and watch each quarter-turn repeat. What appears to be a simple decoration is a catenary problem, reduced through quadratic interpolation, running from the movement of your hand.</p>
+                    <p><a href="../">Return to the home page →</a></p>
+                </section>
+            </article>
+        </div>
+    </main>
+
+    <footer>
+        Made with geometry, JavaScript, and a square that refuses to be a circle.
+    </footer>
+
+    <script>
+        const side = 84;
+        const maxLift = (Math.sqrt(2) * side / 2) - (side / 2);
+        const angleControl = document.querySelector("#angleControl");
+        const angleValue = document.querySelector("#angleValue");
+        const phaseValue = document.querySelector("#phaseValue");
+        const offsetValue = document.querySelector("#offsetValue");
+        const comparisonLabel = document.querySelector("#comparisonLabel");
+        const comparisonValue = document.querySelector("#comparisonValue");
+        const demoSquare = document.querySelector("#demoSquare");
+        const demoCenter = document.querySelector("#demoCenter");
+        const modeButtons = document.querySelectorAll("[data-mode]");
+        let mode = "approx";
+
+        function quarterTurnPhase(angle) {
+            const wrapped = ((angle % 90) + 90) % 90;
+            return angle > 0 && wrapped === 0 ? 90 : wrapped;
+        }
+
+        function approximation(angle) {
+            const phase = quarterTurnPhase(angle);
+            return (-Math.pow((phase - 45) / 45, 2) + 1) * maxLift;
+        }
+
+        function exactCorrection(angle) {
+            const phase = quarterTurnPhase(angle) * Math.PI / 180;
+            return (side / 2) * (Math.cos(phase) + Math.sin(phase) - 1);
+        }
+
+        function updateDemo() {
+            const angle = Number(angleControl.value);
+            const phase = quarterTurnPhase(angle);
+            const exact = exactCorrection(angle);
+            const approximate = approximation(angle);
+            const offset = mode === "exact" ? exact : approximate;
+            const isApprox = mode === "approx";
+
+            demoSquare.classList.toggle("is-exact", !isApprox);
+            demoSquare.style.transform = `translateY(${-offset}px) rotate(${angle}deg)`;
+            demoCenter.style.transform = `translateY(${-offset}px)`;
+            angleValue.textContent = `${angle}°`;
+            phaseValue.textContent = `${phase}°`;
+
+            offsetValue.textContent = `${offset.toFixed(2)} px`;
+            offsetValue.className = isApprox ? "readout-approx" : "readout-exact";
+
+            if (isApprox) {
+                comparisonLabel.textContent = "Difference from exact";
+                comparisonValue.textContent = `${Math.abs(approximate - exact).toFixed(2)} px`;
+                comparisonValue.className = "readout-exact";
+            } else {
+                comparisonLabel.textContent = "My approximation";
+                comparisonValue.textContent = `${approximate.toFixed(2)} px`;
+                comparisonValue.className = "readout-approx";
+            }
+        }
+
+        modeButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+                mode = button.dataset.mode;
+                modeButtons.forEach((item) => {
+                    item.setAttribute("aria-pressed", String(item === button));
+                });
+                updateDemo();
+            });
+        });
+
+        angleControl.addEventListener("input", updateDemo);
+
+        function drawComparisonPlot() {
+            const left = 35;
+            const right = 775;
+            const baseline = 155;
+            const height = 120;
+
+            function pathFor(curve) {
+                const points = [];
+                for (let angle = 0; angle <= 90; angle += 1) {
+                    const x = left + (angle / 90) * (right - left);
+                    const y = baseline - (curve(angle) / maxLift) * height;
+                    points.push(`${angle === 0 ? "M" : "L"} ${x.toFixed(2)} ${y.toFixed(2)}`);
+                }
+                return points.join(" ");
+            }
+
+            document.querySelector("#plotExact").setAttribute("d", pathFor(exactCorrection));
+            document.querySelector("#plotApprox").setAttribute("d", pathFor(approximation));
+        }
+
+        drawComparisonPlot();
+        updateDemo();
+    </script>
+</body>
+
+</html>

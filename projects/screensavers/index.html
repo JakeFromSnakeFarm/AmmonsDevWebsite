@@ -1,307 +1,598 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title></title>
+    <title>Canvas Screensavers</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nova+Square&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #0f1117;
+            color: #e2e4e9;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .page-header {
+            text-align: center;
+            padding: 3rem 1.5rem 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .page-header h1 {
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: #9ca3af;
+            font-size: 1rem;
+        }
+
+        /* Screensaver Cards */
+        .screensaver-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .screensaver-card {
+            background: #1a1d27;
+            border: 1px solid #2a2d3a;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .screensaver-card:hover {
+            border-color: #3b3f52;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            padding: 1.25rem 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .card-text {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .card-text h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #f3f4f6;
+            margin-bottom: 0.35rem;
+        }
+
+        .card-text p {
+            font-size: 0.9rem;
+            color: #9ca3af;
+            max-width: 600px;
+        }
+
+        .card-controls {
+            display: flex;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.55rem 1.2rem;
+            border: none;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.1s ease, opacity 0.2s ease;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn-start {
+            background: #22c55e;
+            color: #052e16;
+        }
+
+        .btn-start:hover {
+            background: #16a34a;
+        }
+
+        .btn-stop {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        .btn-stop:hover {
+            background: #dc2626;
+        }
+
+        .btn-stop:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        .btn-generate {
+            background: #8b5cf6;
+            color: #fff;
+        }
+
+        .btn-generate:hover {
+            background: #7c3aed;
+        }
+
+        .btn-icon {
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        /* Canvas wrapper */
+        .canvas-wrap {
+            position: relative;
+            width: 100%;
+            background: #000;
+        }
+
+        .canvas-wrap canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        /* Footer */
+        .page-footer {
+            text-align: center;
+            padding: 2rem 1.5rem 3rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .page-footer p {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .page-footer a {
+            color: #60a5fa;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .page-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Status indicator */
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6b7280;
+            margin-top: 0.4rem;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #6b7280;
+            transition: background 0.3s ease;
+        }
+
+        .status.running .status-dot {
+            background: #22c55e;
+            box-shadow: 0 0 6px #22c55e88;
+        }
+
+        .status.running {
+            color: #22c55e;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .card-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .card-controls {
+                width: 100%;
+            }
+
+            .card-controls .btn {
+                flex: 1;
+                justify-content: center;
+            }
+
+            .page-header {
+                padding: 2rem 1rem 1.5rem;
+            }
+
+            .screensaver-grid {
+                padding: 0 1rem 2rem;
+            }
+        }
+    </style>
 </head>
-<style type="text/css">
-* {
-    box-sizing: border-box;
-}
-
-body,
-html {
-    background-color: #aaa;
-}
-
-.canvas-container {
-    display: flex;
-    /*      flex-direction: column;*/
-    width: 90%;
-    margin: 10px auto;
-}
-
-.canvas-container canvas {
-    width: 90%;
-}
-
-.canvas-container button {
-    text-align: center;
-    display: block;
-    height: 90px;
-    width: 10%;
-    font-size: 2em;
-    cursor: pointer;
-    margin: 4rem 0 1rem;
-}
-
-h1 {
-    text-align: center;
-    width: 90%;
-    margin: auto;
-}
-
-@media screen and (max-width: 1000px) {
-    .canvas-container {
-        flex-direction: column;
-    }
-
-    .canvas-container button, .canvas-container canvas {
-        width: 100%;
-    }
-}
-</style>
 
 <body>
-    <h1>This page is unfinished, do not judge the mediocrity of the style, enjoy the content it offers.</h1>
-    <div class="canvas-container">
-        <button onclick="changeInterval(updateMatrixRain,60)">Start</button>
-        <canvas width="1600px" height="900px" id="matrixRain"></canvas>
-    </div>
-    <div class="canvas-container">
-        <button onclick="changeInterval(updateDiagLines,60)">Start</button>
-        <canvas width="1600px" height="900px" id="diagLines"></canvas>
-    </div>
-    <div class="canvas-container">
-        <button onclick="updateSceneryDraw()">New</button>
-        <canvas width="1600px" height="900px" id="sceneryDraw"></canvas>
-    </div>
-    <h1>Youve seen some of my other creations on my <a href="../../">Home Page.</a> I havnt added them here as of now, but you can still view them in their natural habitat.</h1>
-</body>
-<script type="text/javascript">
-var activeInterval;
+    <header class="page-header">
+        <h1>Canvas Screensavers</h1>
+        <p>Interactive browser-based animations built with the HTML5 Canvas API.</p>
+    </header>
 
-function changeInterval(fName, fps) {
-    clearInterval(activeInterval)
-    activeInterval = setInterval(fName, 1000 / fps);
-}
+    <main class="screensaver-grid">
 
-//Scenery Draw
-var cSD = document.getElementById("sceneryDraw");
-var ctxSD = cSD.getContext("2d");
+        <!-- Matrix Rain -->
+        <section class="screensaver-card">
+            <div class="card-info">
+                <div class="card-text">
+                    <h2>Matrix Rain</h2>
+                    <p>Cascading columns of binary digits in glowing green, inspired by the iconic digital rain from
+                        The Matrix. Each chain drifts at a random speed with characters that flicker and change.</p>
+                    <div class="status" id="statusMatrixRain">
+                        <span class="status-dot"></span> Stopped
+                    </div>
+                </div>
+                <div class="card-controls">
+                    <button class="btn btn-start" onclick="startMatrixRain()">
+                        <span class="btn-icon">▶</span> Start
+                    </button>
+                    <button class="btn btn-stop" id="stopMatrixRain" onclick="stopMatrixRain()" disabled>
+                        <span class="btn-icon">■</span> Stop
+                    </button>
+                </div>
+            </div>
+            <div class="canvas-wrap">
+                <canvas width="1600" height="900" id="matrixRain"></canvas>
+            </div>
+        </section>
 
-updateSceneryDraw()
+        <!-- Diagonal Lines -->
+        <section class="screensaver-card">
+            <div class="card-info">
+                <div class="card-text">
+                    <h2>Diagonal Lines</h2>
+                    <p>A mesmerizing pattern of randomly oriented diagonal line segments drawn across a grid. Lines
+                        fill the canvas symmetrically from opposing corners, then reset and begin again.</p>
+                    <div class="status" id="statusDiagLines">
+                        <span class="status-dot"></span> Stopped
+                    </div>
+                </div>
+                <div class="card-controls">
+                    <button class="btn btn-start" onclick="startDiagLines()">
+                        <span class="btn-icon">▶</span> Start
+                    </button>
+                    <button class="btn btn-stop" id="stopDiagLines" onclick="stopDiagLines()" disabled>
+                        <span class="btn-icon">■</span> Stop
+                    </button>
+                </div>
+            </div>
+            <div class="canvas-wrap">
+                <canvas width="1600" height="900" id="diagLines"></canvas>
+            </div>
+        </section>
 
-function updateSceneryDraw() {
-    ctxSD.beginPath();
-    drawLandscape();
-    drawCloud();
-}
+        <!-- Scenery Draw -->
+        <section class="screensaver-card">
+            <div class="card-info">
+                <div class="card-text">
+                    <h2>Scenery Generator</h2>
+                    <p>Procedurally generates a unique landscape each time — rolling hills of grass, a winding river,
+                        and fluffy clouds drifting across a bright sky. No two scenes are alike.</p>
+                </div>
+                <div class="card-controls">
+                    <button class="btn btn-generate" onclick="updateSceneryDraw()">
+                        <span class="btn-icon">🎲</span> Generate
+                    </button>
+                </div>
+            </div>
+            <div class="canvas-wrap">
+                <canvas width="1600" height="900" id="sceneryDraw"></canvas>
+            </div>
+        </section>
 
-function drawLandscape() {
-    let yOffSet = random(400, 600),
-        period = Math.random();
-    ctxSD.fillStyle = "#5df4f7";
-    ctxSD.fillRect(0, 0, cSD.width, cSD.height);
-    ctxSD.strokeStyle = "green";
-    ctxSD.lineWidth = 2;
+    </main>
 
-    for (let x = 0; x <= 1920; ++x) {
-        //Grass
-        let y = 12 * Math.sin(period * x * Math.PI / 180);
-        ctxSD.moveTo(x, cSD.height);
-        ctxSD.lineTo(x, y + yOffSet);
-    }
-    ctxSD.stroke();
+    <footer class="page-footer">
+        <p>Check out more projects on my <a href="../../">Home Page</a>.</p>
+    </footer>
 
-    ctxSD.beginPath();
-    ctxSD.strokeStyle = "blue";
-    for (let i = 0, xOffSet = random(120, 970); i < 80; ++i) {
-        // River
-        for (let y = 0; y <= 900; ++y) {
-            let x = 18 * Math.sin(period * 3 * y * Math.PI / 180),
-                z = 12 * Math.sin(period * (xOffSet + i) * Math.PI / 180) + yOffSet;
-            if (y == 0) ctxSD.moveTo(y + xOffSet + i, z);
+    <script>
+        // ── Interval management (independent per screensaver) ──
+        var matrixRainInterval = null;
+        var diagLinesInterval = null;
 
-            ctxSD.lineTo(x + xOffSet + i, z + y);
+        function startMatrixRain() {
+            if (matrixRainInterval) return;
+            matrixRainInterval = setInterval(updateMatrixRain, 1000 / 60);
+            setStatus('statusMatrixRain', true);
+            document.getElementById('stopMatrixRain').disabled = false;
         }
-    }
-    ctxSD.stroke();
-}
 
-function drawCloud(debug) {
-    let xOff = 400,
-        yOff = 200,
-        radiusX = Math.random() * 120,
-        radiusY = Math.random() * 40,
-        angle = Math.random() * (2 * Math.PI),
-        x = radiusX * Math.cos(angle),
-        y = radiusY * Math.sin(angle);
-    ctxSD.fillStyle = "white";
-    for (let j = 1; j < 4; ++j) {
-        ctxSD.strokeStyle = "black";
-        xOff = random(200 * j, 600 * j);
-        yOff = random(70, 200);
-        for (let i = 0; i < 4; ++i) {
-            (radiusX = Math.random() * 120),
-            (radiusY = Math.random() * 60),
-            (angle = Math.random() * (2 * Math.PI)),
-            (x = radiusX * Math.cos(angle)),
-            (y = radiusY * Math.sin(angle));
+        function stopMatrixRain() {
+            clearInterval(matrixRainInterval);
+            matrixRainInterval = null;
+            setStatus('statusMatrixRain', false);
+            document.getElementById('stopMatrixRain').disabled = true;
+        }
+
+        function startDiagLines() {
+            if (diagLinesInterval) return;
+            diagLinesInterval = setInterval(updateDiagLines, 1000 / 60);
+            setStatus('statusDiagLines', true);
+            document.getElementById('stopDiagLines').disabled = false;
+        }
+
+        function stopDiagLines() {
+            clearInterval(diagLinesInterval);
+            diagLinesInterval = null;
+            setStatus('statusDiagLines', false);
+            document.getElementById('stopDiagLines').disabled = true;
+        }
+
+        function setStatus(id, running) {
+            var el = document.getElementById(id);
+            if (running) {
+                el.className = 'status running';
+                el.innerHTML = '<span class="status-dot"></span> Running';
+            } else {
+                el.className = 'status';
+                el.innerHTML = '<span class="status-dot"></span> Stopped';
+            }
+        }
+
+        // ── Scenery Draw ──
+        var cSD = document.getElementById("sceneryDraw");
+        var ctxSD = cSD.getContext("2d");
+
+        updateSceneryDraw();
+
+        function updateSceneryDraw() {
             ctxSD.beginPath();
-            ctxSD.arc(x + xOff, y + yOff, random(60, 90), 2 * Math.PI, false);
-            ctxSD.fill();
+            drawLandscape();
+            drawCloud();
         }
-        if (debug) {
+
+        function drawLandscape() {
+            let yOffSet = random(400, 600),
+                period = Math.random();
+            ctxSD.fillStyle = "#5df4f7";
+            ctxSD.fillRect(0, 0, cSD.width, cSD.height);
+            ctxSD.strokeStyle = "green";
+            ctxSD.lineWidth = 2;
+
+            for (let x = 0; x <= 1920; ++x) {
+                let y = 12 * Math.sin(period * x * Math.PI / 180);
+                ctxSD.moveTo(x, cSD.height);
+                ctxSD.lineTo(x, y + yOffSet);
+            }
+            ctxSD.stroke();
+
+            ctxSD.beginPath();
             ctxSD.strokeStyle = "blue";
-            ctxSD.beginPath();
-            ctxSD.ellipse(xOff, yOff, 120, 60, 0, 2 * Math.PI, false);
+            for (let i = 0, xOffSet = random(120, 970); i < 80; ++i) {
+                for (let y = 0; y <= 900; ++y) {
+                    let x = 18 * Math.sin(period * 3 * y * Math.PI / 180),
+                        z = 12 * Math.sin(period * (xOffSet + i) * Math.PI / 180) + yOffSet;
+                    if (y == 0) ctxSD.moveTo(y + xOffSet + i, z);
+                    ctxSD.lineTo(x + xOffSet + i, z + y);
+                }
+            }
             ctxSD.stroke();
         }
-    }
-}
 
-
-
-
-
-
-
-//Diagonal Lines
-var cDL = document.getElementById("diagLines");
-var ctxDL = cDL.getContext('2d'),
-    gridW,
-    gridH,
-    cellSize = 20,
-    horInc = 0,
-    verInc = 0,
-    diagBool = true;
-ctxDL.fillStyle = "#000";
-ctxDL.strokeStyle = "#fff";
-ctxDL.fillRect(0, 0, cDL.width, cDL.height);
-calcGridSize(cellSize);
-
-
-function calcGridSize(cellSize) {
-    gridW = Math.floor(cDL.width / cellSize);
-    gridH = Math.floor(cDL.height / cellSize);
-}
-
-function drawDiag(x, y, dir) {
-    ctxDL.beginPath();
-    if (dir) {
-        ctxDL.moveTo(x, y);
-        ctxDL.lineTo(x + cellSize, y + cellSize);
-    } else {
-        ctxDL.moveTo(x, y + cellSize);
-        ctxDL.lineTo(x + cellSize, y);
-    }
-    ctxDL.stroke();
-}
-
-function updateDiagLines() {
-    if (diagBool) {
-        drawDiag(horInc * cellSize, verInc * cellSize, Math.round(Math.random()));
-        drawDiag(cDL.width - (horInc * cellSize), cDL.height - ((verInc + 1) * cellSize), Math.round(Math.random()));
-    } else {
-        drawDiag(cDL.width - (horInc * cellSize), verInc * cellSize, Math.round(Math.random()));
-        drawDiag(horInc * cellSize, cDL.height - ((verInc + 1) * cellSize), Math.round(Math.random()));
-    }
-    if (horInc++ >= gridW) {
-        diagBool = !diagBool;
-        horInc = 0;
-        verInc++;
-        if (verInc >= gridH) {
-            console.log("done")
-            resetDiagLines();
+        function drawCloud(debug) {
+            let xOff = 400,
+                yOff = 200,
+                radiusX = Math.random() * 120,
+                radiusY = Math.random() * 40,
+                angle = Math.random() * (2 * Math.PI),
+                x = radiusX * Math.cos(angle),
+                y = radiusY * Math.sin(angle);
+            ctxSD.fillStyle = "white";
+            for (let j = 1; j < 4; ++j) {
+                ctxSD.strokeStyle = "black";
+                xOff = random(200 * j, 600 * j);
+                yOff = random(70, 200);
+                for (let i = 0; i < 4; ++i) {
+                    (radiusX = Math.random() * 120),
+                    (radiusY = Math.random() * 60),
+                    (angle = Math.random() * (2 * Math.PI)),
+                    (x = radiusX * Math.cos(angle)),
+                    (y = radiusY * Math.sin(angle));
+                    ctxSD.beginPath();
+                    ctxSD.arc(x + xOff, y + yOff, random(60, 90), 2 * Math.PI, false);
+                    ctxSD.fill();
+                }
+                if (debug) {
+                    ctxSD.strokeStyle = "blue";
+                    ctxSD.beginPath();
+                    ctxSD.ellipse(xOff, yOff, 120, 60, 0, 2 * Math.PI, false);
+                    ctxSD.stroke();
+                }
+            }
         }
-    }
-}
 
-function resetDiagLines() {
-    horInc = 0;
-    verInc = 0;
-    ctxDL.fillRect(0, 0, cDL.width, cDL.height);
-}
+        // ── Diagonal Lines ──
+        var cDL = document.getElementById("diagLines");
+        var ctxDL = cDL.getContext('2d'),
+            gridW, gridH,
+            cellSize = 20,
+            horInc = 0,
+            verInc = 0,
+            diagBool = true;
+        ctxDL.fillStyle = "#000";
+        ctxDL.strokeStyle = "#fff";
+        ctxDL.fillRect(0, 0, cDL.width, cDL.height);
+        calcGridSize(cellSize);
 
-//Matrix Rain
-var cMR = document.getElementById("matrixRain");
-var ctxMR = cMR.getContext("2d");
-var chains = [];
-ctxMR.fillStyle = "#000";
-ctxMR.fillRect(0, 0, cMR.width, cMR.height);
-ctxMR.textAlign = "center";
-class Chain {
-    constructor(length, speed, size, x, y) {
-        this.length = length;
-        this.speed = speed;
-        this.size = size;
-        this.height = this.size * this.length;
-        this.x = x;
-        this.y = y;
-        this.green = [];
-        this.text = [];
-        this.colors = [];
-        this.chance = random(0.85, 0.995, 1)
-        for (let i = 0; i < this.length; i++) {
-            this.green.push(random(164, 255));
-            this.text.push((Math.round(Math.random())));
+        function calcGridSize(cellSize) {
+            gridW = Math.floor(cDL.width / cellSize);
+            gridH = Math.floor(cDL.height / cellSize);
         }
-    }
-    move() {
-        this.y += this.speed;
-        if (this.y > cMR.height) {
-            this.y = 0 - this.height;
-            this.x = random(20, cMR.width - 20);
-        }
-    }
-    draw() {
-        for (let i = 0; i < this.length; i++) {
-            if (i == this.length - 1) {
-                ctxMR.fillStyle = "#fff"
+
+        function drawDiag(x, y, dir) {
+            ctxDL.beginPath();
+            if (dir) {
+                ctxDL.moveTo(x, y);
+                ctxDL.lineTo(x + cellSize, y + cellSize);
             } else {
-                ctxMR.fillStyle = "rgb(0," + this.green[i] + ",0)";
+                ctxDL.moveTo(x, y + cellSize);
+                ctxDL.lineTo(x + cellSize, y);
             }
-            let rnd = Math.random();
-            if (rnd > this.chance) {
-                //console.log(rnd)
-                this.green[i] = random(120, 255);
-                this.text[i] = (Math.round(Math.random()));
-            }
-            ctxMR.font = this.size + "px Nova Square";
-            ctxMR.fillText(this.text[i] + "", this.x, this.y + (this.size * i));
+            ctxDL.stroke();
         }
-    }
 
-}
-
-function setupMatrixRain() {
-    for (let i = 0; i < 40; i++) {
-        chains.push(new Chain(random(5, 9), random(2, 8), random(15, 35), random(20, cMR.width - 20), -200));
-    }
-}
-
-function updateMatrixRain() {
-    ctxMR.fillStyle = "#000";
-    ctxMR.fillRect(0, 0, cMR.width, cMR.height);
-    for (let i = 0; i < chains.length; i++) {
-        chains[i].move();
-        chains[i].draw();
-    }
-
-}
-
-setupMatrixRain();
-
-function random(min, max, noRound, occlusion) { //Homebrew random function for generating random numbers, occlusion is an array that holds #s our random cant be
-    if (noRound) {
-        this.value = Math.random() * (max - min) + min;
-    } else {
-        this.value = Math.round(Math.random() * (max - min)) + min;
-    }
-    if (occlusion) {
-        for (let i = 0; i < occlusion.length; i++) {
-            if (this.value == occlusion[i]) {
-                this.value = random(min, max, occlusion); //Recursive function to cycle until it finds our number
+        function updateDiagLines() {
+            if (diagBool) {
+                drawDiag(horInc * cellSize, verInc * cellSize, Math.round(Math.random()));
+                drawDiag(cDL.width - (horInc * cellSize), cDL.height - ((verInc + 1) * cellSize), Math.round(Math.random()));
+            } else {
+                drawDiag(cDL.width - (horInc * cellSize), verInc * cellSize, Math.round(Math.random()));
+                drawDiag(horInc * cellSize, cDL.height - ((verInc + 1) * cellSize), Math.round(Math.random()));
+            }
+            if (horInc++ >= gridW) {
+                diagBool = !diagBool;
+                horInc = 0;
+                verInc++;
+                if (verInc >= gridH) {
+                    resetDiagLines();
+                }
             }
         }
-        return this.value;
-    } else {
-        return this.value;
-    }
-}
-</script>
+
+        function resetDiagLines() {
+            horInc = 0;
+            verInc = 0;
+            ctxDL.fillRect(0, 0, cDL.width, cDL.height);
+        }
+
+        // ── Matrix Rain ──
+        var cMR = document.getElementById("matrixRain");
+        var ctxMR = cMR.getContext("2d");
+        var chains = [];
+        ctxMR.fillStyle = "#000";
+        ctxMR.fillRect(0, 0, cMR.width, cMR.height);
+        ctxMR.textAlign = "center";
+
+        class Chain {
+            constructor(length, speed, size, x, y) {
+                this.length = length;
+                this.speed = speed;
+                this.size = size;
+                this.height = this.size * this.length;
+                this.x = x;
+                this.y = y;
+                this.green = [];
+                this.text = [];
+                this.colors = [];
+                this.chance = random(0.85, 0.995, 1);
+                for (let i = 0; i < this.length; i++) {
+                    this.green.push(random(164, 255));
+                    this.text.push((Math.round(Math.random())));
+                }
+            }
+            move() {
+                this.y += this.speed;
+                if (this.y > cMR.height) {
+                    this.y = 0 - this.height;
+                    this.x = random(20, cMR.width - 20);
+                }
+            }
+            draw() {
+                for (let i = 0; i < this.length; i++) {
+                    if (i == this.length - 1) {
+                        ctxMR.fillStyle = "#fff";
+                    } else {
+                        ctxMR.fillStyle = "rgb(0," + this.green[i] + ",0)";
+                    }
+                    let rnd = Math.random();
+                    if (rnd > this.chance) {
+                        this.green[i] = random(120, 255);
+                        this.text[i] = (Math.round(Math.random()));
+                    }
+                    ctxMR.font = this.size + "px Nova Square";
+                    ctxMR.fillText(this.text[i] + "", this.x, this.y + (this.size * i));
+                }
+            }
+        }
+
+        function setupMatrixRain() {
+            for (let i = 0; i < 40; i++) {
+                chains.push(new Chain(random(5, 9), random(2, 8), random(15, 35), random(20, cMR.width - 20), -200));
+            }
+        }
+
+        function updateMatrixRain() {
+            ctxMR.fillStyle = "#000";
+            ctxMR.fillRect(0, 0, cMR.width, cMR.height);
+            for (let i = 0; i < chains.length; i++) {
+                chains[i].move();
+                chains[i].draw();
+            }
+        }
+
+        setupMatrixRain();
+
+        // ── Utility ──
+        function random(min, max, noRound, occlusion) {
+            if (noRound) {
+                this.value = Math.random() * (max - min) + min;
+            } else {
+                this.value = Math.round(Math.random() * (max - min)) + min;
+            }
+            if (occlusion) {
+                for (let i = 0; i < occlusion.length; i++) {
+                    if (this.value == occlusion[i]) {
+                        this.value = random(min, max, occlusion);
+                    }
+                }
+                return this.value;
+            } else {
+                return this.value;
+            }
+        }
+    </script>
+</body>
 
 </html>
