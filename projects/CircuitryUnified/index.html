@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Circuitry — a procedural circuit puzzle and a walkthrough of how each board is generated.">
+    <title>Circuitry | Jacob Ammons</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nova+Round&family=Nova+Square&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #2f2d2e;
+            --paper: #efefef;
+            --paper-deep: #e1e0e0;
+            --teal: #048ba8;
+            --orange: #f18f01;
+            --green: #a2ce32;
+            --white: #f7f7f5;
+            --muted: #686466;
+            --line: rgba(47, 45, 46, 0.18);
+            --shadow: 0 18px 55px rgba(47, 45, 46, 0.14);
+            --grid-blue: #2196F3;
+            --radius: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            background: var(--ink);
+        }
+
+        body {
+            margin: 0;
+            color: var(--ink);
+            font-family: "Nova Round", sans-serif;
+            line-height: 1.75;
+        }
+
+        h1, h2, h3, h4, .eyebrow, .site-nav, .section-number, .game-title {
+            font-family: "Nova Square", sans-serif;
+        }
+
+        a { color: inherit; }
+
+        /* ── Nav ── */
+        .site-nav {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            min-height: 64px;
+            padding: 0 5vw;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            color: var(--white);
+            background: rgba(30, 28, 29, 0.96);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(14px);
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .brand img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .site-nav nav {
+            display: flex;
+            align-items: center;
+            gap: clamp(14px, 3vw, 34px);
+        }
+
+        .site-nav nav a {
+            text-decoration: none;
+            font-size: 0.92rem;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .site-nav nav a:hover,
+        .site-nav nav a:focus-visible {
+            border-color: var(--green);
+        }
+
+        /* ── Game stage ── */
+        .game-stage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 20px 48px;
+            background:
+                radial-gradient(ellipse 80% 60% at 50% 30%, rgba(4, 139, 168, 0.12), transparent),
+                var(--ink);
+            color: var(--white);
+        }
+
+        .game-title {
+            margin: 0 0 4px;
+            font-size: clamp(2rem, 5vw, 3rem);
+            letter-spacing: 0.06em;
+            text-align: center;
+        }
+
+        .game-subtitle {
+            margin: 0 0 18px;
+            max-width: 520px;
+            text-align: center;
+            color: rgba(247, 247, 245, 0.65);
+            font-size: 0.94rem;
+            line-height: 1.55;
+        }
+
+        .grid-wrap {
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+        }
+
+        .grid-container {
+            background-color: var(--grid-blue);
+            border: 4px solid rgba(0,0,0,0.35);
+            border-radius: 6px;
+            display: grid;
+            grid-template-columns: repeat(5, 101px);
+            height: 505px;
+            width: 505px;
+            overflow: hidden;
+        }
+
+        .grid-container img {
+            height: 101px;
+            width: 101px;
+            transition: transform 0.2s ease-in-out;
+            user-select: none;
+            -webkit-user-select: none;
+            cursor: pointer;
+        }
+
+        .game-controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .game-btn {
+            min-width: 148px;
+            padding: 11px 20px;
+            color: var(--white);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-family: "Nova Square", sans-serif;
+            font-size: 0.95rem;
+            letter-spacing: 0.04em;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .game-btn:hover,
+        .game-btn:focus-visible {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: rgba(255, 255, 255, 0.35);
+        }
+
+        .game-btn.active {
+            background: var(--orange);
+            border-color: var(--orange);
+        }
+
+        .game-btn.active:hover {
+            background: #d97e00;
+        }
+
+        .game-btn.primary {
+            background: var(--teal);
+            border-color: var(--teal);
+        }
+
+        .game-btn.primary:hover {
+            background: #037a94;
+        }
+
+        .info-scroll {
+            margin-top: 28px;
+            max-width: 520px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: rgba(247, 247, 245, 0.75);
+            background: rgba(4, 139, 168, 0.15);
+            border: 1px solid rgba(4, 139, 168, 0.35);
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+            line-height: 1.45;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s, color 0.2s;
+        }
+
+        .info-scroll:hover,
+        .info-scroll:focus-visible {
+            color: var(--white);
+            background: rgba(4, 139, 168, 0.28);
+            border-color: rgba(4, 139, 168, 0.55);
+        }
+
+        .info-scroll-icon {
+            flex-shrink: 0;
+            width: 22px;
+            height: 22px;
+            display: grid;
+            place-items: center;
+            color: var(--teal);
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 50%;
+            font-family: "Nova Square", sans-serif;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .info-scroll-text {
+            flex: 1;
+            text-align: left;
+        }
+
+        .info-scroll-arrow {
+            flex-shrink: 0;
+            color: rgba(247, 247, 245, 0.45);
+            animation: bob 2s ease-in-out infinite;
+        }
+
+        .info-scroll:hover .info-scroll-arrow,
+        .info-scroll:focus-visible .info-scroll-arrow {
+            color: var(--green);
+        }
+
+        @keyframes bob {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(5px); }
+        }
+
+        /* ── Report below ── */
+        .report-bg {
+            background:
+                linear-gradient(rgba(47, 45, 46, 0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(47, 45, 46, 0.035) 1px, transparent 1px),
+                var(--paper);
+            background-size: 32px 32px;
+            padding: 72px 0 90px;
+        }
+
+        .report-shell {
+            width: min(100% - 32px, 1060px);
+            margin: 0 auto;
+        }
+
+        .paper {
+            padding: clamp(28px, 6vw, 72px);
+            background: rgba(247, 247, 245, 0.97);
+            border: 1px solid rgba(47, 45, 46, 0.11);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .section {
+            scroll-margin-top: 90px;
+            margin: 0 0 64px;
+        }
+
+        .section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-number {
+            margin-bottom: 5px;
+            color: var(--teal);
+            font-size: 0.82rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            margin: 0 0 18px;
+            font-size: clamp(1.7rem, 4vw, 2.4rem);
+            line-height: 1.15;
+        }
+
+        h3 {
+            margin: 32px 0 12px;
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            line-height: 1.25;
+        }
+
+        p {
+            margin: 0 0 18px;
+            font-size: 1.02rem;
+        }
+
+        .lead {
+            font-size: clamp(1.08rem, 2vw, 1.28rem);
+            line-height: 1.65;
+        }
+
+        .abstract {
+            margin-bottom: 48px;
+            padding: clamp(22px, 4vw, 38px);
+            border-left: 5px solid var(--teal);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            background: var(--paper);
+        }
+
+        .abstract h2 { margin-top: 0; }
+        .abstract p:last-child { margin-bottom: 0; }
+
+        .process-flow {
+            margin: 24px 0;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 0;
+            border: 1px solid var(--ink);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .process-step {
+            padding: 18px 16px;
+            background: var(--white);
+            border-right: 1px solid var(--ink);
+        }
+
+        .process-step:last-child { border-right: 0; }
+
+        .process-step strong {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--teal);
+            font-family: "Nova Square", sans-serif;
+            font-size: 0.82rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .process-step p {
+            margin: 0;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .comparison-grid {
+            margin: 24px 0;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .comparison-card {
+            padding: 20px;
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+        }
+
+        .comparison-card h4 {
+            margin: 0 0 8px;
+            color: var(--teal);
+            font-size: 1rem;
+        }
+
+        .comparison-card p {
+            margin: 0;
+            font-size: 0.92rem;
+        }
+
+        .comparison-card.hard h4 {
+            color: var(--orange);
+        }
+
+        .implementation-steps {
+            margin: 24px 0;
+            padding: 0;
+            list-style: none;
+            display: grid;
+            gap: 10px;
+        }
+
+        .implementation-steps li {
+            padding: 12px 16px;
+            background: var(--paper-deep);
+            border-left: 4px solid var(--teal);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            font-size: 0.94rem;
+        }
+
+        .implementation-steps strong {
+            font-family: "Nova Square", sans-serif;
+        }
+
+        .distinction {
+            margin: 28px 0;
+            padding: 24px;
+            color: var(--white);
+            background: linear-gradient(135deg, #087a92, #045b70);
+            border-radius: var(--radius);
+        }
+
+        .distinction strong {
+            display: block;
+            margin-bottom: 8px;
+            font-family: "Nova Square", sans-serif;
+            font-size: 1.08rem;
+        }
+
+        .distinction p { margin: 0; }
+
+        /* ── Demo lab ── */
+        .demo-lab {
+            margin: 28px 0 40px;
+            border: 1px solid var(--ink);
+            border-radius: var(--radius);
+            overflow: hidden;
+            background: var(--white);
+        }
+
+        .demo-lab-header {
+            padding: 18px 22px;
+            color: var(--white);
+            background: var(--ink);
+        }
+
+        .demo-lab-header h3 {
+            margin: 0 0 4px;
+            color: var(--green);
+            font-size: 1rem;
+        }
+
+        .demo-lab-header p {
+            margin: 0;
+            color: rgba(247, 247, 245, 0.72);
+            font-size: 0.88rem;
+            line-height: 1.55;
+        }
+
+        .demo-lab-body {
+            padding: clamp(18px, 3vw, 28px);
+            text-align: center;
+            background: var(--ink);
+        }
+
+        .demo-lab-body .grid-wrap {
+            display: inline-block;
+        }
+
+        .demo-lab-body .game-controls {
+            margin-top: 16px;
+        }
+
+        .legend {
+            margin: 16px 0 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px 24px;
+            font-size: 0.86rem;
+            color: rgba(247, 247, 245, 0.6);
+        }
+
+        .legend span {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend .swatch {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .legend .swatch.frontier { background: #63db65; }
+        .legend .swatch.active { background: var(--orange); }
+        .legend .swatch.grid { background: var(--grid-blue); }
+
+        #demo-grid img {
+            background-color: var(--grid-blue);
+        }
+
+        #demo-grid img.demo-frontier {
+            background-color: #63db65;
+        }
+
+        #demo-grid img.demo-active {
+            background-color: var(--orange);
+            box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.45);
+            animation: demo-pulse 0.75s ease-in-out infinite;
+        }
+
+        @keyframes demo-pulse {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+
+        /* ── Win overlay ── */
+        .win-banner {
+            display: none;
+            margin-top: 16px;
+            padding: 14px 24px;
+            background: var(--green);
+            color: var(--ink);
+            border-radius: var(--radius);
+            font-family: "Nova Square", sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: 0.04em;
+            animation: popIn 0.35s ease-out;
+        }
+
+        .win-banner.show { display: block; }
+
+        @keyframes popIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* ── Footer ── */
+        footer {
+            padding: 34px 20px;
+            text-align: center;
+            color: rgba(247, 247, 245, 0.5);
+            background: var(--ink);
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 0.9rem;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 720px) {
+            .site-nav { padding: 0 16px; }
+
+            .brand span,
+            .site-nav nav a:not(:last-child) { display: none; }
+
+            .game-stage { padding: 14px 12px 40px; }
+
+            .grid-wrap { padding: 10px; }
+
+            .grid-container {
+                grid-template-columns: repeat(5, 64px);
+                height: 320px;
+                width: 320px;
+            }
+
+            .grid-container img {
+                width: 64px;
+                height: 64px;
+            }
+
+            .report-shell { width: min(100% - 18px, 1060px); }
+            .paper { padding-inline: 20px; }
+
+            .process-flow,
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .process-step {
+                border-right: 0;
+                border-bottom: 1px solid var(--ink);
+            }
+
+            .process-step:last-child { border-bottom: 0; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            .info-scroll-arrow { animation: none; }
+            #demo-grid img.demo-active { animation: none; }
+        }
+    </style>
+</head>
+
+<body ondragstart="return false" ondrop="return false">
+    <header class="site-nav">
+        <a class="brand" href="../../" aria-label="Return to Jacob Ammons' home page">
+            <img src="../../assets/logotransparentwhite.png" alt="">
+            <span>Jacob Ammons</span>
+        </a>
+        <nav aria-label="Page navigation">
+            <a href="#generation">How It's Made</a>
+            <a href="../../">Back home</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="game-stage" id="play">
+            <h1 class="game-title">&#9889; Circuitry</h1>
+            <p class="game-subtitle">Left-click any node or pipe to rotate it 90°. Connect every wire back to the center power source. Each puzzle is generated on the fly — toggle <strong>Hard Mode</strong> to use a slightly tougher generator that builds more complex layouts.</p>
+
+            <div class="grid-wrap">
+                <div class="grid-container" id="play-grid"></div>
+            </div>
+
+            <div class="game-controls">
+                <button type="button" class="game-btn primary" id="play-new">New Puzzle</button>
+                <button type="button" class="game-btn" id="play-solve">Solve</button>
+                <button type="button" class="game-btn" id="play-hard">Hard Mode: OFF</button>
+            </div>
+
+            <div class="win-banner" id="win-banner">Circuit complete!</div>
+
+            <a href="#generation" class="info-scroll">
+                <span class="info-scroll-icon" aria-hidden="true">i</span>
+                <span class="info-scroll-text">Scroll down to read about how this puzzle is made and its AI generation.</span>
+                <svg class="info-scroll-arrow" width="20" height="12" viewBox="0 0 20 12" fill="none" aria-hidden="true"><path d="M1 1l9 9 9-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+        </section>
+
+        <div class="report-bg">
+            <div class="report-shell">
+                <article class="paper">
+                    <section id="generation" class="section" aria-labelledby="generation-title">
+                        <p class="section-number">How it's made</p>
+                        <h2 id="generation-title">Procedural puzzle generation</h2>
+
+                        <div class="abstract">
+                            <h2>The idea</h2>
+                            <p>Circuitry does not ship with pre-made levels. Every puzzle is built in real time by growing a connected wire tree outward from the center tile. The generator picks random directions, assigns tile artwork based on how many connections each cell ends up with, and stores the correct rotation for each piece before scrambling the board for the player.</p>
+                            <p>Toggle <strong>Hard Mode</strong> below to compare both generators at 700 ms per step. In hard mode, <strong>orange</strong> is the tile being processed and <strong>green</strong> tiles sit on the frontier queue. In normal mode, <strong>orange</strong> steps through the grid left-to-right, one tile at a time. Pause anytime to inspect a step.</p>
+                        </div>
+
+                        <div class="demo-lab">
+                            <div class="demo-lab-header">
+                                <h3>Live generation demo</h3>
+                                <p id="demo-mode-caption">Hard mode — orange = processing, green = queued on the frontier.</p>
+                            </div>
+                            <div class="demo-lab-body">
+                                <div class="grid-wrap">
+                                    <div class="grid-container" id="demo-grid"></div>
+                                </div>
+                                <div class="game-controls">
+                                    <button type="button" class="game-btn primary" id="demo-new">New Puzzle</button>
+                                    <button type="button" class="game-btn" id="demo-pause">Pause</button>
+                                    <button type="button" class="game-btn active" id="demo-hard">Hard Mode: ON</button>
+                                </div>
+                                <div class="legend" id="demo-legend">
+                                    <span id="demo-legend-active"><span class="swatch active"></span> Processing now</span>
+                                    <span id="demo-legend-frontier"><span class="swatch frontier"></span> Frontier (queued)</span>
+                                    <span id="demo-legend-scan" hidden><span class="swatch active"></span> Scan position (L→R)</span>
+                                    <span><span class="swatch grid"></span> Settled</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="process-flow" aria-label="Generation pipeline">
+                            <div class="process-step">
+                                <strong>Seed</strong>
+                                <p>The center cell gets three random connections and becomes the power T-junction.</p>
+                            </div>
+                            <div class="process-step">
+                                <strong>Grow</strong>
+                                <p>Each active tile picks a valid direction and links to its neighbor, which joins the frontier.</p>
+                            </div>
+                            <div class="process-step">
+                                <strong>Classify</strong>
+                                <p>1 connection = node, 2 = straight or L, 3 = T-joint. Types drive both art and solution angle.</p>
+                            </div>
+                            <div class="process-step">
+                                <strong>Scramble</strong>
+                                <p>Solution rotations are saved, then tiles reset so the player can rotate them into place.</p>
+                            </div>
+                        </div>
+
+                        <h3>Normal vs. hard generation</h3>
+                        <p class="lead">The two modes use the same tile rules but different strategies for choosing which cell grows next. That choice changes the shape of the circuit — and I only realized how much when I stumbled into it while optimizing the generator.</p>
+                        <div class="comparison-grid">
+                            <div class="comparison-card">
+                                <h4>Normal mode</h4>
+                                <p>Every tick runs a full left-to-right, top-to-bottom scan of the 5×5 grid — row 0 left to right, then row 1, and so on. Any unfinished tile hit during that pass may grow. Because the loop order is fixed, tiles earlier in the scan tend to expand first when several cells are eligible at once. It is simple, but biased toward a predictable sweep direction.</p>
+                            </div>
+                            <div class="comparison-card hard">
+                                <h4>Hard mode</h4>
+                                <p>Only tiles on a <em>frontier queue</em> are eligible. When a cell connects outward, its neighbor is pushed onto the queue — and each step picks a <strong>random</strong> tile from that queue to grow next. There is no fixed scan order; growth wanders through the board in a less predictable path.</p>
+                            </div>
+                        </div>
+
+                        <div class="distinction">
+                            <strong>How I found out hard mode was actually harder</strong>
+                            <p>Hard mode started as a performance tweak. Scanning all 25 tiles every frame was wasteful, so I tried maintaining a queue of frontier cells and only ticking one per step. I did not set out to change puzzle difficulty — but when I switched back and forth during development, the queue version consistently produced layouts that felt tougher to solve. The random frontier selection creates more branching, less uniform wire paths, and fewer of the easy patterns the left-to-right scan tends to favor. Hard mode stayed in the game as a toggle once I realized the accident was a feature.</p>
+                        </div>
+
+                        <ul class="implementation-steps">
+                            <li><strong>Connections</strong> — Directions are encoded 0-3 (up, down, left, right). Each link is reciprocal: connecting up on tile A adds down on tile B.</li>
+                            <li><strong>Constraints</strong> — A tile stops growing at three connections (T-joint) or when every neighbor is blocked. Edge cells naturally cap at fewer links.</li>
+                            <li><strong>Solution angles</strong> — Once the tree is complete, each tile's connection pattern maps to a rotation in degrees. That array is the answer key.</li>
+                            <li><strong>Normal vs. hard</strong> — Normal sweeps the grid in fixed row order; hard randomly picks from the frontier queue. Same rules, different traversal — and noticeably different puzzle feel.</li>
+                            <li><strong>Visual demo</strong> — Toggle hard mode in the demo to watch either the left-to-right scan or random frontier selection at 700 ms per step.</li>
+                        </ul>
+
+                        <div class="distinction">
+                            <strong>Why build a demo at all?</strong>
+                            <p>The game hides generation behind a fast timer. The demo exists to make the algorithm legible — the same code path, slowed down and annotated, so you can see randomness become a solvable circuit.</p>
+                        </div>
+                    </section>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        Circuitry — procedural circuit puzzle by Jacob Ammons
+    </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script>
+    (function () {
+        var TILES = "./tiles/";
+
+        function arraysEqual(a, b) {
+            for (var i = 0; i < a.length; i++) {
+                if (a[i] !== b[i]) return false;
+            }
+            return true;
+        }
+
+        function random(min, max, occlusion) {
+            var value = Math.round(Math.random() * (max - min)) + min;
+            if (occlusion) {
+                for (var i = 0; i < occlusion.length; i++) {
+                    if (value === occlusion[i]) {
+                        return random(min, max, occlusion);
+                    }
+                }
+            }
+            return value;
+        }
+
+        function findIndex(id) {
+            return { x: Math.floor(id / 5), y: id % 5 };
+        }
+
+        function buildGrid(containerId, prefix) {
+            var html = "";
+            for (var i = 0; i < 25; i++) {
+                html += '<img class="crossRotate" id="' + prefix + "-" + i + '" data-id="' + i + '" src="' + TILES + 'null.png" alt="" />';
+            }
+            document.getElementById(containerId).innerHTML = html;
+        }
+
+        function CircuitryEngine(options) {
+            this.prefix = options.prefix;
+            this.mode = options.mode;
+            this.hardMode = !!options.hardMode;
+            this.pieces = [];
+            this.solution = [];
+            this.toVisitPieces = [];
+            this.interval = null;
+            this.conditionsInterval = null;
+            this.fails = 0;
+            this.paused = false;
+            this.activePieceId = null;
+            this.demoScanIndex = 0;
+            this.intervalSpeed = this.mode === "demo" ? 700 : (this.hardMode ? 5 : 50);
+            this.generating = false;
+        }
+
+        CircuitryEngine.prototype.selector = function (id) {
+            return "#" + this.prefix + "-" + id;
+        };
+
+        CircuitryEngine.prototype.createPiece = function (i, j, id) {
+            var engine = this;
+
+            function Piece(i, j, id) {
+                this.trueRot = 0;
+                this.cssRot = 90;
+                this.id = id;
+                this.index = { i: i, j: j, id: id };
+                this.src = null;
+                this.connections = [];
+                this.hasUp = false;
+                this.hasDown = false;
+                this.hasLeft = false;
+                this.hasRight = false;
+                this.isSetTile = false;
+                this.wasSpliced = false;
+            }
+
+            Piece.prototype.grabExclusions = function () {
+                var excluded = [];
+                var pieceUp, pieceDown, pieceLeft, pieceRight;
+
+                try { pieceUp = engine.pieces[this.index.i - 1][this.index.j]; } catch (e) { pieceUp = null; }
+                try { pieceDown = engine.pieces[this.index.i + 1][this.index.j]; } catch (e) { pieceDown = null; }
+                try { pieceLeft = engine.pieces[this.index.i][this.index.j - 1]; } catch (e) { pieceLeft = null; }
+                try { pieceRight = engine.pieces[this.index.i][this.index.j + 1]; } catch (e) { pieceRight = null; }
+
+                for (var c = 0; c < this.connections.length; c++) {
+                    excluded[c] = this.connections[c];
+                }
+
+                if (pieceUp == null || pieceUp.connections.length >= 1) {
+                    if (!this.hasUp) excluded.push(0);
+                }
+                if (pieceDown == null || pieceDown.connections.length >= 1) {
+                    if (!this.hasDown) excluded.push(1);
+                }
+                if (pieceLeft == null || pieceLeft.connections.length >= 1) {
+                    if (!this.hasLeft) excluded.push(2);
+                }
+                if (pieceRight == null || pieceRight.connections.length >= 1) {
+                    if (!this.hasRight) excluded.push(3);
+                }
+
+                return { excluded: excluded, pieceUp: pieceUp, pieceDown: pieceDown, pieceLeft: pieceLeft, pieceRight: pieceRight };
+            };
+
+            Piece.prototype.isFinishedEndNode = function () {
+                if (this.connections.length !== 1) return false;
+                if (this.isSetTile) return true;
+
+                var neighbors = this.grabExclusions();
+                if (neighbors.excluded.length >= 4) return true;
+
+                var dirs = [0, 1, 2, 3];
+                var neighborByDir = [neighbors.pieceUp, neighbors.pieceDown, neighbors.pieceLeft, neighbors.pieceRight];
+
+                for (var d = 0; d < dirs.length; d++) {
+                    if (neighbors.excluded.indexOf(dirs[d]) !== -1) continue;
+                    var neighbor = neighborByDir[d];
+                    if (neighbor != null && neighbor.connections.length === 0) {
+                        return false;
+                    }
+                }
+
+                return true;
+            };
+
+            Piece.prototype.finalizeEndNode = function () {
+                if (!this.isFinishedEndNode()) return false;
+
+                this.wasSpliced = true;
+                this.isSetTile = true;
+                this.connections.sort(function (a, b) { return a - b; });
+                this.setSrc();
+                if (engine.mode === "demo") {
+                    this.selfRotate(this.calcSolution());
+                }
+
+                this.spliceFromQueue();
+                return true;
+            };
+
+            Piece.prototype.setSrc = function (forceSrc) {
+                if (!forceSrc) {
+                    switch (this.connections.length) {
+                        case 1:
+                            this.src = "node";
+                            break;
+                        case 2:
+                            if (this.connections[0] > this.connections[1]) {
+                                var temp = this.connections[0];
+                                this.connections[0] = this.connections[1];
+                                this.connections[1] = temp;
+                            }
+                            if ((this.connections[0] === 0 && this.connections[1] === 1) ||
+                                (this.connections[0] === 2 && this.connections[1] === 3)) {
+                                this.src = "straight";
+                            } else {
+                                this.src = "ljoint";
+                            }
+                            break;
+                        case 3:
+                            this.src = "tjoint";
+                            break;
+                    }
+                } else {
+                    this.src = forceSrc;
+                }
+
+                if (this.index.i === 2 && this.index.j === 2) {
+                    this.src = "power";
+                }
+
+                document.querySelector(engine.selector(this.id)).src = TILES + this.src + ".png";
+            };
+
+            Piece.prototype.calcSolution = function () {
+                if (this.src === "node" || this.src === "straight" || this.src === "holder") {
+                    switch (this.connections[this.connections.length - 1]) {
+                        case 0: return 0;
+                        case 1: return this.src === "straight" ? 0 : 180;
+                        case 2: return this.src === "straight" ? 90 : 270;
+                        case 3: return 90;
+                    }
+                } else if (this.src === "ljoint") {
+                    if (arraysEqual(this.connections, [1, 2])) return 180;
+                    if (arraysEqual(this.connections, [1, 3])) return 90;
+                    if (arraysEqual(this.connections, [0, 2])) return 270;
+                    return 0;
+                } else {
+                    if (arraysEqual(this.connections, [1, 2, 3])) return 180;
+                    if (arraysEqual(this.connections, [0, 2, 3])) return 0;
+                    if (arraysEqual(this.connections, [0, 1, 2])) return 270;
+                    return 90;
+                }
+            };
+
+            Piece.prototype.selfRotate = function (angle) {
+                if (engine.mode === "demo") {
+                    $(engine.selector(this.id)).css("transform", "rotate(" + angle + "deg)");
+                }
+            };
+
+            Piece.prototype.spliceFromQueue = function () {
+                for (var q = engine.toVisitPieces.length - 1; q >= 0; q--) {
+                    if (engine.toVisitPieces[q] === this.index) {
+                        if (engine.mode === "demo") {
+                            $(engine.selector(this.index.id)).removeClass("demo-frontier demo-active");
+                        } else {
+                            $(engine.selector(this.index.id)).css("background-color", "#2196F3");
+                        }
+                        engine.toVisitPieces.splice(q, 1);
+                    }
+                }
+            };
+
+            Piece.prototype.tileSet = function () {
+                if (!this.wasSpliced) {
+                    this.wasSpliced = true;
+                    this.isSetTile = true;
+                    if (engine.hardMode) {
+                        this.spliceFromQueue();
+                    }
+                    this.setSrc();
+                    if (engine.mode === "demo") {
+                        this.selfRotate(this.calcSolution());
+                    }
+                }
+            };
+
+            Piece.prototype.checkCons = function () {
+                if (this.connections.length >= 3 || this.connections.length === 0) {
+                    if (this.connections.length >= 3) {
+                        this.tileSet();
+                    }
+                    return false;
+                }
+                return true;
+            };
+
+            Piece.prototype.freeRandomDir = function () {
+                var neighbors = this.grabExclusions();
+                var excluded = neighbors.excluded;
+
+                if (excluded.length >= 4) {
+                    this.tileSet();
+                    return;
+                }
+
+                this.connections.push(random(0, 3, excluded));
+                var dir = this.connections[this.connections.length - 1];
+                var neighbor;
+
+                switch (dir) {
+                    case 0:
+                        this.hasUp = true;
+                        neighbor = neighbors.pieceUp;
+                        neighbor.connections.push(1);
+                        neighbor.hasDown = true;
+                        break;
+                    case 1:
+                        this.hasDown = true;
+                        neighbor = neighbors.pieceDown;
+                        neighbor.connections.push(0);
+                        neighbor.hasUp = true;
+                        break;
+                    case 2:
+                        this.hasLeft = true;
+                        neighbor = neighbors.pieceLeft;
+                        neighbor.connections.push(3);
+                        neighbor.hasRight = true;
+                        break;
+                    case 3:
+                        this.hasRight = true;
+                        neighbor = neighbors.pieceRight;
+                        neighbor.connections.push(2);
+                        neighbor.hasLeft = true;
+                        break;
+                }
+
+                if (engine.mode === "demo") {
+                    neighbor.setSrc("holder");
+                    neighbor.selfRotate(neighbor.calcSolution());
+                } else if (engine.hardMode && neighbor.connections.length === 1) {
+                    neighbor.setSrc("holder");
+                }
+                if (engine.hardMode) {
+                    engine.toVisitPieces.push(neighbor.index);
+                }
+            };
+
+            Piece.prototype.tick = function () {
+                if (!this.isSetTile && this.checkCons()) {
+                    this.freeRandomDir();
+                    engine.fails = 0;
+
+                    if (engine.mode === "demo") {
+                        this.setSrc();
+                        this.connections.sort(function (a, b) { return a - b; });
+                        this.selfRotate(this.calcSolution());
+                    }
+                } else {
+                    if (!engine.hardMode) {
+                        if (engine.fails++ === 25) {
+                            engine.finishGeneration();
+                            return;
+                        }
+                    }
+
+                    this.connections.sort(function (a, b) { return a - b; });
+                    this.setSrc();
+
+                    if (engine.mode === "demo") {
+                        this.selfRotate(this.calcSolution());
+                    }
+                }
+            };
+
+            return new Piece(i, j, id);
+        };
+
+        CircuitryEngine.prototype.clearTimers = function () {
+            if (this.interval) clearInterval(this.interval);
+            if (this.conditionsInterval) clearInterval(this.conditionsInterval);
+            this.interval = null;
+            this.conditionsInterval = null;
+        };
+
+        CircuitryEngine.prototype.pruneFinishedEndNodes = function () {
+            if (!this.hardMode) return;
+
+            for (var i = this.toVisitPieces.length - 1; i >= 0; i--) {
+                var idx = this.toVisitPieces[i];
+                this.pieces[idx.i][idx.j].finalizeEndNode();
+            }
+        };
+
+        CircuitryEngine.prototype.paintDemoHighlights = function () {
+            if (this.mode !== "demo") return;
+
+            var i;
+            for (i = 0; i < 25; i++) {
+                $(this.selector(i)).removeClass("demo-frontier demo-active");
+            }
+
+            for (i = 0; i < this.toVisitPieces.length; i++) {
+                $(this.selector(this.toVisitPieces[i].id)).addClass("demo-frontier");
+            }
+
+            if (this.activePieceId != null) {
+                $(this.selector(this.activePieceId)).removeClass("demo-frontier").addClass("demo-active");
+            }
+        };
+
+        CircuitryEngine.prototype.init = function () {
+            this.clearTimers();
+            this.generating = true;
+            this.fails = 0;
+            this.toVisitPieces = [];
+            this.solution = [];
+            this.paused = false;
+            this.activePieceId = null;
+            this.demoScanIndex = 0;
+
+            for (var r = 0; r < 25; r++) {
+                var $tile = $(this.selector(r));
+                $tile.css({ transform: "rotate(0deg)" }).attr("src", TILES + "null.png");
+                if (this.mode === "demo") {
+                    $tile.removeClass("demo-frontier demo-active");
+                } else {
+                    $tile.css("background-color", "#2196F3");
+                }
+            }
+
+            this.pieces = [];
+            for (var i = 0; i < 5; i++) {
+                this.pieces[i] = [];
+            }
+
+            var count = 0;
+            for (var row = 0; row < 5; row++) {
+                for (var col = 0; col < 5; col++, count++) {
+                    this.pieces[row][col] = this.createPiece(row, col, count);
+                }
+            }
+
+            var center = this.pieces[2][2];
+            center.freeRandomDir();
+            center.freeRandomDir();
+            center.freeRandomDir();
+
+            if (this.hardMode) {
+                this.activePieceId = 12;
+                center.tick();
+                if (this.mode === "demo") {
+                    center.setSrc();
+                    center.connections.sort(function (a, b) { return a - b; });
+                    center.selfRotate(center.calcSolution());
+                }
+            } else if (this.mode === "demo") {
+                center.setSrc();
+                center.connections.sort(function (a, b) { return a - b; });
+                center.selfRotate(center.calcSolution());
+                this.activePieceId = 0;
+            }
+
+            var self = this;
+            this.interval = setInterval(function () { self.generateStep(); }, this.intervalSpeed);
+
+            if (this.mode === "demo") {
+                this.conditionsInterval = setInterval(function () { self.highlightFrontier(); }, 50);
+                this.paintDemoHighlights();
+            }
+
+            if (this.mode === "play") {
+                document.getElementById("win-banner").classList.remove("show");
+            }
+        };
+
+        CircuitryEngine.prototype.generateStep = function () {
+            if (this.paused) return;
+
+            if (this.hardMode) {
+                this.pruneFinishedEndNodes();
+
+                if (this.toVisitPieces.length !== 0) {
+                    var pick = this.toVisitPieces[random(0, this.toVisitPieces.length - 1)];
+                    var activePiece = this.pieces[pick.i][pick.j];
+
+                    if (activePiece.finalizeEndNode()) {
+                        this.pruneFinishedEndNodes();
+                        if (this.toVisitPieces.length === 0) {
+                            this.activePieceId = null;
+                            if (this.mode === "demo") {
+                                this.paintDemoHighlights();
+                            }
+                            this.finishGeneration();
+                            return;
+                        }
+                        this.activePieceId = null;
+                        if (this.mode === "demo") {
+                            this.paintDemoHighlights();
+                        }
+                        return;
+                    }
+
+                    this.activePieceId = pick.id;
+                    if (this.mode === "demo") {
+                        this.paintDemoHighlights();
+                    }
+                    activePiece.tick();
+                    this.pruneFinishedEndNodes();
+
+                    if (this.toVisitPieces.length === 0) {
+                        this.activePieceId = null;
+                        if (this.mode === "demo") {
+                            this.paintDemoHighlights();
+                        }
+                        this.finishGeneration();
+                    }
+                } else {
+                    this.activePieceId = null;
+                    if (this.mode === "demo") {
+                        this.paintDemoHighlights();
+                    }
+                    this.finishGeneration();
+                }
+            } else if (this.mode === "demo") {
+                var scanId = this.demoScanIndex;
+                var scanPos = findIndex(scanId);
+                this.activePieceId = scanId;
+                this.paintDemoHighlights();
+                this.pieces[scanPos.x][scanPos.y].tick();
+                this.demoScanIndex = (this.demoScanIndex + 1) % 25;
+            } else {
+                for (var r = 0; r < 5; r++) {
+                    for (var c = 0; c < 5; c++) {
+                        this.pieces[r][c].tick();
+                    }
+                }
+            }
+        };
+
+        CircuitryEngine.prototype.highlightFrontier = function () {
+            if (this.paused) return;
+            if (this.hardMode) {
+                this.pruneFinishedEndNodes();
+
+                if (this.toVisitPieces.length === 0 && this.generating) {
+                    this.activePieceId = null;
+                    if (this.mode === "demo") {
+                        this.paintDemoHighlights();
+                    }
+                    this.finishGeneration();
+                    return;
+                }
+            }
+
+            if (this.mode === "demo") {
+                this.paintDemoHighlights();
+            } else {
+                for (var i = 0; i < this.toVisitPieces.length; i++) {
+                    $(this.selector(this.toVisitPieces[i].id)).css("background-color", "#63db65");
+                }
+            }
+            for (var r = 0; r < 5; r++) {
+                for (var c = 0; c < 5; c++) {
+                    var piece = this.pieces[r][c];
+                    piece.checkCons();
+                    var x = piece.grabExclusions();
+                    if (x.excluded.length === 4) {
+                        piece.tileSet();
+                    }
+                }
+            }
+        };
+
+        CircuitryEngine.prototype.settleAllTiles = function () {
+            for (var r = 0; r < 5; r++) {
+                for (var c = 0; c < 5; c++) {
+                    var piece = this.pieces[r][c];
+                    if (piece.connections.length === 0) continue;
+
+                    piece.connections.sort(function (a, b) { return a - b; });
+                    piece.isSetTile = true;
+                    piece.setSrc();
+                    if (this.mode === "demo") {
+                        piece.selfRotate(piece.calcSolution());
+                    }
+                }
+            }
+        };
+
+        CircuitryEngine.prototype.finishGeneration = function () {
+            this.clearTimers();
+            this.generating = false;
+            this.settleAllTiles();
+            this.vectorToSolutionArray();
+
+            if (this.mode === "demo") {
+                this.activePieceId = null;
+                this.paintDemoHighlights();
+            }
+        };
+
+        CircuitryEngine.prototype.vectorToSolutionArray = function () {
+            var count = 0;
+            this.solution = [];
+            for (var r = 0; r < 5; r++) {
+                for (var c = 0; c < 5; c++) {
+                    this.solution[count++] = this.pieces[r][c].calcSolution();
+                }
+            }
+        };
+
+        CircuitryEngine.prototype.rotatePiece = function (piece, check) {
+            var el = $(this.selector(piece.id));
+            el.css("transform", "rotate(" + piece.cssRot + "deg)");
+
+            if (piece.cssRot % 360 === 0) {
+                piece.trueRot = 0;
+            } else {
+                piece.trueRot += 90;
+                if (piece.src === "straight") {
+                    if (piece.trueRot === 270) piece.trueRot = 90;
+                    if (piece.trueRot === 180) piece.trueRot = 0;
+                }
+            }
+            piece.cssRot += 90;
+
+            if (check !== false) {
+                this.checkWin();
+            }
+        };
+
+        CircuitryEngine.prototype.checkWin = function () {
+            var current = [];
+            for (var r = 0; r < 5; r++) {
+                for (var c = 0; c < 5; c++) {
+                    current.push(this.pieces[r][c].trueRot);
+                }
+            }
+            if (arraysEqual(current, this.solution)) {
+                var prefix = this.prefix;
+                $("img[id^='" + prefix + "'][src$='node.png']").attr("src", TILES + "anode.png");
+                document.getElementById("win-banner").classList.add("show");
+            }
+        };
+
+        CircuitryEngine.prototype.solve = function () {
+            for (var i = 0; i < this.solution.length; i++) {
+                $(this.selector(i)).css("transform", "rotate(" + this.solution[i] + "deg)");
+            }
+        };
+
+        CircuitryEngine.prototype.setHardMode = function (enabled) {
+            this.hardMode = enabled;
+            if (this.mode === "demo") {
+                this.intervalSpeed = 700;
+            } else {
+                this.intervalSpeed = enabled ? 5 : 50;
+            }
+        };
+
+        function updateDemoUI(engine) {
+            var isHard = engine.hardMode;
+            document.getElementById("demo-mode-caption").textContent = isHard
+                ? "Hard mode — orange = processing, green = queued on the frontier."
+                : "Normal mode — orange moves left-to-right, one tile processed per step.";
+            document.getElementById("demo-legend-frontier").hidden = !isHard;
+            document.getElementById("demo-legend-active").hidden = !isHard;
+            document.getElementById("demo-legend-scan").hidden = isHard;
+        }
+
+        CircuitryEngine.prototype.togglePause = function () {
+            var self = this;
+            this.paused = !this.paused;
+            if (this.paused) {
+                this.clearTimers();
+            } else {
+                this.interval = setInterval(function () { self.generateStep(); }, this.intervalSpeed);
+                if (this.mode === "demo") {
+                    this.conditionsInterval = setInterval(function () { self.highlightFrontier(); }, 50);
+                }
+            }
+            return this.paused;
+        };
+
+        buildGrid("play-grid", "play");
+        buildGrid("demo-grid", "demo");
+
+        var playEngine = new CircuitryEngine({ prefix: "play", mode: "play", hardMode: false });
+        var demoEngine = new CircuitryEngine({ prefix: "demo", mode: "demo", hardMode: true });
+
+        $("#play-grid").on("click", "img", function () {
+            if (playEngine.generating) return;
+            var id = parseInt(this.getAttribute("data-id"), 10);
+            var index = findIndex(id);
+            playEngine.rotatePiece(playEngine.pieces[index.x][index.y]);
+        });
+
+        $("#play-new").on("click", function () {
+            playEngine.init();
+        });
+
+        $("#play-solve").on("click", function () {
+            playEngine.solve();
+        });
+
+        $("#play-hard").on("click", function () {
+            playEngine.setHardMode(!playEngine.hardMode);
+            this.textContent = playEngine.hardMode ? "Hard Mode: ON" : "Hard Mode: OFF";
+            this.classList.toggle("active", playEngine.hardMode);
+            playEngine.init();
+        });
+
+        $("#demo-new").on("click", function () {
+            demoEngine.init();
+            $("#demo-pause").text("Pause");
+            updateDemoUI(demoEngine);
+        });
+
+        $("#demo-pause").on("click", function () {
+            var paused = demoEngine.togglePause();
+            this.textContent = paused ? "Unpause" : "Pause";
+        });
+
+        $("#demo-hard").on("click", function () {
+            demoEngine.setHardMode(!demoEngine.hardMode);
+            this.textContent = demoEngine.hardMode ? "Hard Mode: ON" : "Hard Mode: OFF";
+            this.classList.toggle("active", demoEngine.hardMode);
+            updateDemoUI(demoEngine);
+            demoEngine.init();
+            $("#demo-pause").text("Pause");
+        });
+
+        playEngine.init();
+        demoEngine.init();
+        updateDemoUI(demoEngine);
+    })();
+    </script>
+</body>
+
+</html>
