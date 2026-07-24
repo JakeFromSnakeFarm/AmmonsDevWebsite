@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="How Jacob Ammons replaced exact square-wheel trigonometry with a 99.30% accurate, substantially cheaper parabolic estimate.">
-    <title>99.3% of the Curve, Half the Compute | Jacob Ammons</title>
+    <title>Cheaper. Easier. Less Math. | Jacob Ammons</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nova+Round&family=Nova+Square&display=swap" rel="stylesheet">
@@ -287,6 +287,204 @@
         .benchmark-note strong {
             color: var(--green);
             font-family: "Nova Square", sans-serif;
+        }
+
+        .benchmark-lab {
+            margin: 34px 0;
+            border: 1px solid var(--ink);
+            background: var(--white);
+        }
+
+        .benchmark-lab-header {
+            padding: 20px 22px;
+            color: var(--white);
+            background: var(--ink);
+        }
+
+        .benchmark-lab-header h3 {
+            margin: 0 0 6px;
+            color: var(--green);
+            font-size: 1rem;
+        }
+
+        .benchmark-lab-header p {
+            margin: 0;
+            color: rgba(247, 247, 245, 0.72);
+            font-size: 0.9rem;
+            line-height: 1.55;
+        }
+
+        .benchmark-lab-body {
+            padding: clamp(18px, 3vw, 28px);
+        }
+
+        .benchmark-controls {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
+            gap: 14px;
+            align-items: end;
+        }
+
+        .benchmark-controls label {
+            display: grid;
+            gap: 6px;
+            color: var(--muted);
+            font-family: "Nova Square", sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .benchmark-controls select,
+        .benchmark-button {
+            min-height: 44px;
+            padding: 9px 12px;
+            border: 1px solid var(--ink);
+            border-radius: 0;
+            font: inherit;
+        }
+
+        .benchmark-controls select {
+            color: var(--ink);
+            background: var(--white);
+        }
+
+        .benchmark-button {
+            color: var(--white);
+            background: var(--teal);
+            border-color: var(--teal);
+            cursor: pointer;
+            font-family: "Nova Square", sans-serif;
+        }
+
+        .benchmark-button:hover,
+        .benchmark-button:focus-visible {
+            background: #087a92;
+        }
+
+        .benchmark-button:disabled {
+            cursor: wait;
+            opacity: 0.55;
+        }
+
+        .benchmark-button.secondary {
+            color: var(--ink);
+            background: transparent;
+            border-color: var(--ink);
+        }
+
+        .benchmark-status {
+            min-height: 1.6em;
+            margin: 16px 0 8px;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .benchmark-progress {
+            width: 100%;
+            height: 8px;
+            display: block;
+            accent-color: var(--teal);
+        }
+
+        .benchmark-results[hidden] {
+            display: none;
+        }
+
+        .benchmark-results {
+            margin-top: 22px;
+        }
+
+        .benchmark-result-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            border: 1px solid var(--line);
+        }
+
+        .benchmark-result {
+            min-width: 0;
+            padding: 16px;
+            border-right: 1px solid var(--line);
+        }
+
+        .benchmark-result:last-child {
+            border-right: 0;
+        }
+
+        .benchmark-result strong,
+        .benchmark-result span {
+            display: block;
+        }
+
+        .benchmark-result strong {
+            margin-bottom: 7px;
+            font-family: "Nova Square", sans-serif;
+            font-size: 0.76rem;
+            text-transform: uppercase;
+        }
+
+        .benchmark-result span {
+            font-family: "Nova Square", sans-serif;
+            font-size: clamp(1.25rem, 3vw, 2rem);
+        }
+
+        .benchmark-result small {
+            display: block;
+            margin-top: 6px;
+            color: var(--muted);
+            font-family: "Nova Round", sans-serif;
+            font-size: 0.78rem;
+            line-height: 1.4;
+        }
+
+        .benchmark-result.approx {
+            color: var(--teal);
+        }
+
+        .benchmark-result.exact,
+        .benchmark-result.reduced {
+            color: var(--orange);
+        }
+
+        .benchmark-ratios {
+            margin: 14px 0;
+            padding: 14px 16px;
+            background: var(--paper-deep);
+            line-height: 1.7;
+        }
+
+        .benchmark-runs {
+            margin: 0;
+            padding-left: 22px;
+            color: var(--muted);
+            font: 0.82rem/1.65 Consolas, "Courier New", monospace;
+        }
+
+        .benchmark-environment {
+            margin: 14px 0;
+            overflow-wrap: anywhere;
+            color: var(--muted);
+            font-size: 0.78rem;
+            line-height: 1.45;
+        }
+
+        .benchmark-result-actions {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .benchmark-copy-status {
+            color: var(--teal);
+            font-size: 0.84rem;
+        }
+
+        .benchmark-caution {
+            margin: 14px 0 0;
+            color: var(--muted);
+            font-size: 0.82rem;
+            line-height: 1.55;
         }
 
         .process-flow {
@@ -1026,6 +1224,20 @@
             .mode-switch {
                 grid-row: 1;
             }
+
+            .benchmark-controls,
+            .benchmark-result-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .benchmark-result {
+                border-right: 0;
+                border-bottom: 1px solid var(--line);
+            }
+
+            .benchmark-result:last-child {
+                border-bottom: 0;
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -1058,8 +1270,8 @@
         <section class="hero">
             <div class="hero-content">
                 <p class="eyebrow">A measured mathematical approximation</p>
-                <h1>99.3% of the Curve. Half the Compute.</h1>
-                <p class="hero-deck">Most people see a square rolling across a screen. I see a catenary problem whose exact solution asks the browser to do far more math than the final animation needs. This is how I reduced that problem to one line while keeping its worst error below a quarter of a pixel.</p>
+                <h1>Cheaper. Easier. Less Math.</h1>
+                <p class="hero-deck">The 'square-wheel' or rolling square animation is a result of a catenary function. I see a catenary problem whose exact solution asks for far more math than the final animation needs. This is how I reduced that problem to one line while keeping its worst error below a quarter of a pixel.</p>
                 <div class="hero-meta">
                     <span>Jacob Ammons</span>
                     <span>Applied Mathematics / Performance Engineering</span>
@@ -1202,7 +1414,68 @@
 
                     <h3>What the processor avoids</h3>
                     <p>Functions such as <code>sin</code>, <code>cos</code>, and <code>cosh</code> are known as transcendental functions. A CPU cannot generally resolve them with one ordinary addition or multiplication instruction. JavaScript engines may use range reduction, polynomial approximations, lookup data, native math libraries, or hardware-assisted routines depending on the browser and processor. Ironically, even the computer commonly approximates these “exact” functions internally.</p>
-                    <p>Since JavaScript is compiled at runtime, there is no honest universal number of CPU cycles that can be assigned to either expression. What I can measure is elapsed execution time. In Chromium 144, 10 million evaluations of my expression completed in roughly 144–169 milliseconds after the engine warmed up. The direct sine-plus-cosine version required roughly 396–421 milliseconds. Even if we use a trigonometric identity to reduce the exact equation to only one cosine, my estimate remains approximately twice as fast.</p>
+                    <p>Since JavaScript is compiled at runtime, there is no honest universal number of CPU cycles that can be assigned to either expression. What I can measure is elapsed execution time. Each timed result is the <strong>total wall-clock time</strong> for one formula to run through every evaluation in the loop—not the time for a single call. In Chromium 144, one timed pass of 10 million evaluations of my expression completed in roughly 144–169 milliseconds after the engine warmed up. The direct sine-plus-cosine version required roughly 396–421 milliseconds for the same 10 million calls. Even if we use a trigonometric identity to reduce the exact equation to only one cosine, my estimate remains approximately twice as fast.</p>
+
+                    <div class="benchmark-lab" id="benchmarkLab">
+                        <div class="benchmark-lab-header">
+                            <h3>Run the same benchmark on this computer</h3>
+                            <p>Each formula receives one untimed warm-up pass. The timed runs use <code>performance.now()</code> around the full loop, accumulate every result, and rotate formula order between runs. The milliseconds shown are the <strong>total time for all evaluations in that run</strong>, not per call.</p>
+                        </div>
+                        <div class="benchmark-lab-body">
+                            <div class="benchmark-controls">
+                                <label for="benchmarkIterations">
+                                    Evaluations per formula
+                                    <select id="benchmarkIterations">
+                                        <option value="1000000">1,000,000 — quick</option>
+                                        <option value="5000000">5,000,000</option>
+                                        <option value="10000000" selected>10,000,000 — paper method</option>
+                                        <option value="20000000">20,000,000</option>
+                                    </select>
+                                </label>
+                                <label for="benchmarkRunCount">
+                                    Timed runs
+                                    <select id="benchmarkRunCount">
+                                        <option value="3">3 runs</option>
+                                        <option value="5" selected>5 runs — paper method</option>
+                                        <option value="7">7 runs</option>
+                                    </select>
+                                </label>
+                                <button class="benchmark-button" id="benchmarkStart" type="button">Start benchmark</button>
+                            </div>
+
+                            <p class="benchmark-status" id="benchmarkStatus" aria-live="polite">Ready. A 10-million × 5 test may briefly pause the page.</p>
+                            <progress class="benchmark-progress" id="benchmarkProgress" value="0" max="1" aria-label="Benchmark progress"></progress>
+
+                            <div class="benchmark-results" id="benchmarkResults" hidden>
+                                <div class="benchmark-result-grid">
+                                    <div class="benchmark-result approx">
+                                        <strong>My approximation</strong>
+                                        <span id="benchmarkApproxMedian">—</span>
+                                        <small id="benchmarkApproxPerCall"></small>
+                                    </div>
+                                    <div class="benchmark-result exact">
+                                        <strong>Direct sin + cos</strong>
+                                        <span id="benchmarkDirectMedian">—</span>
+                                        <small id="benchmarkDirectPerCall"></small>
+                                    </div>
+                                    <div class="benchmark-result reduced">
+                                        <strong>Reduced one-cosine</strong>
+                                        <span id="benchmarkReducedMedian">—</span>
+                                        <small id="benchmarkReducedPerCall"></small>
+                                    </div>
+                                </div>
+                                <p class="benchmark-ratios" id="benchmarkRatios"></p>
+                                <ol class="benchmark-runs" id="benchmarkRunsOutput" aria-label="Individual benchmark runs"></ol>
+                                <p class="benchmark-environment" id="benchmarkEnvironment"></p>
+                                <div class="benchmark-result-actions">
+                                    <button class="benchmark-button secondary" id="benchmarkCopy" type="button">Copy results for Jacob</button>
+                                    <span class="benchmark-copy-status" id="benchmarkCopyStatus" aria-live="polite"></span>
+                                </div>
+                            </div>
+
+                            <p class="benchmark-caution">For a useful comparison, keep this tab visible and avoid starting other heavy work while it runs. Results vary with browser version, processor, power mode, temperature, extensions, and background activity. This measures only the isolated formulas—not animation frame rate or whole-page CPU use.</p>
+                        </div>
+                    </div>
 
                     <div class="distinction">
                         <strong>What did I actually save?</strong>
@@ -1213,7 +1486,7 @@
                 <section class="section" id="accuracy">
                     <p class="section-number">Section 02</p>
                     <h2>Is approximation bad mathematics?</h2>
-                    <p class="lead">Now you may question why I would knowingly use an inaccurate equation when the entire point of mathematics is to receive an accurate answer. Just to prove a point, not everything has to be done by the book.</p>
+                    <p class="lead">Why I would knowingly use an inaccurate equation when the entire point of mathematics is to receive an accurate answer. Just to prove a point that not everything has to be done by the book.</p>
                     <p>Approximations are used everywhere in mathematics. We shorten π, use numerical integration when an antiderivative is impractical, and replace complicated functions with Taylor polynomials that are easier to calculate over a controlled range. The distinction between a poor guess and a useful approximation is that a useful approximation has a defined domain, preserves known properties, and carries an error we can measure.</p>
                     <p>In my case the domain is only one quarter-turn, from 0 to 90 degrees. I know the normalized lift must pass through the points (0, 0), (45, 1), and (90, 0). There is exactly one quadratic function that passes through all three of those points:</p>
 
@@ -1361,17 +1634,6 @@ square.style.setProperty(
                     </div>
 
                     <p>Now we know the beginning, peak, and ending height without using trigonometry at all. If we wanted every point between them to be exact, we would project the rotated half-width and half-height onto the vertical axis using <em>cos φ</em> and <em>sin φ</em>. This gives us the exact center-height function seen earlier. My animation does not need every intermediate value to be perfect, but it absolutely needs these limits to be correct. The parabola was built around those limits instead of replacing them.</p>
-
-                    <div class="callout-grid">
-                        <div class="callout">
-                            <h3>What is preserved</h3>
-                            <p>Periodicity, symmetry, diagonal height, responsive scaling, visual contact, and continuous motion.</p>
-                        </div>
-                        <div class="callout">
-                            <h3>What is intentionally omitted</h3>
-                            <p>Exact no-slip kinematics, changing contact pivots, road sampling, physical time, acceleration, and force.</p>
-                        </div>
-                    </div>
                 </section>
 
                 <section class="section" id="mathematics">
@@ -1528,6 +1790,212 @@ square.style.setProperty(
 
         drawComparisonPlot();
         updateDemo();
+
+        const benchmarkIterations = document.querySelector("#benchmarkIterations");
+        const benchmarkRunCount = document.querySelector("#benchmarkRunCount");
+        const benchmarkStart = document.querySelector("#benchmarkStart");
+        const benchmarkStatus = document.querySelector("#benchmarkStatus");
+        const benchmarkProgress = document.querySelector("#benchmarkProgress");
+        const benchmarkResults = document.querySelector("#benchmarkResults");
+        const benchmarkApproxMedian = document.querySelector("#benchmarkApproxMedian");
+        const benchmarkDirectMedian = document.querySelector("#benchmarkDirectMedian");
+        const benchmarkReducedMedian = document.querySelector("#benchmarkReducedMedian");
+        const benchmarkApproxPerCall = document.querySelector("#benchmarkApproxPerCall");
+        const benchmarkDirectPerCall = document.querySelector("#benchmarkDirectPerCall");
+        const benchmarkReducedPerCall = document.querySelector("#benchmarkReducedPerCall");
+        const benchmarkRatios = document.querySelector("#benchmarkRatios");
+        const benchmarkRunsOutput = document.querySelector("#benchmarkRunsOutput");
+        const benchmarkEnvironment = document.querySelector("#benchmarkEnvironment");
+        const benchmarkCopy = document.querySelector("#benchmarkCopy");
+        const benchmarkCopyStatus = document.querySelector("#benchmarkCopyStatus");
+        let benchmarkSummary = "";
+        let benchmarkSink = 0;
+
+        function benchmarkApproximation(index) {
+            const height = 84;
+            const deltaH = ((Math.sqrt(2) * height) / 2) - (height / 2);
+            const phase = index % 90;
+            return (-Math.pow((phase - 45) / 45, 2) + 1) * deltaH;
+        }
+
+        function benchmarkDirectExact(index) {
+            const height = 84;
+            const phase = (index % 90) * Math.PI / 180;
+            return (height / 2) * (Math.cos(phase) + Math.sin(phase) - 1);
+        }
+
+        function benchmarkReducedExact(index) {
+            const height = 84;
+            const phase = (index % 90) * Math.PI / 180;
+            return (height / 2) * (Math.SQRT2 * Math.cos(phase - Math.PI / 4) - 1);
+        }
+
+        function timeFormula(formula, iterations) {
+            let checksum = 0;
+            const started = performance.now();
+            for (let index = 0; index < iterations; index += 1) {
+                checksum += formula(index);
+            }
+            const milliseconds = performance.now() - started;
+            benchmarkSink += checksum;
+            return milliseconds;
+        }
+
+        function median(values) {
+            const sorted = [...values].sort((a, b) => a - b);
+            const middle = Math.floor(sorted.length / 2);
+            return sorted.length % 2
+                ? sorted[middle]
+                : (sorted[middle - 1] + sorted[middle]) / 2;
+        }
+
+        function nextPaint() {
+            return new Promise((resolve) => {
+                requestAnimationFrame(() => setTimeout(resolve, 0));
+            });
+        }
+
+        function formatMilliseconds(value) {
+            return `${value.toFixed(2)} ms total`;
+        }
+
+        function formatPerCall(totalMs, iterations) {
+            const nanoseconds = (totalMs * 1_000_000) / iterations;
+            return `≈ ${nanoseconds.toFixed(1)} ns per evaluation`;
+        }
+
+        async function runBrowserBenchmark() {
+            const iterations = Number(benchmarkIterations.value);
+            const runCount = Number(benchmarkRunCount.value);
+            const formulas = [
+                { key: "approximation", label: "approximation", run: benchmarkApproximation },
+                { key: "direct", label: "direct sin + cos", run: benchmarkDirectExact },
+                { key: "reduced", label: "reduced one-cosine", run: benchmarkReducedExact }
+            ];
+            const totalSteps = formulas.length * (runCount + 1);
+            const runs = [];
+            let completedSteps = 0;
+
+            benchmarkStart.disabled = true;
+            benchmarkIterations.disabled = true;
+            benchmarkRunCount.disabled = true;
+            benchmarkResults.hidden = true;
+            benchmarkCopyStatus.textContent = "";
+            benchmarkProgress.max = totalSteps;
+            benchmarkProgress.value = 0;
+
+            try {
+                benchmarkStatus.textContent = "Warming up the JavaScript engine…";
+                await nextPaint();
+
+                for (const formula of formulas) {
+                    timeFormula(formula.run, iterations);
+                    completedSteps += 1;
+                    benchmarkProgress.value = completedSteps;
+                    await nextPaint();
+                }
+
+                for (let runIndex = 0; runIndex < runCount; runIndex += 1) {
+                    const run = {};
+                    const order = formulas.map((_, index) => formulas[(index + runIndex) % formulas.length]);
+
+                    for (const formula of order) {
+                        benchmarkStatus.textContent = `Timed run ${runIndex + 1} of ${runCount}: ${formula.label}…`;
+                        await nextPaint();
+                        run[formula.key] = timeFormula(formula.run, iterations);
+                        completedSteps += 1;
+                        benchmarkProgress.value = completedSteps;
+                    }
+
+                    runs.push(run);
+                }
+
+                const approximationMedian = median(runs.map((run) => run.approximation));
+                const directMedian = median(runs.map((run) => run.direct));
+                const reducedMedian = median(runs.map((run) => run.reduced));
+                const directRatios = runs.map((run) => run.direct / run.approximation);
+                const reducedRatios = runs.map((run) => run.reduced / run.approximation);
+                const directRatio = median(directRatios);
+                const reducedRatio = median(reducedRatios);
+                const directSaving = (1 - (1 / directRatio)) * 100;
+                const reducedSaving = (1 - (1 / reducedRatio)) * 100;
+
+                benchmarkApproxMedian.textContent = formatMilliseconds(approximationMedian);
+                benchmarkDirectMedian.textContent = formatMilliseconds(directMedian);
+                benchmarkReducedMedian.textContent = formatMilliseconds(reducedMedian);
+                benchmarkApproxPerCall.textContent = formatPerCall(approximationMedian, iterations);
+                benchmarkDirectPerCall.textContent = formatPerCall(directMedian, iterations);
+                benchmarkReducedPerCall.textContent = formatPerCall(reducedMedian, iterations);
+                benchmarkRatios.innerHTML =
+                    `<strong>${directRatio.toFixed(2)}× faster</strong> than direct sin + cos (${directSaving.toFixed(1)}% less total time)<br>` +
+                    `<strong>${reducedRatio.toFixed(2)}× faster</strong> than the reduced one-cosine form (${reducedSaving.toFixed(1)}% less total time)`;
+
+                benchmarkRunsOutput.replaceChildren();
+                runs.forEach((run, index) => {
+                    const item = document.createElement("li");
+                    item.textContent =
+                        `Run ${index + 1}: approx ${run.approximation.toFixed(2)} ms · ` +
+                        `direct ${run.direct.toFixed(2)} ms · one-cos ${run.reduced.toFixed(2)} ms`;
+                    benchmarkRunsOutput.append(item);
+                });
+
+                const environment = `${navigator.userAgent} · ${navigator.hardwareConcurrency || "unknown"} logical processors`;
+                benchmarkEnvironment.textContent = environment;
+                benchmarkSummary = [
+                    "Walking-square browser benchmark",
+                    `Date: ${new Date().toISOString()}`,
+                    `Environment: ${environment}`,
+                    `Method: ${runCount} timed runs, ${iterations.toLocaleString()} evaluations per formula, after one full warm-up pass`,
+                    `Note: all millisecond values are total loop time for one formula in one run, not per evaluation`,
+                    `Median approximation total: ${approximationMedian.toFixed(2)} ms (${formatPerCall(approximationMedian, iterations)})`,
+                    `Median direct sin + cos total: ${directMedian.toFixed(2)} ms (${formatPerCall(directMedian, iterations)})`,
+                    `Median reduced one-cosine total: ${reducedMedian.toFixed(2)} ms (${formatPerCall(reducedMedian, iterations)})`,
+                    `Median direct/approximation ratio: ${directRatio.toFixed(3)}x`,
+                    `Median reduced/approximation ratio: ${reducedRatio.toFixed(3)}x`,
+                    ...runs.map((run, index) =>
+                        `Run ${index + 1}: approx=${run.approximation.toFixed(2)} ms, direct=${run.direct.toFixed(2)} ms, oneCos=${run.reduced.toFixed(2)} ms`
+                    )
+                ].join("\n");
+
+                benchmarkResults.hidden = false;
+                benchmarkStatus.textContent = "Benchmark complete.";
+            } catch (error) {
+                benchmarkStatus.textContent = `Benchmark stopped: ${error.message}`;
+            } finally {
+                benchmarkStart.disabled = false;
+                benchmarkIterations.disabled = false;
+                benchmarkRunCount.disabled = false;
+            }
+        }
+
+        function copyBenchmarkResults() {
+            const fallbackCopy = () => {
+                const textArea = document.createElement("textarea");
+                textArea.value = benchmarkSummary;
+                textArea.style.position = "fixed";
+                textArea.style.opacity = "0";
+                document.body.append(textArea);
+                textArea.select();
+                document.execCommand("copy");
+                textArea.remove();
+            };
+
+            const copyOperation = navigator.clipboard
+                ? navigator.clipboard.writeText(benchmarkSummary)
+                : Promise.resolve().then(fallbackCopy);
+
+            copyOperation
+                .then(() => {
+                    benchmarkCopyStatus.textContent = "Copied—paste the results into chat.";
+                })
+                .catch(() => {
+                    fallbackCopy();
+                    benchmarkCopyStatus.textContent = "Copied—paste the results into chat.";
+                });
+        }
+
+        benchmarkStart.addEventListener("click", runBrowserBenchmark);
+        benchmarkCopy.addEventListener("click", copyBenchmarkResults);
     </script>
 </body>
 
