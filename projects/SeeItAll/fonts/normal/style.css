@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Antarctican Headline';
+    src: local('Antarctican Headline Book'), local('Antarctican-Headline-Book'),
+        url('AntarcticanHeadline-Book.woff2') format('woff2'),
+        url('AntarcticanHeadline-Book.woff') format('woff'),
+        url('AntarcticanHeadline-Book.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }

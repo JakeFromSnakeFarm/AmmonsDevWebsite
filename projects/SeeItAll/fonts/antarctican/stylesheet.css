@@ -1,0 +1,120 @@
+@font-face {
+    font-family: 'Antarctican Headline';
+    src: url('AntarcticanHeadline-Thin.eot');
+    src: local('Antarctican Headline Thin'), local('AntarcticanHeadline-Thin'),
+        url('AntarcticanHeadline-Thin.eot?#iefix') format('embedded-opentype'),
+        url('AntarcticanHeadline-Thin.woff2') format('woff2'),
+        url('AntarcticanHeadline-Thin.woff') format('woff'),
+        url('AntarcticanHeadline-Thin.ttf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Antarctican Headline Ultrablack';
+    src: url('AntarcticanHeadline-Ultrablack.eot');
+    src: local('Antarctican Headline Ultrablack'), local('AntarcticanHeadline-Ultrablack'),
+        url('AntarcticanHeadline-Ultrablack.eot?#iefix') format('embedded-opentype'),
+        url('AntarcticanHeadline-Ultrablack.woff2') format('woff2'),
+        url('AntarcticanHeadline-Ultrablack.woff') format('woff'),
+        url('AntarcticanHeadline-Ultrablack.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Antarctican Headline';
+    src: url('AntarcticanHeadline-Bold.eot');
+    src: local('Antarctican Headline Bold'), local('AntarcticanHeadline-Bold'),
+        url('AntarcticanHeadline-Bold.eot?#iefix') format('embedded-opentype'),
+        url('AntarcticanHeadline-Bold.woff2') format('woff2'),
+        url('AntarcticanHeadline-Bold.woff') format('woff'),
+        url('AntarcticanHeadline-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Antarctican Headline Book';
+    src: url('AntarcticanHeadline-Book.eot');
+    src: local('Antarctican Headline Book'), local('AntarcticanHeadline-Book'),
+        url('AntarcticanHeadline-Book.eot?#iefix') format('embedded-opentype'),
+        url('AntarcticanHeadline-Book.woff2') format('woff2'),
+        url('AntarcticanHeadline-Book.woff') format('woff'),
+        url('AntarcticanHeadline-Book.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Antarctican Headline';
+    src: url('AntarcticanHeadline-Medium.eot');
+    src: local('Antarctican Headline Medium'), local('AntarcticanHeadline-Medium'),
+        url('AntarcticanHeadline-Medium.eot?#iefix') format('embedded-opentype'),
+        url('AntarcticanHeadline-Medium.woff2') format('woff2'),
+        url('AntarcticanHeadline-Medium.woff') format('woff'),
+        url('AntarcticanHeadline-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Antarctican Headline';
+    src: url('AntarcticanHeadline-Semibold.eot');
+    src: local('Antarctican Headline Semibold'), local('AntarcticanHeadline-Semibold'),
+        url('AntarcticanHeadline-Semibold.eot?#iefix') format('embedded-opentype'),
+        url('AntarcticanHeadline-Semibold.woff2') format('woff2'),
+        url('AntarcticanHeadline-Semibold.woff') format('woff'),
+        url('AntarcticanHeadline-Semibold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Antarctican Headline';
+    src: url('AntarcticanHeadline-Light.eot');
+    src: local('Antarctican Headline Light'), local('AntarcticanHeadline-Light'),
+        url('AntarcticanHeadline-Light.eot?#iefix') format('embedded-opentype'),
+        url('AntarcticanHeadline-Light.woff2') format('woff2'),
+        url('AntarcticanHeadline-Light.woff') format('woff'),
+        url('AntarcticanHeadline-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Antarctican Headline';
+    src: url('AntarcticanHeadline-Black.eot');
+    src: local('Antarctican Headline Black'), local('AntarcticanHeadline-Black'),
+        url('AntarcticanHeadline-Black.eot?#iefix') format('embedded-opentype'),
+        url('AntarcticanHeadline-Black.woff2') format('woff2'),
+        url('AntarcticanHeadline-Black.woff') format('woff'),
+        url('AntarcticanHeadline-Black.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Antarctican Headline';
+    src: url('AntarcticanHeadline-Ultrabold.eot');
+    src: local('Antarctican Headline Ultrabold'), local('AntarcticanHeadline-Ultrabold'),
+        url('AntarcticanHeadline-Ultrabold.eot?#iefix') format('embedded-opentype'),
+        url('AntarcticanHeadline-Ultrabold.woff2') format('woff2'),
+        url('AntarcticanHeadline-Ultrabold.woff') format('woff'),
+        url('AntarcticanHeadline-Ultrabold.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Antarctican Headline';
+    src: url('AntarcticanHeadline-Extralight.eot');
+    src: local('Antarctican Headline Extralight'), local('AntarcticanHeadline-Extralight'),
+        url('AntarcticanHeadline-Extralight.eot?#iefix') format('embedded-opentype'),
+        url('AntarcticanHeadline-Extralight.woff2') format('woff2'),
+        url('AntarcticanHeadline-Extralight.woff') format('woff'),
+        url('AntarcticanHeadline-Extralight.ttf') format('truetype');
+    font-weight: 200;
+    font-style: normal;
+}
+
