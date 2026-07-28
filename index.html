@@ -744,13 +744,13 @@
 
     //Terminal Type Effect
     var terminalType = document.getElementById("terminalTypeEffect"),
-        phrases = ["Software Engineer", "Full Stack Dev", "Data Scientist"],
+        phrases = ["Software Engineer", "Full Stack Dev", "Data Scientist","CTO"],
         terminalCount = -1,
         terminalPhraseCount = 0;
     var terminalInterval = setInterval(updateTerminalType, 50);
 
     function updateTerminalType() {
-        let phraseLength = phrases[terminalPhraseCount % 3].length * 2; //Operation takes 100ms when typing and 50ms when deleting this way
+        let phraseLength = phrases[terminalPhraseCount % 4].length * 2; //Operation takes 100ms when typing and 50ms when deleting this way
         if (++terminalCount >= phraseLength) { //End of Word
             //Insert pause before deletion starts
             if (terminalCount >= (phraseLength + 40)) { //phraseLength + X is delay before deleting. 50ms*X is the time.
@@ -775,7 +775,7 @@
             if (terminalType.innerHTML == "&nbsp;") {
                 terminalType.innerHTML = "";
             }
-            terminalType.innerHTML += phrases[terminalPhraseCount % 3][terminalCount / 2];
+            terminalType.innerHTML += phrases[terminalPhraseCount % 4][terminalCount / 2];
         }
     }
 
