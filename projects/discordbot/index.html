@@ -1,120 +1,285 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Discord Embed Bot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         html {
-            background-color: #eee;
+            background-color: #0f0f0f;
+            color: #e0e0e0;
+            scroll-behavior: smooth;
         }
+
         body {
-            max-width: 1200px;
-            margin: auto;
-            font-size: 1.5em;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 1.05rem;
+            line-height: 1.75;
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 0 24px 80px;
         }
 
-        code {
-            background-color: #ddd;
-            padding: 20px;
-            display: block;
-            word-break: break-word;
+        .hero {
+            text-align: center;
+            padding: 72px 0 40px;
+            border-bottom: 1px solid #222;
+            margin-bottom: 48px;
         }
 
-        i {
-            all: unset;
-            color: red;
+        .hero h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.5px;
+            margin-bottom: 12px;
         }
-        b {
-            all: unset;
-            color: blue;
+
+        .hero .subtitle {
+            color: #888;
+            font-size: 1.1rem;
+            max-width: 560px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #fff;
+            margin: 56px 0 12px;
+            letter-spacing: -0.3px;
+        }
+
+        h2:first-child { margin-top: 0; }
+
+        h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #bbb;
+            margin: 28px 0 8px;
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: #c0c0c0;
+        }
+
+        a {
+            color: #5b9cf5;
+            text-decoration: none;
+        }
+
+        a:hover { text-decoration: underline; }
+
+        .section {
+            background: #161616;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 36px 32px;
+            margin-bottom: 24px;
+        }
+
+        .tag {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+        }
+
+        .tag-purple { background: #1e0a2e; color: #c084fc; border: 1px solid #3e1560; }
+        .tag-green { background: #0a2e1a; color: #34d399; border: 1px solid #155e30; }
+        .tag-blue { background: #0a1a2e; color: #60a5fa; border: 1px solid #15355e; }
+
+        .callout {
+            background: linear-gradient(135deg, #0f1a2e 0%, #0a1220 100%);
+            border: 1px solid #1e3050;
+            border-left: 4px solid #5b9cf5;
+            border-radius: 8px;
+            padding: 20px 24px;
+            margin: 20px 0;
+            color: #94b8db;
+            font-size: 0.95rem;
+        }
+
+        pre {
+            background: #1a1a2e;
+            border: 1px solid #2a2a44;
+            border-radius: 8px;
+            padding: 20px 24px;
+            overflow-x: auto;
+            margin: 16px 0 20px;
+            font-size: 0.85rem;
+            line-height: 1.7;
+        }
+
+        pre code {
+            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+            color: #e0e0e0;
+            background: none;
+            padding: 0;
+        }
+
+        .kw { color: #c792ea; }
+        .fn { color: #82aaff; }
+        .str { color: #c3e88d; }
+        .op { color: #89ddff; }
+        .cm { color: #546e7a; font-style: italic; }
+        .num { color: #f78c6c; }
+        .var { color: #e0e0e0; }
+        .tag-hl { color: #f07178; }
+
+        code.inline {
+            font-family: 'JetBrains Mono', 'Consolas', monospace;
+            background: #1e1e2e;
+            border: 1px solid #2a2a44;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            color: #c792ea;
+        }
+
+        img {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 1px solid #2a2a44;
+            margin: 16px 0;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #222;
+            margin: 48px 0;
+        }
+
+        @media (max-width: 640px) {
+            body { font-size: 1rem; padding: 0 16px 60px; }
+            .hero { padding: 48px 0 32px; }
+            .hero h1 { font-size: 1.8rem; }
+            .section { padding: 24px 20px; }
+            pre { padding: 16px; font-size: 0.78rem; }
         }
     </style>
 </head>
 
 <body>
-    <div class="intro">
-        <h1>The Problem</h1>
-        <p>Links from the social media site ifunny.co dont auto embed within discord (a chromium based app). When sharing links to videos it is inconvenient to be redirected to your browser on PC or be forced into a different screen/app on mobile just to view them.</p>
-        <h1>The Solution</h1>
-        <p>Just because ifunny.co doesnt have embed handling for link sharing doesnt stop us from man handling the data for ourselves from their CDN. Hidden inside the data returned from the HTTPS request to ifunny.co is an .mp4 file we can sniff and scrape out.</p>
+    <div class="hero">
+        <h1>Discord Embed Bot</h1>
+        <p class="subtitle">A 39-line Node.js bot that scrapes iFunny video links and auto-embeds them in Discord.</p>
     </div>
-    <div class="explain">
-        <div class="point">
-            <h2>Inspecting the data</h2>
-            <p>Ifunny doesnt give us any APIs to work with to efficiently retrieve data, so we have to work with the source HTML given through the HTTPS request. Lets take a look at the &#60video&#62 tag to see what hints we can find.</p>
-            <!-- IMG -->
-            <img src="./assets/datai.png">
-            <p>This looks like visual garbage. Our mp4 is inside the video tag though. The HTML data can be treated as a giant string, and we can search for .mp4. This yields ~5 results per page, some of which are bogus. This isnt a consistent enough approach for me and would require some if/else logic. Luckily this data-src attribute (possibly used for lazy loading) is the only occurence on the page and contains our proper data. This allows us to do only 1 search, and no conditional logic.</p>
-            <h2>Scraping the data</h2>
-            <p>
-                Since we know what were looking for we can use the JS String.search() function to find our substring.<br>
-                <code>
-                    <b>let</b> index <i>=</i> data.<b>search</b>("data-src=");
-                </code><br>
-                <code>
-                    //data-src="https://img.ifunny.co/videos/ec20...e46b664c3499d820_1.mp4"<br><br>
-                <i>for</i> (index <i>+=</i> 10; index < data.length; index<i>++</i>) {<br>
-                &nbsp&nbsp&nbsp&nbspif (data[index] <i>!=</i> "<i>\"</i>")<br>
-                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsptempstr <i>+=</i> data[index];<br>
-                &nbsp&nbsp&nbsp&nbspelse<br>
-                    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp break;<br>
-            }
-                </code>
-            </p>
-            <h2>Sending the link</h2>
-            <p>DiscordJS makes this easy, we can pass our link data with the original message object. We can use our message object data to reply with our scraped link in the same channel.<br>
-                <code>
-                    message.channel.<b>send</b> ("" <i>+</i> string);
-                </code></p><br>
-                The final product is 39 lines of a simple, but effective code. Software doesnt *have* to be complicated, it just has to serve its purpose.<br>
-            <code>
-                const { Client, Intents } <i>=</i> require("discord.js");<br>
-const client <i>=</i> new Client({<br>
-    &nbsp&nbsp&nbsp&nbspintents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],<br>
-});<br>
-const request <i>=</i> require("request");<br>
-const ifunnyLink <i>=</i> "https://ifunny.co/video";<br>
 
-client.<b>once</b>("ready", () => {<br>
-    &nbsp&nbsp&nbsp&nbsp<b>console.log</b>("Discord bot operational");<br>
-});<br>
-client.on("message", message => {<br>
-    &nbsp&nbsp&nbsp&nbsp<i>if</i> (<i>!</i>message.content.<b>startsWith</b>(ifunnyLink) <i>||</i> message.author.bot) return;<br>
-    &nbsp&nbsp&nbsp&nbsp<b>queryAndSend</b>("" + message.content, message);<br>
-});<br>
-client.<b>login</b>("Super Secret Key");<br>
+    <div class="section">
+        <h2>The Problem</h2>
+        <p>Links from the social media site ifunny.co don't auto-embed within Discord. When sharing links to videos it is inconvenient to be redirected to your browser on PC or be forced into a different app on mobile just to view them.</p>
+    </div>
 
-<b>function</b> queryAndSend(link, message) {<br>
-    &nbsp&nbsp&nbsp&nbsplet tempstr <i>=</i> "";<br>
-    &nbsp&nbsp&nbsp&nbsprequest(<br>
-        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp`` <i>+</i> link,<br>
-        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp(err, response, body) => {<br>
-            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsplet data <i>=</i> body;<br>
-            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspdataLength <i>=</i> data.length;<br>
-            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsplet index <i>=</i> data.<b>search</b>("data-src=");<br>
-            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<i>for</i> (let i <i>=</i> index <i>+</i> 10; i < data.length; i<i>++</i>) {<br>
-                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspif (data[i] <i>!=</i> "<i>\"</i>")<br>
-                    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsptempstr <i>+=</i> data[i];<br>
-                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspelse<br>
-                    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp break;<br>
-            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp}<br>
-            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<b>sendMessage</b>(tempstr, message);<br>
-        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp}<br>
-    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp);<br>
-}<br>
+    <div class="section">
+        <h2>The Solution</h2>
+        <p>Just because ifunny.co doesn't have embed handling for link sharing doesn't stop us from handling the data ourselves from their CDN. Hidden inside the data returned from the HTTPS request to ifunny.co is an <code class="inline">.mp4</code> file we can sniff and scrape out.</p>
+    </div>
 
-<b>function</b> sendMessage(string, message) {<br>
-    &nbsp&nbsp&nbsp&nbspmessage.channel.<b>send</b> ("" <i>+</i> string);<br>
-}
-            </code>
+    <hr class="divider">
+
+    <div class="section">
+        <span class="tag tag-purple">Research</span>
+        <h2>Inspecting the Data</h2>
+        <p>iFunny doesn't give us any APIs to work with to efficiently retrieve data, so we have to work with the source HTML given through the HTTPS request. Let's take a look at the <code class="inline">&lt;video&gt;</code> tag to see what hints we can find.</p>
+
+        <img src="./assets/datai.png" alt="Screenshot of iFunny page source showing video tag with data-src attribute">
+
+        <p>This looks like visual garbage. Our mp4 is inside the video tag though. The HTML data can be treated as a giant string, and we can search for <code class="inline">.mp4</code>. This yields ~5 results per page, some of which are bogus.</p>
+
+        <div class="callout">
+            This isn't a consistent enough approach and would require conditional logic. Luckily the <code class="inline">data-src</code> attribute (possibly used for lazy loading) is the only occurrence on the page and contains our proper data. This allows us to do only 1 search, and no conditional logic.
         </div>
     </div>
-    <div class=""></div>
+
+    <div class="section">
+        <span class="tag tag-green">Implementation</span>
+        <h2>Scraping the Data</h2>
+        <p>Since we know what we're looking for we can use <code class="inline">String.search()</code> to find our substring.</p>
+
+<pre><code><span class="kw">let</span> <span class="var">index</span> <span class="op">=</span> <span class="var">data</span>.<span class="fn">search</span>(<span class="str">"data-src="</span>);</code></pre>
+
+        <p>Once we have the starting index, we walk forward character by character until we hit the closing quote, building the URL as we go:</p>
+
+<pre><code><span class="cm">// data-src="https://img.ifunny.co/videos/ec20...e46b664c3499d820_1.mp4"</span>
+
+<span class="kw">for</span> (<span class="var">index</span> <span class="op">+=</span> <span class="num">10</span>; <span class="var">index</span> <span class="op">&lt;</span> <span class="var">data</span>.<span class="var">length</span>; <span class="var">index</span><span class="op">++</span>) {
+    <span class="kw">if</span> (<span class="var">data</span>[<span class="var">index</span>] <span class="op">!=</span> <span class="str">"\""</span>)
+        <span class="var">tempstr</span> <span class="op">+=</span> <span class="var">data</span>[<span class="var">index</span>];
+    <span class="kw">else</span>
+        <span class="kw">break</span>;
+}</code></pre>
+    </div>
+
+    <div class="section">
+        <span class="tag tag-blue">Discord.js</span>
+        <h2>Sending the Link</h2>
+        <p>DiscordJS makes this easy. We can pass our link data with the original message object to reply with our scraped link in the same channel.</p>
+
+<pre><code><span class="var">message</span>.<span class="var">channel</span>.<span class="fn">send</span>(<span class="str">""</span> <span class="op">+</span> <span class="var">string</span>);</code></pre>
+
+        <div class="callout">
+            The final product is 39 lines of simple, but effective code. Software doesn't <em>have</em> to be complicated &mdash; it just has to serve its purpose.
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section">
+        <h2>Full Source</h2>
+
+<pre><code><span class="kw">const</span> { <span class="var">Client</span>, <span class="var">Intents</span> } <span class="op">=</span> <span class="fn">require</span>(<span class="str">"discord.js"</span>);
+<span class="kw">const</span> <span class="var">client</span> <span class="op">=</span> <span class="kw">new</span> <span class="fn">Client</span>({
+    <span class="var">intents</span>: [<span class="var">Intents</span>.<span class="var">FLAGS</span>.<span class="var">GUILDS</span>, <span class="var">Intents</span>.<span class="var">FLAGS</span>.<span class="var">GUILD_MESSAGES</span>],
+});
+<span class="kw">const</span> <span class="var">request</span> <span class="op">=</span> <span class="fn">require</span>(<span class="str">"request"</span>);
+<span class="kw">const</span> <span class="var">ifunnyLink</span> <span class="op">=</span> <span class="str">"https://ifunny.co/video"</span>;
+
+<span class="var">client</span>.<span class="fn">once</span>(<span class="str">"ready"</span>, () <span class="op">=&gt;</span> {
+    <span class="var">console</span>.<span class="fn">log</span>(<span class="str">"Discord bot operational"</span>);
+});
+
+<span class="var">client</span>.<span class="fn">on</span>(<span class="str">"message"</span>, <span class="var">message</span> <span class="op">=&gt;</span> {
+    <span class="kw">if</span> (<span class="op">!</span><span class="var">message</span>.<span class="var">content</span>.<span class="fn">startsWith</span>(<span class="var">ifunnyLink</span>) <span class="op">||</span> <span class="var">message</span>.<span class="var">author</span>.<span class="var">bot</span>) <span class="kw">return</span>;
+    <span class="fn">queryAndSend</span>(<span class="str">""</span> <span class="op">+</span> <span class="var">message</span>.<span class="var">content</span>, <span class="var">message</span>);
+});
+
+<span class="var">client</span>.<span class="fn">login</span>(<span class="str">"Super Secret Key"</span>);
+
+<span class="kw">function</span> <span class="fn">queryAndSend</span>(<span class="var">link</span>, <span class="var">message</span>) {
+    <span class="kw">let</span> <span class="var">tempstr</span> <span class="op">=</span> <span class="str">""</span>;
+    <span class="fn">request</span>(
+        <span class="str">``</span> <span class="op">+</span> <span class="var">link</span>,
+        (<span class="var">err</span>, <span class="var">response</span>, <span class="var">body</span>) <span class="op">=&gt;</span> {
+            <span class="kw">let</span> <span class="var">data</span> <span class="op">=</span> <span class="var">body</span>;
+            <span class="var">dataLength</span> <span class="op">=</span> <span class="var">data</span>.<span class="var">length</span>;
+            <span class="kw">let</span> <span class="var">index</span> <span class="op">=</span> <span class="var">data</span>.<span class="fn">search</span>(<span class="str">"data-src="</span>);
+            <span class="kw">for</span> (<span class="kw">let</span> <span class="var">i</span> <span class="op">=</span> <span class="var">index</span> <span class="op">+</span> <span class="num">10</span>; <span class="var">i</span> <span class="op">&lt;</span> <span class="var">data</span>.<span class="var">length</span>; <span class="var">i</span><span class="op">++</span>) {
+                <span class="kw">if</span> (<span class="var">data</span>[<span class="var">i</span>] <span class="op">!=</span> <span class="str">"\""</span>)
+                    <span class="var">tempstr</span> <span class="op">+=</span> <span class="var">data</span>[<span class="var">i</span>];
+                <span class="kw">else</span>
+                    <span class="kw">break</span>;
+            }
+            <span class="fn">sendMessage</span>(<span class="var">tempstr</span>, <span class="var">message</span>);
+        }
+    );
+}
+
+<span class="kw">function</span> <span class="fn">sendMessage</span>(<span class="var">string</span>, <span class="var">message</span>) {
+    <span class="var">message</span>.<span class="var">channel</span>.<span class="fn">send</span>(<span class="str">""</span> <span class="op">+</span> <span class="var">string</span>);
+}</code></pre>
+    </div>
 </body>
 
 </html>
